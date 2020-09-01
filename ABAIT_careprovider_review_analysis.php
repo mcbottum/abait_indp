@@ -188,7 +188,7 @@ foreach($scale_array as $value){
                         print"<th>Total Episodes</th>\n";
                         print"<th>Total Duration (min)</th>\n";
                         print"<th>Total Intensity Units</th>\n";
-                        print"<th>PRNs</th>\n";
+                        print"<th>Police Int</th>\n";
                         print"<th>Most Recent Scale Entry</th>\n";
                     print"</tr>\n";
                 print "</thead>";

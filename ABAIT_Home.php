@@ -65,36 +65,25 @@ window.onload = function() {
 
 <link 	rel = "stylesheet"
 		type = "text/css"
-		href = "ABAIT_Home.css">
+		href = "ABAIT_home_v2.css">
 </head>
 <body>
 <div id="body" class="shadow">
 <fieldset id='welcome' class="shadow">
 	<div id = "head">
-		<h1>  Welcome to the </h1>
 		<h1>Adaptive Behavior Assessment and Intervention Tool</h1> 
 	</div>
 </fieldset>
 		<form 	onsubmit='return formValidator()'
-				action = "agitationpasscheck.php" 
-				method = "post">
+				action = "ABAIT_passcheck_v2.php" 
+				method = "get">
 	<table class="center">
 		<tr>
-<!-- 			<td>
-				<div >
-					<img id="logo3"src= "ABAITdataflow.png" height=475px  alt="hi" />
-				</div>
-			</td> -->
-	
-
 			<td>
-
 				<div id = "homename">
 				<fieldset id='login' class="shadow">
-			
 					<table>
 							<tr><th span=2>Login ID</th></tr>
-							
 							<tr><td align="center" margin-bottum="5px">
 								<input	type = "password" id = 'password' name = "password" autocomplete="off"/>
 

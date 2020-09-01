@@ -5,6 +5,7 @@ if($_SESSION['passwordcheck']!='pass'){
 	header("Location:logout.php");
 	print $_SESSION['passwordcheck'];
 }
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -23,6 +24,11 @@ print $_SESSION['SITE']
 <link 	rel = "stylesheet"
 		type = "text/css"
 		href = "ABAIT_admin.css">
+
+<script>
+
+</script>
+
 </head>
 <body>
 <!-- <div id="body" style="width:980px;margin: 0px auto 0px auto; text-align: left">
@@ -42,6 +48,9 @@ $_SESSION['residentkey']=null;
 <?
 print $_SESSION['adminfirst']."  ".$_SESSION['adminlast']."'s Administrator Home Page";
 
+
+
+
 ?>
 </div>
 
@@ -59,6 +68,8 @@ print $_SESSION['adminfirst']."  ".$_SESSION['adminlast']."'s Administrator Home
 				<li><a href="ABAIT_Scale_Create.php">Create New ABAIT Behavior Plans</a></li>
 				<!-- <li><a href="ABAIT_Scale_Setup.php">Edit Behavior Categories</a></li> -->
 				<li><a href="ABAIT_trigger.php">Edit or Delete ABAIT Behavior Plans</a></li>
+				<li><a href="graph_try.php">Sample graph</a></li>
+
 			</ul>
 		<li><h4>Member Enrollment</h4></li>
 			<ul>
@@ -78,15 +89,16 @@ print $_SESSION['adminfirst']."  ".$_SESSION['adminlast']."'s Administrator Home
 				<li><a href='ABAIT_trigger_intervention_catalog.php'>Catalog of Behavior Triggers and Interventions</a></li>
 				<li><a href="chooseresident_for_map_review.php">Create and Review Residents' Behavior Plans</a></li>
 				<li><a href="ABAIT_quick_scales_v2.php">Record New Behavior</a></li>
-				<li><a href='ABAIT_prn_effect_v2.php'>Record PRN Effect for Resident</a></li>
+				<li><a href='ABAIT_prn_effect_v2.php'>Record Emergency Intervention Effect</a></li>
 			</ul>
 		<li><h4>Analysis and Education</h4>
 			<ul>
 				<!-- <li><a href="global_analysis.php">Resident 30 Day Global Analysis</a></li> -->
 				<li><a href="episode_historical_review.php">Resident Episode Historical Review</a></li>
-				<li><a href="resident_for_prn.php">Resident PRN Review</a></li>
+				<li><a href="resident_for_prn.php">Emergency Intervention Review</a></li>
 				<li><a href="resident_fact_sheet.php">Resident Fact Sheet</a></li>
 				<li><a href="ABAIT_careprovider_review.php">Care Provider Analysis</a></li>
+
 			</ul></li>
 
 	</ol>

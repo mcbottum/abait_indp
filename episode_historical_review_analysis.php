@@ -5,6 +5,7 @@ if($_SESSION['passwordcheck']!='pass'){
 	header("Location:logout.php");
 	print $_SESSION['passwordcheck'];
 }
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -13,15 +14,32 @@ if($_SESSION['passwordcheck']!='pass'){
 <? print"<link rel='shortcut icon' href='$_SESSION[favicon]' type='image/x-icon'>";?>
 <meta http-equiv="Content-Type" content="text/html;
 	charset=utf-8" />
+<!-- <script src="static/js/jquery-3-5-1.min.js"></script> -->
+<script src="static/js/canvasjs.min.js"></script>
 <title>
 <?
 print $_SESSION['SITE']
 ?>
 </title>
+<?
+set_css()
+?>
 <script>
 function backButton(target_population) {
 	self.location='episode_historical_review.php?tp='+target_population;
 }
+
+function hide() {
+
+	obj = document.getElementById("chartContainer");
+	obj1 = document.getElementById("hide_graph");
+
+	obj.style.display = "none";
+	obj1.style.display = "none";
+
+}
+
+
 </script>
 <link 	rel = "stylesheet"
 		type = "text/css"
@@ -132,6 +150,11 @@ if($filename=="Submit Resident for Global Analysis"){
 			$trigger_breakdown=$_REQUEST['trigger_breakdown'];
 		}else{
 			$trigger_breakdown=Null;
+		}
+		if(isset($_REQUEST['carer_breakdown'])){
+			$carer_breakdown=$_REQUEST['carer_breakdown'];
+		}else{
+			$carer_breakdown=Null;
 		}
 		if(isset($_REQUEST['intervention_effect'])){
 			$intervention_effect=$_REQUEST['intervention_effect'];
@@ -719,9 +742,205 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
 
 
 
+if($carer_breakdown){ ////////////////////////////////////////carer breakdown//////////////////////////////////////
+
+	///////// testing //////////
+	$dataPoints1 = array(
+    array("label"=> "2010", "y"=> 36.12),
+    array("label"=> "2011", "y"=> 34.87),
+    array("label"=> "2012", "y"=> 40.30),
+    array("label"=> "2013", "y"=> 35.30),
+    array("label"=> "2014", "y"=> 39.50),
+    array("label"=> "2015", "y"=> 50.82),
+    array("label"=> "2016", "y"=> 74.70)
+);
+$dataPoints2 = array(
+    array("label"=> "2010", "y"=> 64.61),
+    array("label"=> "2011", "y"=> 70.55),
+    array("label"=> "2012", "y"=> 72.50),
+    array("label"=> "2013", "y"=> 81.30),
+    array("label"=> "2014", "y"=> 63.60),
+    array("label"=> "2015", "y"=> 69.38),
+    array("label"=> "2016", "y"=> 98.70)
+);
 
 
+	/////// end testing ///////////
 
+
+	if($residentkey=='all_residents'){
+		$res_name="all residents";
+	}else{
+		$res_name=$res_first." ".$res_last;
+	}
+    print"<h3 align=center>Carer Presence during Episodes</h3>\n";
+
+    $carers_sql = "SELECT * from personaldata WHERE target_population='$Population'";
+    $carers_session=mysqli_query($conn,$carers_sql);
+    $carer_presence_array=array();
+    while($row=mysqli_fetch_assoc($carers_session)){
+    	$carer_presence_array[$row[personaldatakey]]=array("name"=> $row[first]." ".$row[last],"On Staff"=>0,"Present During Incident"=>0,"Present During Intervention"=>0);
+    }
+
+    $behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+    $behavior_map_data_session=mysqli_query($conn,$behavior_map_data_sql);
+
+    while($row=mysqli_fetch_assoc($behavior_map_data_session)){
+    	foreach($carer_presence_array as $x => $x_value) {
+    		if(in_array($x,explode(",", $row[on_staff]))){
+    			$carer_presence_array[$x]['On Staff']+=1;
+    		}
+    		if(in_array($x,explode(",", $row[staff_present_incident]))){
+    			$carer_presence_array[$x]['Present During Incident']+=1;
+    		}
+    		if(in_array($x,explode(",", $row[staff_present_intervention]))){
+    			$carer_presence_array[$x]['Present During Intervention']+=1;
+    		}
+    	}
+    }
+
+    $resident_mapping_data_sql="SELECT * FROM resident_mapping WHERE date > '$date_start' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+    $resident_mapping_data_session=mysqli_query($conn,$resident_mapping_data_sql);
+    while($row=mysqli_fetch_assoc($resident_mapping_data_session)){
+
+    	foreach($carer_presence_array as $x => $x_value) {
+    		if(in_array($x,explode(",", $row[on_staff]))){
+    			$carer_presence_array[$x]['On Staff']+=1;
+
+    		}
+    		if(in_array($x,explode(",", $row[staff_present_incident]))){
+    			$carer_presence_array[$x]['Present During Incident']+=1;
+    		}
+    		if(in_array($x,explode(",", $row[staff_present_intervention]))){
+    			$carer_presence_array[$x]['Present During Intervention']+=1;
+    		}
+    	}
+    }
+
+    // foreach($scale_array as $behavior){
+
+        $trigger_count=0;
+        $trigger_duration=NULL;
+
+        $behavior_maps_sql="SELECT * FROM behavior_maps WHERE behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+        $behavior_maps_session=mysqli_query($conn,$behavior_maps_sql);
+            // print "<table width='100%'>";
+            // print "<tr><td>";
+            print "<table align=center class=' scroll local' border='1' bgcolor='white'>";
+                print "<thead>";
+                    print"<tr><th colspan='5'>Carer Interactions with $res_name Since <em>$date_start</em></th></tr>";
+                    print"<tr>";
+                    		print"<th>Carer</th>";
+                    		print"<th>On Staff</th>";
+                    		print"<th>Present During Episode</th>";
+                    		print"<th>Present During Interaction</th>";
+                    		print"<th>Graph</th>";
+                    print"</tr>";
+            print "</thead>";
+            	print "<tbody>";
+            		$on_staff = array();
+            		$present_incident = array();
+            		$staff_present_intervention = array();
+            		foreach ($carer_presence_array as $key => $value) {
+            			$on_staff[] = array("label" => $carer_presence_array[$key]["name"], "y"=> $carer_presence_array[$key]["On Staff"]);
+            			$present_incident[] = array("label" => $carer_presence_array[$key]["name"], "y"=> $carer_presence_array[$key]["Present During Incident"]);
+            			$staff_present_intervention[] = array("label" => $carer_presence_array[$key]["name"], "y"=> $carer_presence_array[$key]["Present During Intervention"]);
+
+
+            			print"<tr>";
+            			    foreach ($carer_presence_array[$key] as $key1 => $value1) {
+            			    	print"<td>$value1</td>";
+            			    }
+            				print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='chart_call()'></td>";
+            			print"</tr>";
+            		}
+				print "</tbody>";
+            print "</table>";
+
+     	// print"</td></tr></table>";
+
+    // }//end foreach
+}// end carer_breakdown if
+// foreach ($on_staff as $key => $value) {
+
+// 	echo $value["name"],$value['y'];
+
+// }
+?>
+<script>
+function chart_call() {
+	obj = document.getElementById("chartContainer");
+	obj1 = document.getElementById("hide_graph");
+	obj.style.display = "block";
+	obj1.style.display = "block";
+ 
+var chart = new CanvasJS.Chart("chartContainer", {
+
+    animationEnabled: true,
+    theme: "light2",
+    title:{
+        text: "Carer Resident Interactions"
+    },
+    axisY:{
+        includeZero: true
+    },
+    legend:{
+        cursor: "pointer",
+        verticalAlign: "center",
+        horizontalAlign: "right",
+        itemclick: toggleDataSeries
+    },
+    data: [{
+        type: "column",
+        name: "On Staff",
+        indexLabel: "{y}",
+        yValueFormatString: "#0",
+        showInLegend: true,
+        dataPoints: <?php echo json_encode($on_staff, JSON_NUMERIC_CHECK); ?>
+    },{
+        type: "column",
+        name: "Present During Incident",
+        indexLabel: "{y}",
+        yValueFormatString: "#0",
+        showInLegend: true,
+        dataPoints: <?php echo json_encode($present_incident, JSON_NUMERIC_CHECK); ?>
+    },{
+        type: "column",
+        name: "Present During Intervention",
+        indexLabel: "{y}",
+        yValueFormatString: "#0",
+        showInLegend: true,
+        dataPoints: <?php echo json_encode($staff_present_intervention, JSON_NUMERIC_CHECK); ?>
+    }]
+});
+chart.render();
+ 
+function toggleDataSeries(e){
+    if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+        e.dataSeries.visible = false;
+    }
+    else{
+        e.dataSeries.visible = true;
+    }
+    chart.render();
+}
+ 
+}
+</script>
+<?
+
+print"<div id='chartContainer' style='display: none; height: 370px; width: 100%;'></div>";
+print"<script src='static/js/canvasjs.min.js'></script>";
+
+print"<div id='hide_graph' style='display: none'>";
+	print "<p class='backButton'>";
+		print "<input	type = 'button'
+					name = ''
+					id = 'hideButton'
+					value = 'Hide Chart'
+					onClick=\"hide()\"/>\n";
+	print "</p>";
+print"</div>";
 
 
 if($all_episode){//////////////////////////////////////////all_episode/////////////////////////////////////////

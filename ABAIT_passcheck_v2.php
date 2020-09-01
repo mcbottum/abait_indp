@@ -94,7 +94,7 @@ $filename =$_REQUEST["submit"];
 					}					
 					elseif($row1['accesslevel']=='caregiver'&&$row1['password']==$password){
 						$nextfile="ABAIT_caregiverhome_v2.php";
-						$_SESSION['home_page']='ABAIT_caregiverhome_v2';
+						$_SESSION['home_page']='ABAIT_caregiverhome_v2.php';
 						$_SESSION['passwordcheck']='pass';
 						$_SESSION['personaldatakey']=$row1['personaldatakey'];
 						$_SESSION['password']=$password;

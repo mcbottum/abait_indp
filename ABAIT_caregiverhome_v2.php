@@ -18,6 +18,7 @@ if($_SESSION['passwordcheck']!='pass'){
 <?
 print $_SESSION['SITE']
 ?>
+
 </title>
 <?
 set_css()
@@ -47,32 +48,38 @@ set_css()
 		color: black;
 	}
 
+
 </style>
 </head>
 <body class="container">
-
 	<?	
 		$names = build_page_pg();
 	?>
-	<h2 class="m-3" align='center'>
+<!-- 	<h2 class="m-3" align='center'>
+		Carer Home Page
+	</h2> -->
+
+	<h2 class="m-3 p-2 footer_div" align='center'>
 		Carer Home Page
 	</h2>
 
-	<h2 class="m-2 p-2 footer_div" align='center'>
-		Roles
-	</h2>
-
-	<table class='center'>
-		<tr><td class="p-3" align='center'>
+	<div class="row justify-content-md-center">
+		<div class='col col-lg-3 mt-4'>
 			<a  class="btn  btn-lg btn-block p-5" href='ABAIT_quick_scales_v2.php'>Record Behavior Episode</a>
-		</td></tr>
-		<tr><td class="p-3" align='center'>
-			<a  class="btn  btn-lg btn-block p-5" href='ABAIT_prn_effect_v2.php'>Record Medication Effect</a>
-		</td></tr>
-		<tr><td  class="p-3" align='center'>
+			</div>
+		</div>
+	<div class="row justify-content-md-center">
+		<div class='col col-lg-3 mt-4'>
+			<a  class="btn  btn-lg btn-block p-5" href='ABAIT_prn_effect_v2.php'>Post Emergency Intervention</a>
+			
+			</div>
+		</div>
+	<div class="row justify-content-md-center">
+		<div class='col col-lg-3 mt-4 mb-4'>
 			<a class="btn btn-lg btn-block p-5" href='ABAIT_tutorials_v2.php'>Tutorials</a>
-		</td></tr>
-	</table>
+			</div>
+		</div>
+
 
 	<? build_footer_pg() ?>
 

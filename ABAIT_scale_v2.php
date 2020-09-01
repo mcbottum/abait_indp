@@ -343,6 +343,12 @@ input {
     $score_sum=mysqli_query($conn1,$sql2);
     $intensity=mysqli_query($conn1,$sql3);
 
+
+    // Get all Carer Names
+    $Population_strip=mysqli_real_escape_string($conn1,$Target_Population);
+    $sql4="SELECT * FROM personaldata WHERE House='$_SESSION[house]'";
+    $session4=mysqli_query($conn1,$sql4);
+
     $first=$_SESSION['first'];
     $last=$_SESSION['last'];
 
@@ -390,11 +396,11 @@ input {
                         <select class='selBox custom-select-background custom-select-lg mb-3' data-width='auto' name = "duration" id="durat">
                             <option value = "">Choose Minutes</option>
                             <?
-                            for($t = 5;$t <= 90;$t +=5){
+                            for($t = 1;$t <= 5;$t +=1){
                                 print "<option value = $t>$t</option>";
                             }
                             ?>
-                            <option value = "105">More than 90</option>
+                            <option value = "105">More than 5 minutes</option>
                         </select>
                     </td>
                 </tr>
@@ -448,7 +454,7 @@ input {
                 print "<td  colspan='6'><h3>Intervention $int <span style='color:Lime'>(optional)</span></h3></td></tr>";
         }else{
             print"<tr align='center' class='behaviorIntensityAfter'>";
-                print "<td  colspan='6' ><h3>Was Medication Given?</h3></td></tr>";
+                print "<td  colspan='6' ><h3>Was Police Intervention Required?</h3></td></tr>";
         }
 
         if($int<3){
@@ -494,7 +500,7 @@ input {
         if($int==6){
             print"<tr id='behavior_tr1'>";
                     print"<td colspan='6' align='center'>";
-                        print"<div id='behavior_description_tag' style='display: none; color: red;'>Enter specific description of behavior which required PRN in yellow text-box.</div>";
+                        print"<div id='behavior_description_tag' style='display: none; color: red;'>Enter specific description of behavior which required Police Intervention in yellow text-box.</div>";
                 print "</td>";
             print "</tr>";
 
@@ -507,7 +513,58 @@ input {
                     print "</div>";
                 print "</td>";
             print "</tr>";
-            }
+
+
+            print "<tr>";
+                print"<td align='center'>";
+                    print"<div id = 'onstaff'>";
+                        print"<tr><td  colspan='6' align='center'><h3> Other Staff Present?</h3></td>";
+                         
+
+                            print "<table class='table' align='center' width='75%'border='1' bgcolor='white'>";
+                                print"<tr><th>Carer</th><th>On Staff</th><th>Present during incident</th><th>Present during intervention</th>";
+                                    while($row4 = mysqli_fetch_assoc($session4)){
+                                    
+                                            print"<tr>";
+                                                print"<td>$row4[first] $row4[last]</td>";
+                                                print"<td style='text-align: center; vertical-align: middle;'>";
+
+                                                            print"<input type = 'checkbox'
+                                                            name = 'onstaff[]'
+                                                            id='$row4[personaldatakey]'
+                                                            value = '$row4[personaldatakey]'/>";
+
+                                                print"</td>";
+                                                print"<td style='text-align: center; vertical-align: middle;'>";
+                                                            print"<input type = 'checkbox'
+                                                            name = 'presentincident[]'
+                                                            id='$row4[personaldatakey]'
+                                                            value = '$row4[personaldatakey]'/>";
+                                                print"</td>";
+                                                print"<td style='text-align: center; vertical-align: middle;'>";
+                                                            print"<input type = 'checkbox'
+                                                            name = 'presentintervention[]'
+                                                            id='$row4[personaldatakey]'
+                                                            value = '$row4[personaldatakey]'/>";
+                                                print"</td>";
+                                            print"</tr>";
+                                    }
+                            print"</table>";
+
+
+                    print"</div>";
+                print"</td>";
+            print "</tr>";
+
+
+
+        }
+
+
+
+
+
+
       
 print "<tr><td colspan=2 style='padding:0px'>";
 
@@ -522,7 +579,7 @@ print "<tr><td colspan=2 style='padding:0px'>";
                                     if($int<6){
                                         print "<th  align='center'><span style='color:red'>AFTER </span> $int  Intervention</th>";
                                     }else{
-                                        print "<th  align='center'><span style='color:red'>AFTER </span> Medication</th>";
+                                        print "<th  align='center'><span style='color:red'>AFTER </span> Police Intervention</th>";
                                     }
                             print "</tr>";
 

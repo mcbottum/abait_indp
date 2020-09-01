@@ -50,7 +50,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 
 		$date=date('Y-m-d');
 		$date_start=date('Y-m-d',(strtotime('- 30 days')));
-		$title='PRN Review';
+		$title='Emergency Intervention Review';
 		$request_residentkey=$_REQUEST['residentkey'];
 		$Population=$_REQUEST['population'];
 		print "<input type='hidden' name='residentkey' value='$request_residentkey'>";
@@ -68,7 +68,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 <table width='100%'>
 	<tr class='floatRight' />
 		<td>
-			<input type='submit' value='Tap for more Info' onClick="alert('This data compares PRN to Non-PRN recorded behavior episodes.  Additionally, each PRN requiring behavior episode is listed in the second table along with a specific description of the aggitated behavior.');return false">
+			<input type='submit' value='Tap for more Info' onClick="alert('This data compares behavior episodes requiring Emergency intervention, to those that did not.  Additionally, each Emergency intervention requiring behavior episode is listed in the second table along with a specific description of the aggitated behavior.');return false">
 		</td>
 	</tr>
 	<tr class='floatRight' />
@@ -95,6 +95,11 @@ build_page($_SESSION['privilege'],$cgfirst);
 					$sql5="SELECT * FROM scale_table WHERE Target_Population='$Population_strip'";
 					$session5=mysqli_query($conn,$sql5);
 					$row5=mysqli_fetch_assoc($session5);
+
+					//get episode contact
+					$sql_contact = "SELECT * from episode_contact";
+					$session_contact = mysqli_query($conn,$sql_contact);
+					$contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);
 
 					$sum_PRN=0;
 					$sum_PRN_rm=0;
@@ -161,11 +166,11 @@ build_page($_SESSION['privilege'],$cgfirst);
 									print"<tr>\n";
 										print"<th>Start Date</th>\n";
 										print"<th>End Date</th>\n";
-										print"<th>Total PRN</th>\n";
+										print"<th>Total Emergency Int</th>\n";
 										print"<th>Total Episodes</th>\n";
-										print"<th>PRN/Total Episode Ratio</th>\n";
-										print"<th>Ave Duration of PRN Episode (min)</th>\n";
-										print"<th>Ave Duration of non-PRN Episode (min)</th>\n";
+										print"<th>Emergency Int/Total Episode Ratio</th>\n";
+										print"<th>Ave Duration of Emergency Int Episode (min)</th>\n";
+										print"<th>Ave Duration of non-Emergency Int Episode (min)</th>\n";
 									print"</tr>\n";
 									print"<tr><td colspan='7' align='center'><i>During Two Week Observation Period</i></td></tr>";
 									print"<tr>\n";
@@ -189,14 +194,14 @@ build_page($_SESSION['privilege'],$cgfirst);
 									print"</tr>\n";
 								print "</table>";
 
-					print"<h2> 30 Day Listing of PRN Episodes for $res_first $res_last</h2>\n";
+					print"<h2> 30 Day Listing of Emergency Int Episodes for $res_first $res_last</h2>\n";
 
 								print "<table width='100%' class='center table hover' border='1' bgcolor='white'>";
 
 									print"<tr><th>Episode Date</th>\n";
 									print"<th>Episode Time</th>\n";
 									print"<th>Specific Behavior Description</th>\n";
-									print"<th>Thirty Minute PRN Response</th></tr>\n";
+									print"<th>Thirty Minute Emergency Int Response</th></tr>\n";
 
 									print"<tr><td colspan='7' align='center'><i>During Two Week Observation Period</i></td></tr>";
 									$session8=mysqli_query($conn,$sql_rm4);
@@ -207,14 +212,24 @@ build_page($_SESSION['privilege'],$cgfirst);
 											print"<tr>";
 												print"<td>$row8[date]</td>";
 												print"<td>$row8[time]</td>";
+
 												print"<td>$row8[behavior_description]</td>";
-												print"<td>$row8[post_PRN_observation]</td>";
+												// print"<td>$row8[post_PRN_observation]</td>";
+												print"<td>";
+												foreach (explode(',',$row8[post_PRN_observation]) as $key) {
+													foreach ($contact_data as $contact) {
+														if($contact[id]==$key){
+															print"--$contact[contact_type]--";
+														}
+													}
+												}
+												print"</td>";
 											print"</tr>";
 										}
 									}
 									if(!$PRN_given){
 										print"<tr>";
-											print"<td colspan='7' align='center'>No PRNs Given</td>";
+											print"<td colspan='7' align='center'>No Emergency Int Required</td>";
 										print"</tr>";
 									}
 
@@ -235,12 +250,12 @@ build_page($_SESSION['privilege'],$cgfirst);
 									}
 									if(!$PRN_given){
 										print"<tr>";
-											print"<td colspan='7' align='center'>No PRNs Given</td>";
+											print"<td colspan='7' align='center'>No Emergency Int Required</td>";
 										print"</tr>";
 									}
 								print"</table>";
 
-				print"<h3> Enter RN PRN Review Comments Here </h3>";
+				print"<h3> Enter Administrative Emergency Int Review Comments Here </h3>";
 					$report_name = 'PRNreport_'.$row1[residentkey];
 					print"<input type='text' name=$report_name style='background-color: yellow; font-size: 14px; width:99%;' size='130'>";
 		}//end row1 while for residents in Target_Population
@@ -249,7 +264,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 			print"<div id = 'submit'>";
 				print"<input 	type = 'submit'
 											name = 'submit'
-											value = 'Submit PRN Report'>";
+											value = 'Submit Emergency Intervention Report'>";
 			print"</div>";
 	print"</fieldset>";
 	print"</form>";

@@ -258,7 +258,7 @@ set_css()
 
 		print"</td></tr>";
 		print"<tr><td>";
-		print"<b><em>Behavior Type</em></b>";
+		print"<b><em>Behavior Category</em></b>";
 		print"</td></tr>";		
 		print"<tr><td>";
 			// print"<input type='hidden' name='residentkey' value=$residentkey>";		

@@ -37,7 +37,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 
 		<form 	action = "adminhome.php"
 						method = "post">
-			<h2><label>PRN Report</label></h2>
+			<h2><label>Police Intervention Report</label></h2>
 
 <?
 		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
@@ -64,9 +64,9 @@ build_page($_SESSION['privilege'],$cgfirst);
 				if($PRN_report){
 					mysqli_query($conn,"INSERT INTO PRN_report VALUES(null,'$privilegekey','$residentkey','$Population','$date','$PRN_report')");
 					echo mysqli_error($conn);
-					print "<h3>PRN Review Report for ".$row[first]." ".$row[last]." has been logged.</h3>\n";
+					print "<h3>Police Intervention Review Report for ".$row[first]." ".$row[last]." has been logged.</h3>\n";
 				}else{
-					print"<h3 style='color:red'>Please return to PRN Report Page, PRN report was missing for ".$row[first]." ".$row[last].".<h3>";
+					print"<h3 style='color:red'>Please return to Police Interventio Report Page, report was missing for ".$row[first]." ".$row[last].".<h3>";
 				}
 		}// END WHILE.
 ?>

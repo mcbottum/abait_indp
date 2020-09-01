@@ -48,6 +48,10 @@ $names = build_page_pg();
 	}
 
 	$duration=$_REQUEST['duration'];
+	if($duration=="More than 5"){
+		$duration=10;
+	}
+
 
 	$behavior_description=$_REQUEST['behavior_description'];
 	if($behavior_description=='Enter specific description of behavior which required PRN here.'){
@@ -116,11 +120,28 @@ $names = build_page_pg();
 		$intervention_score_6=$intensityA[3]-$intensityA[5];
 	}
 
+	if (isset($_POST['onstaff'])) {
+	    $onstaff = implode(",",$_POST['onstaff']);
+	}else{
+		$onstaff="";
+	}
+
+	if (isset($_POST['presentincident'])) {
+	    $presentincident = implode(",",$_POST['presentincident']);
+	}else{
+		$presentincident="";
+	}
+	if (isset($_POST['presentintervention'])) {
+	    $presentintervention = implode(",",$_POST['presentintervention']);
+	}else{
+		$presentintervention="";
+	}
+
 	$post_PRN_observation = '';
 	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
 	//mysqli_select_db($_SESSION['database'],$conn);	
 
-	mysqli_query($conn, "INSERT INTO behavior_map_data VALUES(null,'$mapkey','$_SESSION[residentkey]','$behavior','$date','$time','$intervention_score_1','$intervention_score_2','$intervention_score_3','$intervention_score_4','$intervention_score_5','$intervention_score_6','$duration','$PRN','$behavior_description','$intensity_before','$post_PRN_observation','$_SESSION[personaldatakey]')");
+	mysqli_query($conn, "INSERT INTO behavior_map_data VALUES(null,'$mapkey','$_SESSION[residentkey]','$behavior','$date','$time','$intervention_score_1','$intervention_score_2','$intervention_score_3','$intervention_score_4','$intervention_score_5','$intervention_score_6','$duration','$PRN','$behavior_description','$onstaff','$presentincident','$presentintervention','$intensity_before','$post_PRN_observation','$_SESSION[personaldatakey]')");
 	$first=$_SESSION['first'];
 	$last=$_SESSION['last'];
 	

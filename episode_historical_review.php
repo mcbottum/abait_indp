@@ -287,15 +287,21 @@ $scale_array=array();
 							print"<tr><td>";
 							print "<label>";
 							print "<input type='checkbox'
+									name='carer_breakdown'
+									value='1'>Carer Involvement</label></td></tr>\n";
+
+							print"<tr><td>";
+							print "<label>";
+							print "<input type='checkbox'
 									name='all_episode'
 									value='1'>All Episode Printout</label></td></tr>\n";
 						print"</table>\n";
 					print"</td></tr>\n";
 				print "</tbody>";
 			print "</table>";
-		print "</td><th>";
+		print "</td>";
 
-		print "</th></tr></table>";// table for javascript comment
+		print "</tr></table>";// table for javascript comment
 ?>
 			<div id = "submit">
 				<input 	type = "submit"

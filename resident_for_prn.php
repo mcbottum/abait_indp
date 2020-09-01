@@ -56,7 +56,7 @@ if($_SESSION['cgfirst']!=""){
 build_page($_SESSION['privilege'],$cgfirst);
 ?>
 <div id="head"><h3>
-Residents for PRN Review
+Residents for Police Intervention Review
 </h3></div>
 <?
 if(isset($_REQUEST['Population'])){
@@ -146,7 +146,7 @@ if($_SESSION['Target_Population']!='all'){
 			print "<div id = 'submit'>";
 				print 	"<input 	type = 'submit'
 								name = 'submit'
-								value = 'Submit Resident for PRN Review'>";
+								value = 'Submit Resident for Review'>";
 			print "</div>";
 		}
 

@@ -330,7 +330,7 @@ $r=0;
                                     print"<span class='tab wide'>Intensity</span>";
                                     print"<span class='tab wide'>Most Effective Intervention</span>";
                                     print"<span class='tab wide'>Intervention to Avoid</span>";
-                                    print"<span class='tab vnarrow'>PRN</span>";
+                                    print"<span class='tab vnarrow'>Police Int</span>";
                                     print"<span class='tab vnarrow'>Plan Created</span>";
                                     print"<span class='tab narrow'>Del</span>";
                                 print"</th>";

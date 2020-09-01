@@ -31,10 +31,10 @@ $names = build_page_pg();
 		method = "post">
 <?
 		$date=date('Y-m-d');
-		$date_start=date('Y-m-d',(strtotime('- 30 days')));	
+		$date_start=date('Y-m-d',(strtotime('- 2 days')));	
 		//print"$date_start";
-		$title1='Thirty Minute Post PRN Response Report';
-		$title2='Residents Receiving PRNs Within the Last Thirty Days';
+		$title1='Thirty Minute Post Emergency Intervention Follow-Up';
+		$title2='Residents Experiencing Emergency Intervention Within the Last 48 Hours';
 		#$residentkey=$_REQUEST['resident_choice'];
 
 		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
@@ -55,6 +55,12 @@ $names = build_page_pg();
 			$sql4="SELECT * FROM behavior_map_data WHERE  date > '$date_start' AND PRN='1'";
 			$sql5="SELECT * FROM scale_table WHERE Target_Population='$Population_row1_strip'";
 		}
+
+		//get episode contact
+		$sql_contact = "SELECT * from episode_contact WHERE Target_Population='$Population_strip'";
+		$session_contact = mysqli_query($conn,$sql_contact);
+		$contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);
+
 		$session4=mysqli_query($conn,$sql4);
 		$session_rm4=mysqli_query($conn,$sql_rm4);
 		$session5=mysqli_query($conn,$sql5);
@@ -62,119 +68,117 @@ $names = build_page_pg();
 		$res_first=$row1['first'];
 		$res_last=$row1['last'];
 		//print(mysqli_num_rows ( $session4 ));
-		print"<table width='100%' class='center'>";
-			print"<tr>";
-				print"<td>";
+
+
+		print"<div class='row justify-content-md-center'>";
+			print"<div class='col col-lg-auto pr-0'>";
 					print"<h2 align='center'> $title1 </h2>\n";
-				print"</td>";
-			print"</tr>";
+			print"</div>";
+		print"</div>";
 			
-			print"<tr>";
-				print"<td>";
+		print"<div class='row justify-content-md-center'>";
+			print"<div class='col col-lg-auto pr-0'>";
 					print"<h3 align='center'> $title2 </h3>\n";
-				print"</td>";
-			print"</tr>";
+			print"</div>";
+		print"</div>";
 ?>
-			<tr>
-				<td align='center'>
-					<input type='button' value='Tap for more Info' onClick="alert('The effectivness and or side effects of a PRN must be observed and recorded thirty minutes after it is administered.  Record observations here.');return false">
+			<div class='row justify-content-md-center'>
+				<div class='col col-lg-auto pr-0'>
+					<input type='button' value='Tap for more Info' onClick="alert('The effectivness and or side effects of any police intervention must be observed and recorded thirty minutes after it is administered.  Record observations here.');return false">
 					<input type='button' value='Print Page' onClick='window.print()'>
-				</td>
-			</tr>
+				</div>
+			</div>
 <?
-			print"<tr>";
-				print"<td>";
-					print "<table class='center'  bgcolor='white'>";
+
+					print "<table class='table-bordered' align='center'>";
+					print"<thead class='thead-light'>";
 						print"<tr>";
-							print"<th>Choose Episode</th>\n";
 							print"<th>Episode Date</th>\n";
-							print"<th>Episode Time</th>\n";
-							$provider_resident = $_SESSION['provider_resident'];
-							print"<th>$provider_resident</th>\n";
-							print"<th>Behavior Description</th></tr>\n";
+							print"<th>Child</th>\n";
+							print"<th>Incident Description</th>\n";
+							print"<th>Post Incident Actions (Check!)</th>";
+					print"</thead>";
+					print"</tr>\n";
 
 							$session8=mysqli_query($conn,$sql_rm4);
 							$PRN_description=0;
-							if(mysqli_num_rows($session8)!=0){
-								while($row8=mysqli_fetch_assoc($session8)){//non-mapped  PRNs
-									print"<tr>";
-										print"<td>";
+							for ($i=0; $i < 1; $i++) { ##Just take one at a time
+								if(mysqli_num_rows($session8)!=0){
+									while($row8=mysqli_fetch_assoc($session8)){//non-mapped  PRNs
 										if(!$row8['post_PRN_observation']){
-											print"<input name='episode_choice_rm' id='episode_choice' type='radio' value='$row8[mapkey]'>";
-											$PRN_description=1;
-										}else{
-											print"recorded $row8[date]";
+											$do_submit=true;
+											print"<tr>";
+												print"<td class='align-middle p-1'><table class='table-borderless'><tr><td>$row8[date]</td></tr><tr><td>$row8[time]</td></tr></table></td>";
+												$session2=mysqli_query($conn,$sql1);
+												while($row2=mysqli_fetch_assoc($session2)){
+													if($row2['residentkey']==$row8['residentkey']){
+														print"<td class='align-middle p-1'>$row2[first] $row2[last]</td>";
+														// added hidden field for the single resident per page 
+														print "<input type='hidden' id='episode_choice_rm', name='episode_choice_rm' value='$row8[mapkey]'>";
+													}
+												}
+												print"<td class='align-middle p-1'>";
+													print"<table class='table-sm table-hover table-bordered' align='center'>";
+														print"<tr>";
+															print"<td class='align-middle p-1'>$row8[behavior_description]</td>";
+														print"</tr>";
+															foreach (explode(',',$row8[pre_PRN_observation]) as $key) {
+																foreach ($contact_data as $contact) {
+																	if($contact[id]==$key){
+																		print"<tr><td class='align-middle m-2'>$contact[contact_type]</td></tr>";
+																	}
+																}
+															}
+													print"</table>";
+												print"</td>";
+												print"<td class='align-middle p-1'>";
+
+													print"<table align='center' class='table-sm table-hover table-bordered'>";
+
+														foreach ($contact_data as $row) {
+															if($row[contact_category]=='post'){
+																print"<tr>";
+																	print"<td class='align-middle p-1'>";
+																		print"<input type = 'checkbox'
+																			class='m-2'
+																			name = 'emergency_intervention[]'
+																			id = '$row[contact_type]'
+																			value = '$row[id]'/>";
+																			print"<label for='$row[contact_type]''>$row[contact_type]</label>";
+																	print"</td>";
+																print"</tr>";
+															}
+														}
+													print"</table>";
+												print"</td>";
+
+											print"</tr>";
 										}
-										print "</td>";
-										print"<td>$row8[date]</td>";
-										print"<td>$row8[time]</td>";
-										$session2=mysqli_query($conn,$sql1);
-										while($row2=mysqli_fetch_assoc($session2)){
-											if($row2['residentkey']==$row8['residentkey']){
-										print"<td>$row2[first] $row2[last]</td>";
-											}
-										}
-										print"<td>$row8[behavior_description]</td>";
-									print"</tr>";
+									}
+								
+								}else{
+											$do_submit=false;
+											print"<div class='row justify-content-md-center'>";
+												print"<div class='col col-lg-auto pr-0'>";
+														print"<h3 style='color:green' align='center'>Currently, No Emergency Intervention Follow-Ups are Required</h3>\n";
+												print"</div>";
+											print"</div>";
 								}
 							}
 
-							$session6=mysqli_query($conn,$sql4);
-							if(mysqli_num_rows($session8)!=0){
-								while($row6=mysqli_fetch_assoc($session6)){//mapped PRNs
-									print"<tr>";
-										print"<td>";
-										if(!$row6['post_PRN_observation']){
-											print"<input name='episode_choice' id='episode_choice' type='radio' value='$row6[behaviormapdatakey]'>";
-											$PRN_description=1;
-										}else{
-											print"recorded $row6[date]";
-										}
-										print"</td>";
-										print"<td>$row6[date]</td>";
-										print"<td>$row6[time]</td>";
-										$session3=mysqli_query($conn,$sql1);
-										while($row3=mysqli_fetch_assoc($session3)){
-											if($row3['residentkey']==$row6['residentkey']){
-										print"<td>$row3[first] $row3[last]</td>";
-											}
-										}
-										print"<td>$row6[behavior_description]</td>";
-									print"</tr>";
-									
-								}
-
-							}else{
-								print"<tr><td align='center' colspan='5'>";
-									print("No medicated episodes have been recorded.");
-								print"</td></tr>";
-							}
 					print"</table>";
-					?>
-					</td>
 
-					
-				</td></tr>
-<?if($PRN_description<>0){
-	?>
-	<tr><td  colspan='4' align='center'>Enter specific description of post PRN response in the yellow text box below.</td></tr>
-	<tr><td  colspan='4' align='center'>
-		<input	type = "text" name="post_PRN_observation" id="post_PRN_observation" style=" background-color: yellow; font-size: 14px; width:99%;" value="" size="130"/>
-	</td></tr>
-	
-</table>				
-					
+
 		
 
-
-			<div id = "submit">	
-				<input 	type = "submit"
-						name = "submit"
-						value = "Submit">
-			</div>
-<?}else{
-	print'</table>';
-	}?>
+	if($do_submit){
+				print"<div id = 'submit'>";	
+					print"<input 	type = 'submit'
+							name = 'submit'
+							value = 'Submit'>";
+				print"</div>";
+	}
+?>
 	</form>
 <?build_footer_pg()?>
 </body>

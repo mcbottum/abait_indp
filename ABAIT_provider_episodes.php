@@ -206,7 +206,7 @@ if($all_episode){//////////////////////////////////////////all_episode//////////
                         print"<th>Behavior Classification</th>";
                         print"<th>Trigger</th>\n";
                         print"<th>Episode Duration</th>";
-                        print"<th>PRN Given</th>";
+                        print"<th>Police Int</th>";
                     print"</tr>";
                 print "</thead>";
                 print "<tbody>";
@@ -486,7 +486,7 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
                                 print"<th>End Date</th>\n";
                                 print"<th>Total Episodes</th>\n";
                                 print"<th>Total Duration of Episodes</th>\n";
-                                print"<th>Total PRN</th>\n";
+                                print"<th>Total Police Int</th>\n";
                             print"</tr>\n";
                         print "</thead>";
                         print "<tbody>";

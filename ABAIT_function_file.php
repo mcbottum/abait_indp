@@ -172,6 +172,91 @@ function ABAIT_pie_graph($values,$graphTitle,$yLabel,$graphNumber){
 	//imagepng($image);
 	imagedestroy($img);
 }
+if($_POST['action'] == 'call_this') {
+  build_canvasjs_graph();
+}
+function build_canvasjs_graph(){
+ 
+$dataPoints1 = array(
+	array("label"=> "2010", "y"=> 36.12),
+	array("label"=> "2011", "y"=> 34.87),
+	array("label"=> "2012", "y"=> 40.30),
+	array("label"=> "2013", "y"=> 35.30),
+	array("label"=> "2014", "y"=> 39.50),
+	array("label"=> "2015", "y"=> 50.82),
+	array("label"=> "2016", "y"=> 74.70)
+);
+$dataPoints2 = array(
+	array("label"=> "2010", "y"=> 64.61),
+	array("label"=> "2011", "y"=> 70.55),
+	array("label"=> "2012", "y"=> 72.50),
+	array("label"=> "2013", "y"=> 81.30),
+	array("label"=> "2014", "y"=> 63.60),
+	array("label"=> "2015", "y"=> 69.38),
+	array("label"=> "2016", "y"=> 98.70)
+);
+	
+?>
+<!DOCTYPE HTML>
+<html>
+<head>  
+<script>
+src="static/js/jquery-3.5.1.min.js">
+window.onload = function () {
+ 
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	theme: "light2",
+	title:{
+		text: "Average Amount Spent on Real and Artificial X-Mas Trees in U.S."
+	},
+	axisY:{
+		includeZero: true
+	},
+	legend:{
+		cursor: "pointer",
+		verticalAlign: "center",
+		horizontalAlign: "right",
+		itemclick: toggleDataSeries
+	},
+	data: [{
+		type: "column",
+		name: "Real Trees",
+		indexLabel: "{y}",
+		yValueFormatString: "$#0.##",
+		showInLegend: true,
+		dataPoints: <?php echo json_encode($dataPoints1, JSON_NUMERIC_CHECK); ?>
+	},{
+		type: "column",
+		name: "Artificial Trees",
+		indexLabel: "{y}",
+		yValueFormatString: "$#0.##",
+		showInLegend: true,
+		dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
+	}]
+});
+chart.render();
+ 
+function toggleDataSeries(e){
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		e.dataSeries.visible = false;
+	}
+	else{
+		e.dataSeries.visible = true;
+	}
+	chart.render();
+}
+ 
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="static/js/canvasjs.min.js"></script>
+</body>
+</html> 
+<?
+}
 
 function set_css(){
 	// set CSS file for either admin or caregiver role
@@ -246,12 +331,15 @@ function set_homepage() {
 	}
 }
 
-function build_page_pg(){
+function build_page_pg($display='none'){
 	if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1200)) {
 	    $nextfile='ABAIT_logout_v2.php';
 		header("Location:$nextfile");
 	}
 	$_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+
+
+
 
 	if($_SESSION['cgfirst']!=""){
 		$first=$_SESSION['cgfirst'];
@@ -261,6 +349,20 @@ function build_page_pg(){
 		$last=$_SESSION['adminlast'];
 	}
 	$home = $_SESSION['home_page'];
+
+	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+    $date=date('Y-m-d');
+    $date_start=date('Y-m-d',(strtotime('- 2 days')));
+    if($_SESSION['privilege']=='caregiver'){
+        $sql_show="SELECT * from resident_mapping WHERE date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND post_PRN_observation IS NULL ORDER BY date";
+    	$session1=mysqli_query($conn,$sql_show);
+    	if($session1->num_rows > 0){
+    		$display='block';
+        // echo "<script>";
+        //     echo "document.getElementById('alert').style.display = 'block';";
+        // echo "</script>";
+    	}
+    }
 
 	?>
 			<div class="page-header p-2">  </div>
@@ -273,13 +375,21 @@ function build_page_pg(){
 			  </button>
 			  <div class="collapse navbar-collapse order-md-last" id="navbarSupportedContent">
 			    <ul class="navbar-nav ml-auto  d-flex align-items-end bd-highlight">
-			      <li class="navbar-text  p-3">
+			     	
+			     </li>
+			      <li class="navbar-text pb-3">
 				      <? 
 				      	print $first;
 				      ?> 
 				      Signed In
 			      </li>
-			      <li class="nav-item">
+			      	<? print "<li class='nav-item  mb-4 ml-1 mr-3'><span id='alert' style='font-size: 1em; display:".$display."; color: Red;'>
+			      		<a href='ABAIT_prn_effect_v2.php' style='color:Red'>
+			      			<i class='fas fa-bell'>
+			      			</i>
+		      			</a>
+		      			</span>";?>
+			      	<li class="nav-item">
 			        <a class="navbar-brand p-3" href="ABAIT_logout_v2.php">Logout</a>
 			      </li>
 			    </ul>
@@ -294,7 +404,7 @@ function build_page_pg(){
 function build_footer_pg(){
 	?>
 	<div class="m-2 p-4 footer_div align-middle text-center">  
-		<a class="footer" href='https://centerfordementiabehaviors.com/'>Center for Dementia Behaviors</a>
+		<a class="footer" href='https://centerfordementiabehaviors.com/'>Center for Agitated Behaviors</a>
 	</div>
 	<?
 }
@@ -327,6 +437,8 @@ function build_page($privilege,$first){
 		$cgfirst=$_SESSION['cgfirst'];
 			print"<table width='98%'>\n";
 			print"<tr>\n";
+
+			print"<td valign='bottom' align='right'><span id='alert' style='font-size: 2em; color: Red;'><i class='fas fa-bell'></i></span>HI</td>\n";
 				print"<td valign='bottom' align='right'>$first logged in | <a href='ABAIT_logout_v2.php'>logout</a></td>\n";
 			print"</tr>\n";
 		print"</table>\n";
@@ -335,6 +447,7 @@ function build_page($privilege,$first){
 			<ul id="globalnav">
 				<li id="gn-home"><a href="caregiverhome.php"></a></li>
 				<li id="gn-logout"><a href="ABAIT_logout_v2.php"></a></li>
+				<li><span id='alert' style='font-size: 2em; color: Red;'><i class='fas fa-bell'></i></span></li>
 			</ul>
 		</div>
 		<?
@@ -346,7 +459,7 @@ ini_set('session.bug_compat_42',0);
 ini_set('session.bug_compat_warn',0);
 	?>
 	<!-- <div id= "footer"><p>&nbsp;Copyright &copy; 2012 ABAIT<br>ABAIT LLC</br></p></div> -->
-	<div id= "footer"><br><a href='https://centerfordementiabehaviors.com/'>Center for Dementia Behaviors</a></br></div>
+	<div id= "footer"><br><a href='https://centerfordementiabehaviors.com/'>Center for Agitated Behaviors</a></br></div>
 	
 	<?}
 	

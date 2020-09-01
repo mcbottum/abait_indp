@@ -96,13 +96,13 @@ build_page($_SESSION['privilege'],$cgfirst);
 				}			
 					else{
 						print "<h4 align='center'>Password taken, Please choose another.</h4>";
-						print "<h4 align='center'><a href='administratordata.php'>Return to Enroll New Administrator Form</a></h4>\n"
+						print "<h4 align='center'><a href='administratordata.php'>Return to Enroll New Administrator Form</a></h4>\n";
 						print "<h4 align='center'><a href='updateMembers.php'>Return to Update Members Form</a></h4>\n";
 				}
 		}				
 		if ($newpassword1!=$newpassword2){
 			print "<h4>Please re-enter passwords, they did not match.</h4>";
-			print "<h4 align='center'><a href='administratordata.php'>Return to Enroll New Administrator Form</a></h4>\n"
+			print "<h4 align='center'><a href='administratordata.php'>Return to Enroll New Administrator Form</a></h4>\n";
 			print "<h4 align='center'><a href='updateMembers.php'>Return to Update Members Form</a></h4>\n";
 		}
 		
