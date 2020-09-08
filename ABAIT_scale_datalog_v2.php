@@ -1,5 +1,9 @@
 <?
-include("ABAIT_function_file.php");session_start();
+session_start();
+include("ABAIT_function_file.php");
+include("ABAIT_mailer.php");
+
+
 if($_SESSION['passwordcheck']!='pass'){
 	header("Location:".$_SESSION['logout']);
 	print $_SESSION['passwordcheck'];
@@ -30,6 +34,7 @@ $names = build_page_pg();
 <h3 align='center'><label>Scale Data Log</label></h3>
 		
 <?
+	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
 	$date_bool=$_REQUEST['date'];
 
 	if($date_bool=="NOW"){
@@ -137,11 +142,151 @@ $names = build_page_pg();
 		$presentintervention="";
 	}
 
-	$post_PRN_observation = '';
-	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
+
+						// New way (checkbox per staff member)
+						$onstaff = [];
+						$presentincident = [];
+						$presentintervention = [];
+
+						// assumes reporting staff is present !!!!!
+						array_push($onstaff, $_SESSION['personaldatakey']);
+						array_push($presentincident, $_SESSION['personaldatakey']);
+						array_push($presentintervention, $_SESSION['personaldatakey']);
+
+						if(isset($_REQUEST['staff_present_1'])){
+							$staff1 = $_REQUEST['staff_present_1'];
+							if($staff1=='-1'){
+								$staff1 = $_REQUEST['temp_staff_present_1'];
+							}elseif($staff1=='-2'){
+								$staff_name = explode($_REQUEST['alternative_staff_1_name']);
+								print_r($staff_name);
+								// # insert new staff into personaldata table, retrive it to get personaldatakey
+								// $staff1 = $row['personaldatakey'];
+							}
+							if(isset($_REQUEST['onstaff1'])){
+								array_push($onstaff, $staff1);
+							}
+							if(isset($_REQUEST['presentincident1'])){
+								array_push($presentincident, $staff1);
+							}
+							if(isset($_REQUEST['presentintervention1'])){
+								array_push($presentintervention, $staff1);
+							}
+						}
+						if(isset($_REQUEST['staff_present_2'])){
+							$staff2 = $_REQUEST['staff_present_2'];
+							if($staff2=='-1'){
+								$staff1 = $_REQUEST['temp_staff_present_2'];
+							}elseif($staff2=='-2'){
+								$staff_name = explode($_REQUEST['alternative_staff_2_name']);
+								print_r($staff_name);
+								// # insert new staff into personaldata table, retrive it to get personaldatakey
+								// $staff1 = $row['personaldatakey'];
+							}
+							// if($staff1=='-1'){
+							// 	$staff_name = explode($_REQUEST['alternative_staff_2_name']);
+							// 	$staff_name_sql = "SELECT * FROM personaldata WHERE first=$staff_name[0] and last=$staff_name[1]";
+
+							// }
+							if(isset($_REQUEST['onstaff2'])){
+								array_push($onstaff, $staff2);
+							}
+							if(isset($_REQUEST['presentincident2'])){
+								array_push($presentincident, $staff2);
+							}
+							if(isset($_REQUEST['presentintervention2'])){
+								array_push($presentintervention, $staff2);
+							}
+						}
+						if(isset($_REQUEST['staff_present_3'])){
+							$staff3 = $_REQUEST['staff_present_3'];
+							if($staff3=='-1'){
+								$staff3 = $_REQUEST['temp_staff_present_3'];
+							}elseif($staff1=='-2'){
+								$staff_name = explode($_REQUEST['alternative_staff_3_name']);
+								print_r($staff_name);
+								// # insert new staff into personaldata table, retrive it to get personaldatakey
+								// $staff1 = $row['personaldatakey'];
+							}
+
+							// }
+							if(isset($_REQUEST['onstaff3'])){
+								array_push($onstaff, $staff3);
+							}
+							if(isset($_REQUEST['presentincident3'])){
+								array_push($presentincident, $staff3);
+							}
+							if(isset($_REQUEST['presentintervention3'])){
+								array_push($presentintervention, $staff3);
+							}
+						}
+
+
+						$onstaff = implode(",",$onstaff);
+						$presentincident = implode(",",$presentincident);
+						$presentintervention = implode(",",$presentintervention);
+
+						$residentkey=$_SESSION['residentkey'];
+						$personaldatakey=$_SESSION['personaldatakey'];
+
+						$pd_sql = "SELECT * from personaldata WHERE personaldatakey='$personaldatakey'";
+						$pd_session=mysqli_query($conn,$pd_sql);
+						$row=mysqli_fetch_assoc($pd_session);
+						$carer=$row['first']." ".$row['last'];
+						$r_sql = "SELECT * from residentpersonaldata where residentkey ='$residentkey'";
+						$r_session=mysqli_query($conn,$r_sql);
+						$row=mysqli_fetch_assoc($r_session);
+						$resident=$row['first']." ".$row['last'];
+
+
+//// GATHERING INFO ABOUT PRN OR EMERGENCY SERVICES AND SENDING EMAIL
+
+
+						$PRN=$_REQUEST['PRN'];
+
+						if($PRN){
+							$pre_PRN_observation=$_REQUEST['PRN'];
+							$pre_PRN_observation = implode(',',$_POST['emergency_intervention']);
+							$service = $_POST['emergency_intervention'];
+						}else{
+							$pre_PRN_observation = Null;
+							$service = Null;							
+						}
+
+
+						if($PRN){
+							// sendMail();
+							$sender='admin@abehave.com';
+							$recipient='michael@abehave.com';
+
+							//get episode contact
+							$sql_contact = "SELECT * from episode_contact  WHERE contact_category='during'";
+							$session_contact = mysqli_query($conn,$sql_contact);
+							$contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);
+
+							$contact_string="";
+
+							foreach ($contact_data as $row) {
+								foreach ($service as $key) {	
+									if($key==$row[id]){
+										$contact_string .=$row[contact_type].", ";
+									}
+								}
+							}
+
+							$body = "<h3><p>".$carer. " managed an episode involving ".$resident."</p></h3>";
+							$body .= "<p><b>The episode occured at: </b>".$time. "on ".$date."</p><p><b>Duration: </b>".$duration." minutes.</p><p><b>Behavior Descriptions: </b>".$behavior." ,".$behavior_description."</p><p><b>Trigger: </b>".$trigger."</p><p><b>Additional services  required to manage the episode: </b>".$contact_string;
+
+							echo $body;
+							// sendMail($sender,$recipeint,$body);
+						}
+
+
+	$post_PRN_observation = null;
+	
 	//mysqli_select_db($_SESSION['database'],$conn);	
 
-	mysqli_query($conn, "INSERT INTO behavior_map_data VALUES(null,'$mapkey','$_SESSION[residentkey]','$behavior','$date','$time','$intervention_score_1','$intervention_score_2','$intervention_score_3','$intervention_score_4','$intervention_score_5','$intervention_score_6','$duration','$PRN','$behavior_description','$onstaff','$presentincident','$presentintervention','$intensity_before','$post_PRN_observation','$_SESSION[personaldatakey]')");
+	mysqli_query($conn, "INSERT INTO behavior_map_data VALUES(null,'$mapkey','$_SESSION[residentkey]','$behavior','$date','$time','$intervention_score_1','$intervention_score_2','$intervention_score_3','$intervention_score_4','$intervention_score_5','$intervention_score_6','$duration','$PRN','$behavior_description','$onstaff','$presentincident','$presentintervention','$intensity_before','$pre_PRN_observation',null,'$_SESSION[personaldatakey]')");
 	$first=$_SESSION['first'];
 	$last=$_SESSION['last'];
 	

@@ -355,8 +355,10 @@ function build_page_pg($display='none'){
     $date_start=date('Y-m-d',(strtotime('- 2 days')));
     if($_SESSION['privilege']=='caregiver'){
         $sql_show="SELECT * from resident_mapping WHERE date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND post_PRN_observation IS NULL ORDER BY date";
+        $sql_show_map="SELECT * from behavior_map_data WHERE date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND post_PRN_observation IS NULL ORDER BY date";
     	$session1=mysqli_query($conn,$sql_show);
-    	if($session1->num_rows > 0){
+    	$session2=mysqli_query($conn,$sql_show_map);
+    	if($session1->num_rows > 0 || $session2->num_rows > 0){
     		$display='block';
         // echo "<script>";
         //     echo "document.getElementById('alert').style.display = 'block';";
@@ -413,7 +415,9 @@ function build_footer_pg(){
 function build_page($privilege,$first){
 	// Logout time: 
 	if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1200)) {
+
 	    $nextfile='ABAIT_logout_v2.php';
+	    header_remove("Location:$nextfile");
 		header("Location:$nextfile");
 	}
 	$_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp

@@ -47,8 +47,8 @@ $names = build_page_pg();
 		$row1=mysqli_fetch_assoc($session1);
 		$Population_row1_strip=mysqli_real_escape_string($conn,$row1['Target_Population']);
 		if($_SESSION['privilege']=='caregiver'){
-			$sql_rm4="SELECT * from resident_mapping WHERE date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND PRN='1' ORDER BY date";
-			$sql4="SELECT * FROM behavior_map_data WHERE  date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND PRN='1' ORDER BY date";
+			$sql_rm4="SELECT * from resident_mapping WHERE date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND PRN='1' AND post_PRN_observation IS NULL ORDER BY date";
+			$sql4="SELECT * FROM behavior_map_data WHERE  date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND PRN='1' AND post_PRN_observation IS NULL ORDER BY date";
 			$sql5="SELECT * FROM scale_table WHERE Target_Population='$Population_row1_strip'";
 		}else{
 			$sql_rm4="SELECT * from resident_mapping WHERE date > '$date_start' AND PRN='1'";
@@ -100,61 +100,136 @@ $names = build_page_pg();
 					print"</thead>";
 					print"</tr>\n";
 
+
 							$session8=mysqli_query($conn,$sql_rm4);
-							$PRN_description=0;
-							for ($i=0; $i < 1; $i++) { ##Just take one at a time
+
+							$session4=mysqli_query($conn,$sql4);
+
+							$table = NULL;
+
+							$mapkey = NULL;
+
+								$first = true;
 								if(mysqli_num_rows($session8)!=0){
 									while($row8=mysqli_fetch_assoc($session8)){//non-mapped  PRNs
-										if(!$row8['post_PRN_observation']){
-											$do_submit=true;
-											print"<tr>";
-												print"<td class='align-middle p-1'><table class='table-borderless'><tr><td>$row8[date]</td></tr><tr><td>$row8[time]</td></tr></table></td>";
-												$session2=mysqli_query($conn,$sql1);
-												while($row2=mysqli_fetch_assoc($session2)){
-													if($row2['residentkey']==$row8['residentkey']){
-														print"<td class='align-middle p-1'>$row2[first] $row2[last]</td>";
-														// added hidden field for the single resident per page 
-														print "<input type='hidden' id='episode_choice_rm', name='episode_choice_rm' value='$row8[mapkey]'>";
+										if($first){
+											if(!$row8['post_PRN_observation']){
+												$do_submit=true;
+												$table = "resident_mapping";
+												$mapkey= $row8['mapkey'];
+												print"<tr>";
+													print"<td class='align-middle p-1'><table class='table-borderless'><tr><td>$row8[date]</td></tr><tr><td>$row8[time]</td></tr></table></td>";
+													$session2=mysqli_query($conn,$sql1);
+													while($row2=mysqli_fetch_assoc($session2)){
+
+														if($row2['residentkey']==$row8['residentkey']){
+															print"<td class='align-middle p-1'>$row2[first] $row2[last]</td>";
+															// added hidden field for the single resident per page 
+															
+														}
 													}
-												}
-												print"<td class='align-middle p-1'>";
-													print"<table class='table-sm table-hover table-bordered' align='center'>";
-														print"<tr>";
-															print"<td class='align-middle p-1'>$row8[behavior_description]</td>";
-														print"</tr>";
-															foreach (explode(',',$row8[pre_PRN_observation]) as $key) {
-																foreach ($contact_data as $contact) {
-																	if($contact[id]==$key){
-																		print"<tr><td class='align-middle m-2'>$contact[contact_type]</td></tr>";
+													print"<td class='align-middle p-1'>";
+														print"<table class='table-sm table-hover table-bordered' align='center'>";
+															print"<tr>";
+																print"<td class='align-middle p-1'>$row8[behavior_description]</td>";
+															print"</tr>";
+																foreach (explode(',',$row8[pre_PRN_observation]) as $key) {
+																	foreach ($contact_data as $contact) {
+																		if($contact[id]==$key){
+																			print"<tr><td class='align-middle m-2'>$contact[contact_type]</td></tr>";
+																		}
 																	}
 																}
+														print"</table>";
+													print"</td>";
+													print"<td class='align-middle p-1'>";
+
+														print"<table align='center' class='table-sm table-hover table-bordered'>";
+
+															foreach ($contact_data as $row) {
+																if($row[contact_category]=='post'){
+																	print"<tr>";
+																		print"<td class='align-middle p-1'>";
+																			print"<input type = 'checkbox'
+																				class='m-2'
+																				name = 'emergency_intervention[]'
+																				id = '$row[contact_type]'
+																				value = '$row[id]'/>";
+																				print"<label for='$row[contact_type]''>$row[contact_type]</label>";
+																		print"</td>";
+																	print"</tr>";
+																}
 															}
-													print"</table>";
-												print"</td>";
-												print"<td class='align-middle p-1'>";
+														print"</table>";
+													print"</td>";
 
-													print"<table align='center' class='table-sm table-hover table-bordered'>";
-
-														foreach ($contact_data as $row) {
-															if($row[contact_category]=='post'){
-																print"<tr>";
-																	print"<td class='align-middle p-1'>";
-																		print"<input type = 'checkbox'
-																			class='m-2'
-																			name = 'emergency_intervention[]'
-																			id = '$row[contact_type]'
-																			value = '$row[id]'/>";
-																			print"<label for='$row[contact_type]''>$row[contact_type]</label>";
-																	print"</td>";
-																print"</tr>";
-															}
-														}
-													print"</table>";
-												print"</td>";
-
-											print"</tr>";
+												print"</tr>";
+											}
+										$first = false;
 										}
 									}
+
+								}
+								else if(mysqli_num_rows($session8)==0 && mysqli_num_rows($session4)!=0){
+									while($row4=mysqli_fetch_assoc($session4)){//non-mapped  PRNs
+										if($first){
+											if(!$row4['post_PRN_observation']){
+												$do_submit=true;
+												$table = "behavior_map_data";
+												$mapkey= $row4['behaviormapdatakey'];
+												print"<tr>";
+													print"<td class='align-middle p-1'><table class='table-borderless'><tr><td>$row4[date]</td></tr><tr><td>$row4[time]</td></tr></table></td>";
+													$session2=mysqli_query($conn,$sql1);
+													while($row2=mysqli_fetch_assoc($session2)){
+														if($row2['residentkey']==$row4['residentkey']){
+
+															print"<td class='align-middle p-1'>$row2[first] $row2[last]</td>";
+															// added hidden field for the single resident per page 
+	
+														}
+													}
+													print"<td class='align-middle p-1'>";
+														print"<table class='table-sm table-hover table-bordered' align='center'>";
+															print"<tr>";
+																print"<td class='align-middle p-1'>$row8[behavior_description]</td>";
+															print"</tr>";
+																foreach (explode(',',$row4[pre_PRN_observation]) as $key) {
+																	foreach ($contact_data as $contact) {
+																		if($contact[id]==$key){
+																			print"<tr><td class='align-middle m-2'>$contact[contact_type]</td></tr>";
+																		}
+																	}
+																}
+														print"</table>";
+													print"</td>";
+													print"<td class='align-middle p-1'>";
+
+														print"<table align='center' class='table-sm table-hover table-bordered'>";
+
+															foreach ($contact_data as $row) {
+																if($row[contact_category]=='post'){
+																	print"<tr>";
+																		print"<td class='align-middle p-1'>";
+																			print"<input type = 'checkbox'
+																				class='m-2'
+																				name = 'emergency_intervention[]'
+																				id = '$row[contact_type]'
+																				value = '$row[id]'/>";
+																				print"<label for='$row[contact_type]''>$row[contact_type]</label>";
+																		print"</td>";
+																	print"</tr>";
+																}
+															}
+														print"</table>";
+													print"</td>";
+
+												print"</tr>";
+											}
+										$first = false;
+										}
+									}
+
+
 								
 								}else{
 											$do_submit=false;
@@ -164,7 +239,7 @@ $names = build_page_pg();
 												print"</div>";
 											print"</div>";
 								}
-							}
+							
 
 					print"</table>";
 
@@ -172,6 +247,8 @@ $names = build_page_pg();
 		
 
 	if($do_submit){
+		print "<input type='hidden' id='mapkey', name='mapkey' value='$mapkey'>";
+		print "<input type='hidden' id='table', name='table' value='$table'>";
 				print"<div id = 'submit'>";	
 					print"<input 	type = 'submit'
 							name = 'submit'

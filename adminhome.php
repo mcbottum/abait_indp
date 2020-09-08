@@ -40,6 +40,7 @@ $last=$_SESSION['adminlast'];
 $privilege=$_SESSION['privilege'];
 build_page($_SESSION['privilege'],$_SESSION['adminfirst']);
 $_SESSION['residentkey']=null;
+
 ?>
 
 

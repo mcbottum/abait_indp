@@ -294,6 +294,9 @@ if(empty($creation_date)){
 
 //array of all interventions mapped to behavior
 $intervention_sum=array();
+
+echo $behavior;
+echo "HI";
 $inters = mysqli_query($conn,"SELECT *  FROM interventions WHERE behavior_class='$behavior'");
 while ($inter=mysqli_fetch_assoc($inters)){
 	$intervention_sum[$inter['intervention']]=1;

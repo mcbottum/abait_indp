@@ -29,28 +29,33 @@ $names = build_page_pg();
 ?>
 <h3 align='center'><label>Emergency Intervention Effect Report</label></h3>
 <?
-	$episode_choice_rm=$_REQUEST['episode_choice_rm'];
 
-	echo $episode_choice_rm;
-	echo "HEEEEE    ";
 
-	$episode_choice=$_REQUEST['episode_choice'];
+
+
+	$mapkey = $_REQUEST['mapkey'];
+	$table = $_REQUEST['table'];
+
+
+
+	// $episode_choice=$_REQUEST['episode_choice'];
 	$post_PRN_observation=implode(',',$_REQUEST['emergency_intervention']);
-	echo $post_PRN_observation;
 
 
-	if($post_PRN_observation=="Enter specific description of response to police intervention in this yellow box."){
-		$post_PRN_observation=null;
-	}
-	if($episode_choice_rm){
-		$sql9="UPDATE resident_mapping SET post_PRN_observation='$post_PRN_observation' WHERE mapkey='$episode_choice_rm'";
-	}elseif($episode_choice){
-		$sql9="UPDATE behavior_map_data SET post_PRN_observation='$post_PRN_observation' WHERE behaviormapdatakey='$episode_choice'";
+	// if($post_PRN_observation=="Enter specific description of response to police intervention in this yellow box."){
+	// 	$post_PRN_observation=null;
+	// }
+	// $sql="UPDATE '$insert_table' SET post_PRN_observation='$post_PRN_observation' WHERE '$key'='$episode_choice'";
+	if($table == 'resident_mapping'){
+		$sql="UPDATE resident_mapping SET post_PRN_observation='$post_PRN_observation' WHERE mapkey='$mapkey'";
+	}elseif($table == 'behavior_map_data'){
+		$sql="UPDATE behavior_map_data SET post_PRN_observation='$post_PRN_observation' WHERE behaviormapdatakey='$mapkey'";
 	}
 	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());	
-	$retval = mysqli_query($conn,$sql9);
+	$retval = mysqli_query($conn,$sql);
 	if($post_PRN_observation){
-		print "<h4 align='center'>  The observation: <em> $post_PRN_observation</em> has been logged</h4>";
+		// print "<h4 align='center'>  The observation: <em> $post_PRN_observation</em> has been logged</h4>";
+		print "<h4 align='center'>  The observation has been logged</h4>";
 	}else{
 		print "<br><em>An observation has not been logged.  Please return to the previous page and enter a police intervention response observation.</em></br>";
 	}

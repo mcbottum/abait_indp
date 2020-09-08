@@ -339,22 +339,20 @@ function check(selTag) {
 	$session_carer = mysqli_query($conn,$sql_carer);
 	$carer_data=$session_carer->fetch_all(MYSQLI_ASSOC);
 
-	// //get episode contact
-	// $sql_contact = "SELECT * from episode_contact WHERE Target_Population='$Population_strip' AND contact_category='during'";
-	// $session_contact = mysqli_query($conn,$sql_contact);
-	// $contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);	
+	//get episode contact
+	$sql_contact = "SELECT * from episode_contact WHERE Target_Population='$Population_strip' AND contact_category='during'";
+	$session_contact = mysqli_query($conn,$sql_contact);
+	$contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);	
 
+	//Get house Carer Names
+	$Population_strip=mysqli_real_escape_string($conn,$Target_Population);
+	$sql4="SELECT * FROM personaldata WHERE House='$_SESSION[house]'";
+	$session4=mysqli_query($conn,$sql4);
 
-
-	// Get house Carer Names
-	// $Population_strip=mysqli_real_escape_string($conn,$Target_Population);
-	// $sql4="SELECT * FROM personaldata WHERE House='$_SESSION[house]'";
-	// $session4=mysqli_query($conn,$sql4);
-
-	// // Get all Carer Names
-	// $Population_strip=mysqli_real_escape_string($conn,$Target_Population);
-	// $sql6="SELECT * FROM personaldata WHERE Target_Population='$Population_strip'";
-	// $session6=mysqli_query($conn,$sql6);
+	// Get all Carer Names
+	$Population_strip=mysqli_real_escape_string($conn,$Target_Population);
+	$sql6="SELECT * FROM personaldata WHERE Target_Population='$Population_strip'";
+	$session6=mysqli_query($conn,$sql6);
 
 	//Get slow triggers
 	$sql5="SELECT * FROM scale_table WHERE  scale_name='Slow Trigger'";
@@ -618,7 +616,7 @@ function check(selTag) {
 				print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_1' id='staff_present_1' onchange='show(this)'>";
 					print "<option value=''>Select Staff Member</option>";
 					foreach ($carer_data as $row) {
-						if($row[house]==$_SESSION['house']){
+						if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
 							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
 						}
 					}
@@ -632,7 +630,9 @@ function check(selTag) {
 				print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='temp_staff_present_1' id='temp_staff_present_1' style='display: none;' onchange='show(this)'>";
 					print "<option value=''>Select Staff Member</option>";
 					foreach ($carer_data as $row) {
+						if( $_SESSION['personaldatakey']!=$row['personaldatakey']){
 							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+						}
 					}
 				print"</select>";
 			print"</div>";
@@ -684,7 +684,7 @@ function check(selTag) {
 				print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='staff_present_2' id='staff_present_2' style='display: none;' onchange='show(this)'>";
 					print "<option value=''>Select Staff Member</option>";
 					foreach ($carer_data as $row) {
-						if($row[house]==$_SESSION['house']){
+						if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
 							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
 						}
 					}
@@ -698,7 +698,9 @@ function check(selTag) {
 				print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='temp_staff_present_2' id='temp_staff_present_2' style='display: none;' onchange='show(this)'>";
 					print "<option value=''>Select Staff Member</option>";
 					foreach ($carer_data as $row) {
+						if( $_SESSION['personaldatakey']!=$row['personaldatakey']){
 							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+						}
 					}
 				print"</select>";
 			print"</div>";
@@ -750,7 +752,7 @@ function check(selTag) {
 				print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_3' id='staff_present_3' style='display: none;' onchange='show(this)'>";
 					print "<option value=''>Select Staff Member</option>";
 					foreach ($carer_data as $row) {
-						if($row[house]==$_SESSION['house']){
+						if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
 							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
 						}
 					}
@@ -763,8 +765,11 @@ function check(selTag) {
 			print"<div class='col col-lg-auto pr-0'>";
 				print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='temp_staff_present_3' id='temp_staff_present_3' style='display: none;' onchange='show(this)'>";
 					print "<option value=''>Select Staff Member</option>";
+
 					foreach ($carer_data as $row) {
+						if( $_SESSION['personaldatakey']!=$row['personaldatakey']){
 							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+						}
 					}
 				print"</select>";
 			print"</div>";
@@ -816,7 +821,7 @@ function check(selTag) {
 				print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_4' id='staff_present_4' style='display: none;' onchange='show(this)'>";
 					print "<option value=''>Select Staff Member</option>";
 					foreach ($carer_data as $row) {
-						if($row[house]==$_SESSION['house']){
+						if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
 							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
 						}
 					}
@@ -943,17 +948,17 @@ function check(selTag) {
 								<tr>
 									<th style='text-align: center'> Intervention </th>
 								<?
-								// foreach ($contact_data as $row) {
-								// 	print"</tr>";
-								// 		print"<td>";
-								// 			print"<input type = 'checkbox'
-								// 				name = 'emergency_intervention[]'
-								// 				id = '$row[contact_type]'
-								// 				value = '$row[id]'/>";
-								// 				print"<label for='$row[contact_type]''>$row[contact_type]</label>";
-								// 		print"</td>";
-								// 	print"</tr>";
-								// }
+								foreach ($contact_data as $row) {
+									print"</tr>";
+										print"<td>";
+											print"<input type = 'checkbox'
+												name = 'emergency_intervention[]'
+												id = '$row[contact_type]'
+												value = '$row[id]'/>";
+												print"<label for='$row[contact_type]''>$row[contact_type]</label>";
+										print"</td>";
+									print"</tr>";
+								}
 								?>
 
 							</table>

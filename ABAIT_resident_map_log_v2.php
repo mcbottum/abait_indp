@@ -115,6 +115,11 @@ set_css()
 						$presentincident = [];
 						$presentintervention = [];
 
+						// assumes reporting staff is present !!!!!
+						array_push($onstaff, $_SESSION['personaldatakey']);
+						array_push($presentincident, $_SESSION['personaldatakey']);
+						array_push($presentintervention, $_SESSION['personaldatakey']);
+
 						if(isset($_REQUEST['staff_present_1'])){
 							$staff1 = $_REQUEST['staff_present_1'];
 							if($staff1=='-1'){
@@ -190,16 +195,17 @@ set_css()
 
 						$PRN=$_REQUEST['PRN'];
 
-			
-						$pre_PRN_observation=$_REQUEST['pre_PRN_observation'];
-						
-
-						$pre_PRN_observation = implode(',',$_POST['emergency_intervention']);
-						$service = $_POST['emergency_intervention'];
+						if($PRN){
+							$pre_PRN_observation=$_REQUEST['pre_PRN_observation'];
+							$pre_PRN_observation = implode(',',$_POST['emergency_intervention']);
+							$service = $_POST['emergency_intervention'];
+						}else{
+							$pre_PRN_observation = Null;
+							$service = Null;							
+						}
 
 
 						if($PRN){
-							// sendMail();
 							$sender='admin@abehave.com';
 							$recipient='michael@abehave.com';
 

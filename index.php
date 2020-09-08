@@ -6,7 +6,7 @@
 // redirect if remote sign in
 $a=getallheaders();
 if(array_key_exists("abait",$a)){
-	header('location: http://localhost:80/agitationpasscheck.php');
+	header('location: http://localhost:80/ABAIT_passcheck_v2.php');
 	die;
 }
 session_start();

@@ -172,8 +172,116 @@ function show2( selTag, int ) {
         document.getElementById("intervention_"+int).style.display = "block";
         obj2.style.display = "table-row";
         obj3.style.display = "table-row";
-        obj4.style.display = "table-row";
-        obj5.style.display = "table-row";
+        obj4.style.display = "block";
+        obj5.style.display = "block";
+    }
+    document.getElementById("intensityAfterHeader_3").style.display = "block";
+}
+
+function show3( selTag ) {
+    obj1 = document.getElementById("pre_PRN_observation_tag");
+    obj = document.getElementById("pre_PRN_observation_table");
+    customTrig = document.getElementById("custom_trigger");
+    customSlowTrig = document.getElementById("custom_slow_trigger");
+
+    if ( selTag.value== 'other' ){
+        customTrig.style.display = "block";
+    }else if ( selTag.value== 'new' ){
+        customSlowTrig.style.display = "block";
+    } else if (selTag.id=="PRN_div" && selTag.selectedIndex == 1 ) {
+        obj1.style.display = "block";
+        obj.style.display = "block";
+        obj1.style.align="center";
+    } else {
+        obj1.style.display = "none";
+        obj.style.display = "none";
+    }
+    if(selTag.id=='staff_present_1' && selTag.value > 1){
+        document.getElementById("staff_present_checkbox_div_1").style.display = "block";
+        document.getElementById("staff_present_2").style.display = "block";
+        document.getElementById("alternative_staff1").style.display = "none";
+        document.getElementById("temp_staff_present_1").style.display = "none";
+
+    }else if(selTag.id=='staff_present_1' && selTag.value==0){
+        document.getElementById("staff_present_checkbox_div_1").style.display = "none";
+        document.getElementById("alternative_staff1").style.display = "none";
+        document.getElementById("staff_present_checkbox_div_1").style.display = "block";
+
+    }else if(selTag.id=='staff_present_1' && selTag.value==-1){
+        document.getElementById("alternative_staff1").style.display = "block";
+        document.getElementById("staff_present_checkbox_div_1").style.display = "block";
+        document.getElementById("staff_present_2").style.display = "block";
+        document.getElementById("temp_staff_present_1").style.display = "none";
+
+    }else if(selTag.id=='staff_present_1' && selTag.value==-2){
+        document.getElementById("staff_present_checkbox_div_1").style.display = "block";
+        document.getElementById("staff_present_2").style.display = "block";
+        document.getElementById("alternative_staff1").style.display = "none";
+        document.getElementById("temp_staff_present_1").style.display = "block";
+    }
+
+    if(selTag.id=='staff_present_2' && selTag.value > 1){
+        document.getElementById("staff_present_checkbox_div_2").style.display = "block";
+        document.getElementById("staff_present_3").style.display = "block";
+        document.getElementById("alternative_staff2").style.display = "none";
+        document.getElementById("temp_staff_present_2").style.display = "none";
+    }else if(selTag.id=='staff_present_2' && selTag.value==0){
+        document.getElementById("staff_present_checkbox_div_2").style.display = "none";
+        document.getElementById("alternative_staff2").style.display = "none";
+    }else if(selTag.id=='staff_present_2' && selTag.value==-1){
+        document.getElementById("alternative_staff2").style.display = "block";
+        document.getElementById("staff_present_checkbox_div_2").style.display = "block";
+        document.getElementById("staff_present_3").style.display = "block";
+        document.getElementById("temp_staff_present_2").style.display = "none";
+    }else if(selTag.id=='staff_present_2' && selTag.value==-2){
+        document.getElementById("staff_present_checkbox_div_2").style.display = "block";
+        document.getElementById("staff_present_3").style.display = "block";
+        document.getElementById("alternative_staff2").style.display = "none";
+        document.getElementById("temp_staff_present_2").style.display = "block";
+    }
+
+    if(selTag.id=='staff_present_3' && selTag.value > 1){
+        document.getElementById("staff_present_checkbox_div_3").style.display = "block";
+        // document.getElementById("staff_present_4").style.display = "block";
+        document.getElementById("alternative_staff3").style.display = "none";
+        document.getElementById("temp_staff_present_3").style.display = "none";
+    }else if(selTag.id=='staff_present_3' && selTag.value==0){
+        document.getElementById("staff_present_checkbox_div_3").style.display = "none";
+        document.getElementById("alternative_staff2").style.display = "none";
+
+    }else if(selTag.id=='staff_present_3' && selTag.value==-1){
+        document.getElementById("staff_present_checkbox_div_3").style.display = "none";
+        document.getElementById("alternative_staff3").style.display = "block";
+        document.getElementById("staff_present_checkbox_div_3").style.display = "block";
+        document.getElementById("temp_staff_present_3").style.display = "none";
+    }else if(selTag.id=='staff_present_3' && selTag.value==-2){
+        document.getElementById("staff_present_checkbox_div_3").style.display = "block";
+        // document.getElementById("staff_present_2").style.display = "block";
+        document.getElementById("alternative_staff3").style.display = "none";
+        document.getElementById("temp_staff_present_3").style.display = "block";
+    }
+if(document.getElementById("PRN_div").selectedIndex == 1){
+        obj1.style.display = "block";
+        obj.style.display = "block";
+        obj1.style.align="center";
+    }
+}
+
+function check(selTag) {
+    if(document.getElementById("presentincident1").checked == true || document.getElementById("presentintervention1").checked == true){
+        document.getElementById("onstaff1").checked = true;
+    }else{
+        document.getElementById("onstaff1").checked = false;
+    }
+    if(document.getElementById("presentincident2").checked == true || document.getElementById("presentintervention2").checked == true){
+        document.getElementById("onstaff2").checked = true;
+    }else{
+        document.getElementById("onstaff2").checked = false;
+    }
+    if(document.getElementById("presentincident3").checked == true || document.getElementById("presentintervention3").checked == true){
+        document.getElementById("onstaff3").checked = true;
+    }else{
+        document.getElementById("onstaff3").checked = false;
     }
 }
 
@@ -190,9 +298,9 @@ function showIntervention( selTag,  ) {
     }
 }
 
-function checked(id){
-    return document.getElementById(id).checked;
-}
+// function checked(id){
+//     return document.getElementById(id).checked;
+// }
 
 function hide(id){
     var toggle=0;
@@ -334,20 +442,51 @@ input {
         $trigger=$_SESSION['trigger'];
     }
     $_SESSION['trigger']=$trigger;
-    $conn1=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
+    $conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
     $sql1="SELECT * FROM behavior_maps WHERE mapkey='$trigger'";
     $sql2="SELECT SUM(intervention_score_1), SUM(intervention_score_2), SUM(intervention_score_3), SUM(intervention_score_4), SUM(intervention_score_5), SUM(intervention_score_6) FROM behavior_map_data WHERE mapkey='$trigger'";
     $sql3="SELECT * FROM scale_table WHERE scale_name LIKE '$_SESSION[scale_name]%'";
-    $conn1=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
-    $scale=mysqli_query($conn1,$sql1);
-    $score_sum=mysqli_query($conn1,$sql2);
-    $intensity=mysqli_query($conn1,$sql3);
+    $conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
+    $scale=mysqli_query($conn,$sql1);
+    $score_sum=mysqli_query($conn,$sql2);
+    $intensity=mysqli_query($conn,$sql3);
 
+    $Target_Population=$_SESSION['Target_Population'];
+    $Population_strip=mysqli_real_escape_string($conn,$Target_Population);
+    // For getting caregivers
+    $sql_carer = "SELECT * from personaldata WHERE Target_Population='$Population_strip'";
+    $session_carer = mysqli_query($conn,$sql_carer);
+    $carer_data=$session_carer->fetch_all(MYSQLI_ASSOC);
+
+    //get episode contact
+    $sql_contact = "SELECT * from episode_contact WHERE Target_Population='$Population_strip' AND contact_category='during'";
+    $session_contact = mysqli_query($conn,$sql_contact);
+    $contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);    
+
+    //Get house Carer Names
+    $Population_strip=mysqli_real_escape_string($conn,$Target_Population);
+    $sql4="SELECT * FROM personaldata WHERE House='$_SESSION[house]'";
+    $session4=mysqli_query($conn,$sql4);
+
+    //Get slow triggers
+    $sql5="SELECT * FROM scale_table WHERE  scale_name='Slow Trigger'";
+    $session5=mysqli_query($conn,$sql5);
+    if($session5){
+        $row5 = mysqli_fetch_array($session5);
+        $slow_triggers = explode(',',$row5['triggers']);
+    } 
 
     // Get all Carer Names
-    $Population_strip=mysqli_real_escape_string($conn1,$Target_Population);
-    $sql4="SELECT * FROM personaldata WHERE House='$_SESSION[house]'";
-    $session4=mysqli_query($conn1,$sql4);
+    $Population_strip=mysqli_real_escape_string($conn,$Target_Population);
+    $sql6="SELECT * FROM personaldata WHERE Target_Population='$Population_strip'";
+    $session6=mysqli_query($conn,$sql6);
+
+
+
+
+
+
+
 
     $first=$_SESSION['first'];
     $last=$_SESSION['last'];
@@ -358,17 +497,29 @@ input {
     print "<input type='hidden' id='residentkey', name='residentkey' value='".$residentkey."'>";
     print "<input type='hidden', name='trig' value='".$trig."'>";
         ?>
+
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-auto d-flex justify-content-center">
             <h3 align='center'><label>Date and Time Information</label></h3>
+        </div>
+    </div>
 
 
 
 
-            <table class="center table-sm table-hover ">
-                <tr align="center">
-                    <th align="center" > Select if episode is taking place now</th>
-                </tr>
-                <tr align="center">
-                    <td height='40' align="center" id = "date_header">
+
+
+
+
+
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-auto d-flex justify-content-center">
+                   <h5>Select if episode is taking place now</h5>
+        </div>
+    </div>
+
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-auto d-flex justify-content-center">
                         <input  
                                 name = "date"
                                 id = "now"
@@ -376,23 +527,28 @@ input {
                                 style="width:29%"
                                 onclick="hide('now')"
                                 value = "NOW">
-                    </td>
-                </tr>
-                <tr align="center">
-                    <th align="center"> Or select date and time</th>
-                </tr>
-                <tr align="center">
-                    <td height='40' align="center" id="datetimepicker5_cell">
-                        <div class="input-wrapper">
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-auto d-flex justify-content-center">
+                    <h5>Or select date and time</h5>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-auto d-flex justify-content-center">
+                        <div class="input-wrapper" id="datetimepicker5_cell">
                             <input onchange="checkDate()" class="form-control" id="datetimepicker5"  name="datetimepicker"  autocomplete="off" type="text" placeholder='Touch to enter'/>
                         </div>
 
-                    </td>
-                <tr align="center">
-                    <th align="center">Duration of episode</th>
-                </tr>
-                <tr align="center">
-                    <td height='40'  align="center">
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-auto d-flex justify-content-center">
+                   <h5>Duration of episode</h5>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-auto d-flex justify-content-center">
                         <select class='selBox custom-select-background custom-select-lg mb-3' data-width='auto' name = "duration" id="durat">
                             <option value = "">Choose Minutes</option>
                             <?
@@ -402,9 +558,16 @@ input {
                             ?>
                             <option value = "105">More than 5 minutes</option>
                         </select>
-                    </td>
-                </tr>
-            </table>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
         <?
     $row=mysqli_fetch_assoc($scale);
     $row2=mysqli_fetch_assoc($score_sum);
@@ -416,11 +579,18 @@ input {
     $row3=mysqli_fetch_assoc($intensity);
     $color_array = ['#FF000','#00FF00','#ADFF2F','#FFD700','#FF7F50','#FF0000'];
     // $color_array = ['red','orange','yellow','lightgreen','green','blue'];
+   print" <div class='row justify-content-md-center'>";
+       print" <div class='col col-lg-auto'>";
+            print"<h3 align='center'><label>Select Behavior Intensity</label></h3>\n";
+        print"</div>";
+    print"</div>";
 
-    print"<h3 align='center'><label>Select Behavior Intensity</label></h3>\n";
+
+
+
+
+// THESE ARE THE BEHAVIOR BEFORE 
         print"<table align='center' class='table-sm table-hover'>\n";
-
-            // THESE ARE THE BEHAVIOR BEFORE 
             print "<div id='behaviorIntensityBefore'>";
                 print "<tr>";
                     print "<th align='center'>Behavior Intensity</th>";
@@ -438,35 +608,40 @@ input {
                     print "</tr>";
                 }
             print "</div>";  
-        // print "</table>";
+        print "</table>";
+// END BEHAVIOR INTENSITY BEFORE
 
-    //HERE ARE THE INTERVENTIONS
+
+//HERE ARE THE INTERVENTIONS
     for($int=1; $int<7; $int++){
         if($int<3){  //allow five interventions
-            print"<tr align='center'  id='intensityAfterHeader_$int'>";
+            print"<div class='row justify-content-md-center' align='center'  id='intensityAfterHeader_$int'>";
                 if($int==1){
-                    print "<td colspan='6'><h3>Intervention $int</h3></td></tr>";
+                    print "<div class='col col-lg-auto'><h3>Intervention $int</h3></div>";
                 }else{
-                    print "<td  colspan='6' align: center'><h3>Intervention $int <span style='color:Lime'>(optional)</span></h3</td></tr>";
+                    print "<div class='col col-lg-auto'><h3>Intervention $int <span style='color:Lime'>(optional)</span></h3></div>";
                 }
+            print"</div>";
         }elseif($int<6 && $int>2){  //allow five interventions
-            print"<tr id='intensityAfterHeader_$int' align='center' class='behaviorIntensityAfter' style='display:none'>";
-                print "<td  colspan='6'><h3>Intervention $int <span style='color:Lime'>(optional)</span></h3></td></tr>";
-        }else{
-            print"<tr align='center' class='behaviorIntensityAfter'>";
-                print "<td  colspan='6' ><h3>Was Police Intervention Required?</h3></td></tr>";
+            print"<div class='row justify-content-md-center behaviorIntensityAfter' >";
+                print "<div class='col col-lg-auto' id='intensityAfterHeader_$int' align='center' style='display:none'><h3>Intervention $int <span style='color:Lime'>(optional)</span></h3></div>";
+            print"</div>";
         }
 
+
         if($int<3){
-            print"<tr id='behaviorIntensityAfterSelect_$int' align='center' class='behaviorIntensityAfter'>\n";
+            print"<div class='row justify-content-md-center behaviorIntensityAfter' id='behaviorIntensityAfterSelect_$int' align='center' >\n";
             $display = "block";
         }elseif($int<6 && $int>2){
-            print"<tr id='behaviorIntensityAfterSelect_$int' align='center' class='behaviorIntensityAfter'>\n";
+            print"<div class='row justify-content-md-center behaviorIntensityAfter' id='behaviorIntensityAfterSelect_$int' align='center' >\n";
             $display = "none";
         }else{
-            print"<tr id='behaviorIntensityAfterSelect_$int' align='center' class='behaviorIntensityAfter'>\n";
+            print"<div class='row justify-content-md-center behaviorIntensityAfter' id='behaviorIntensityAfterSelect_$int' align='center' >\n";
         }
-                print"<td colspan='2' style='padding:0px'>\n";
+
+
+///
+                print"<div class='col col-md-auto' style='padding:0px'>\n";
                     if($int<6){
                         $t_intervention = 'intervention'.$int;
                         print"<select  data-width='auto' class='selBox custom-select-background custom-select-lg mb-3' name ='intervention$int' id='intervention_$int' onchange='reload(this); show2(this, $int)' style='display:$display'>";
@@ -486,137 +661,383 @@ input {
                         <optGroup><option class='red' style='color:blue; font-weight:bold' value='new_intervention' style='color:red'>New Idea</option>
                         </optGroup>
                         <?
-                    }else{
-                        print"<select data-width='auto' class='selBox custom-select-background custom-select-lg mb-3' name='intervention6' id='PRN' onchange='show(this)' >";
-                            print "<optGroup>";
-                                print"<option value='0' selected>NO</option>";
-                                print"<option value='1'>YES</option>";
-                            print "</optGroup>";
-                    }
                         print "</select>\n";
-                print"</td>\n";
-            print"</tr>\n";
-            
-        if($int==6){
-            print"<tr id='behavior_tr1'>";
-                    print"<td colspan='6' align='center'>";
-                        print"<div id='behavior_description_tag' style='display: none; color: red;'>Enter specific description of behavior which required Police Intervention in yellow text-box.</div>";
-                print "</td>";
-            print "</tr>";
-
-            print "<tr id='behavior_tr2'>";
-                print "<td  colspan='6' align='center'>";
-                    print "<div>";
-
-                        print"<input type = 'text' name='behavior_description' id='behavior_description'; style='display: none; background-color: yellow; align:center; width:99%;' value=''/>";
-                        
-                    print "</div>";
-                print "</td>";
-            print "</tr>";
-
-
-            print "<tr>";
-                print"<td align='center'>";
-                    print"<div id = 'onstaff'>";
-                        print"<tr><td  colspan='6' align='center'><h3> Other Staff Present?</h3></td>";
-                         
-
-                            print "<table class='table' align='center' width='75%'border='1' bgcolor='white'>";
-                                print"<tr><th>Carer</th><th>On Staff</th><th>Present during incident</th><th>Present during intervention</th>";
-                                    while($row4 = mysqli_fetch_assoc($session4)){
-                                    
-                                            print"<tr>";
-                                                print"<td>$row4[first] $row4[last]</td>";
-                                                print"<td style='text-align: center; vertical-align: middle;'>";
-
-                                                            print"<input type = 'checkbox'
-                                                            name = 'onstaff[]'
-                                                            id='$row4[personaldatakey]'
-                                                            value = '$row4[personaldatakey]'/>";
-
-                                                print"</td>";
-                                                print"<td style='text-align: center; vertical-align: middle;'>";
-                                                            print"<input type = 'checkbox'
-                                                            name = 'presentincident[]'
-                                                            id='$row4[personaldatakey]'
-                                                            value = '$row4[personaldatakey]'/>";
-                                                print"</td>";
-                                                print"<td style='text-align: center; vertical-align: middle;'>";
-                                                            print"<input type = 'checkbox'
-                                                            name = 'presentintervention[]'
-                                                            id='$row4[personaldatakey]'
-                                                            value = '$row4[personaldatakey]'/>";
-                                                print"</td>";
-                                            print"</tr>";
-                                    }
-                            print"</table>";
-
-
-                    print"</div>";
-                print"</td>";
-            print "</tr>";
-
-
-
-        }
-
-
-
-
-
-
-      
-print "<tr><td colspan=2 style='padding:0px'>";
-
-            print "<table class='table-sm table-hover'>";
-                    if($int==1){
-                        print "<tbody colspan=4 id='behaviorIntensityAfterButton_$int'>";
-                    }else{
-                        print "<tbody colspan=4 id='behaviorIntensityAfterButton_$int' style='display:none'>";
                     }
-                            print "<tr id='behaviorIntensityAfterButtonHeader_$int' class='behaviorIntensityAfter' >";
-                                    print "<th width='100%'   align='center'>Behavior Intensity</th>";
-                                    if($int<6){
-                                        print "<th  align='center'><span style='color:red'>AFTER </span> $int  Intervention</th>";
-                                    }else{
-                                        print "<th  align='center'><span style='color:red'>AFTER </span> Police Intervention</th>";
-                                    }
-                            print "</tr>";
+                        
+                print"</div>\n";
+            print"</div>\n";
+        
 
-                            for($i=1;$i<6;$i++){
-                                print"<tr id='behaviorIntensityAfterButton_$int' class='raised behaviorIntensityAfter' style='background:$color_array[$i]'>";
-                                $comment='comment_'.$i;
-                                        print"<td class='scaleIntensity'  style='padding-left:4px'>$row3[$comment]</td>";
-                                        print"<td  align='center'><label><input type='radio'
-                                                    name='intensityA$int'
-                                                    id='intensity$i'
-                                                    value=$i></label>";
-                                        print "</td>";
-                                print "</tr>";
+//AFTER INTENSITY OBSERVATIONS
+      
+            print "<div class='row justify-content-md-center'>";
+                print"<div class='col col-lg-auto m-2'>";
 
-                            }
-                     print "</tbody>";
-            print "</table>";
+                        print "<table class='table-sm m-1 table-hover'>";
+                                if($int==1){
+                                    print "<tbody id='behaviorIntensityAfterButton_$int'>";
+                                }else{
+                                    print "<tbody id='behaviorIntensityAfterButton_$int' style='display:none'>";
+                                }
+                                        print "<tr id='behaviorIntensityAfterButtonHeader_$int' class='behaviorIntensityAfter' >";
+                                                print "<th width='100%'   align='center'>Behavior Intensity</th>";
+                                                if($int<6){
+                                                    print "<th  align='center'><span style='color:red'>AFTER </span> $int  Intervention</th>";
+                                                }
+                                        print "</tr>";
 
+                                        for($i=1;$i<6;$i++){
+                                            print"<tr id='behaviorIntensityAfterButton_$int' class='raised behaviorIntensityAfter' style='background:$color_array[$i]'>";
+                                            $comment='comment_'.$i;
+                                                    print"<td class='scaleIntensity'  style='padding-left:4px'>$row3[$comment]</td>";
+                                                    print"<td  align='center'><label><input type='radio'
+                                                                name='intensityA$int'
+                                                                id='intensity$i'
+                                                                value=$i></label>";
+                                                    print "</td>";
+                                            print "</tr>";
 
-
-
-
-            print "</td></tr>";
-
-
-
-
-
-            }
-
-
-
-
- print "</tr>";
+                                        }
+                                 print "</tbody>";
+                        print "</table>";
 
 
-    print "</table>";
+                print "</div>";
+            print"</div>";
+
+    } // END $intervention FOR LOOP                        
+// EMERGENCY CONTACT REQUIRED
+?>
+
+        <div class="row justify-content-md-center">
+            <div class='col col-lg-auto d-flex justify-content-center'>
+                    <h3><label>Emergency Intervention Required?</label></h3>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class='col col-lg-auto d-flex justify-content-center'>
+                    <?
+                    print"<select data-width='auto' id='PRN_div'class='selBox custom-select-background custom-select-lg mb-3'  name='PRN' onchange='show3(this)' >";
+                        print "<optGroup>";
+                            print"<option value='0' selected>NO</option>";
+                            print"<option value='1'>YES</option>";
+                        print "</optGroup>";
+                    print"</select>";
+
+                    ?>  
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class='col col-lg-auto d-flex justify-content-center'>
+                <div id='pre_PRN_observation_tag' style='display: none; color: red;'>Select specific description of behavior which required Emergency Service.</div>
+            </div>
+        </div>
+<!--         <div class="row justify-content-md-center">
+            <div class='col col-lg-8 d-flex justify-content-center'> -->
+                <div id='pre_PRN_observation_table' style='display: none'>
+                    <!-- <textarea class="form-control form-control-ta" name='pre_PRN_observation' id='pre_PRN_observation'; style='display: none; background-color: yellow;  value=''/></textarea> -->
+                    <div class="row justify-content-md-center">
+                        <div class='col col-lg-8'>
+                            <table align='center' class='table-md table-hover table-bordered'>
+                                <tr>
+                                    <th style='text-align: center'> Intervention </th>
+                                <?
+                                foreach ($contact_data as $row) {
+                                    print"</tr>";
+                                        print"<td>";
+                                            print"<input type = 'checkbox'
+                                                class='m-2'
+                                                name = 'emergency_intervention[]'
+                                                id = '$row[contact_type]'
+                                                value = '$row[id]'/>";
+                                                print"<label for='$row[contact_type]''>$row[contact_type]</label>";
+                                        print"</td>";
+                                    print"</tr>";
+                                }
+                                ?>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+<!--             </div>
+        </div> -->
+<?
+// END EMERGENCY CONTACT REQUIRED
+
+
+    print"<div class='row justify-content-md-center'>";
+        print"<div class='col col-lg-auto d-flex justify-content-center'>";
+             print"<h3> Other Staff Present?</h3>";
+        print"</div>";
+    print"</div>";
+
+
+// SELECT DROPDOWNS FOR STAFF PRESENT for staff 1 present  id='staff_present_1' id='staff_present_checkbox_div_1'
+                  
+
+// for select dropdown for staff 1 present  id='staff_present_1' id='staff_present_checkbox_div_1'
+        $i=0;
+        print"<div class='row justify-content-lg-center'>";
+            print"<div class='col col-lg-auto pr-0 d-flex justify-content-center'>";
+                print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_1' id='staff_present_1' onchange='show3(this)'>";
+                    print "<option value=''>Select Staff Member</option>";
+                    foreach ($carer_data as $row) {
+                        if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                            print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+                        }
+                    }
+                    print "<option value='-2'>Temporary Staff</option>";
+                    print "<option value='-1'>Agency Staff</option>";
+                print"</select>";
+
+            print"</div>";
+
+            print"<div class='col col-lg-auto pr-0'>";
+                print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='temp_staff_present_1' id='temp_staff_present_1' style='display: none;' onchange='show3(this)'>";
+                    print "<option value=''>Select Staff Member</option>";
+                    foreach ($carer_data as $row) {
+                        if( $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                            print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+                        }
+                    }
+                print"</select>";
+            print"</div>";
+
+            print"<div class='col col-lg-auto ml-0 mb-2' id='alternative_staff1' style='display: none;'>";
+                print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_1_name'/></textarea>";
+            print"</div>";
+
+            print"<div class='col col-lg-auto ml-0 mb-2' id='staff_present_checkbox_div_1' style='display: none;'>";        
+                print "<table class='table-sm table-hover table-bordered ' align='center'>";
+                    print"<tr><th style='text-align: center'>Interaction</th></tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox'
+                            name = 'onstaff1'
+                            id = 'onstaff1'
+                            value = '1'/>";
+                            print"<label for='onstaff1'>On Staff</label>";
+                        print "</td>";
+                    print "</tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox' onchange='check(this)'
+                            name = 'presentincident1'
+                            id = 'presentincident1'
+                            value = '1'/>";
+                            print"<label for='presentincident1'>Present during incident</label>";
+                        print "</td>";
+                    print "</tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox' onchange='check(this)'
+                            name = 'presentintervention1'
+                            id = 'presentintervention1'
+                            value = '1'/>";
+                            print"<label for='presentintervention1'>Present during intervention</label>";
+                        print "</td>";
+                    print "</tr>";
+                print "</table>";
+            print"</div>";
+
+        print"</div>";
+
+
+// for select dropdown for staff 2 present  id='staff_present_2' id='staff_present_checkbox_div_2'
+        $i=0;
+        print"<div class='row justify-content-md-center'>";
+            print"<div class='col col-lg-auto pr-0'>";
+                print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='staff_present_2' id='staff_present_2' style='display: none;' onchange='show3(this)'>";
+                    print "<option value=''>Select Staff Member</option>";
+                    foreach ($carer_data as $row) {
+                        if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                            print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+                        }
+                    }
+                    print "<option value='-2'>Temporary Staff</option>";
+                    print "<option value='-1'>Agency Staff</option>";
+                print"</select>";
+            print"</div>";
+
+
+            print"<div class='col col-lg-auto pr-0'>";
+                print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='temp_staff_present_2' id='temp_staff_present_2' style='display: none;' onchange='show3(this)'>";
+                    print "<option value=''>Select Staff Member</option>";
+                    foreach ($carer_data as $row) {
+                        if( $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                            print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+                        }
+                    }
+                print"</select>";
+            print"</div>";
+
+            print"<div class='col col-lg-auto ml-0 mb-2' id='alternative_staff2' style='display: none;'>";
+                print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_2_name'/></textarea>";
+            print"</div>";
+
+            print"<div class='col col-lg-auto ml-0 mb-2' id='staff_present_checkbox_div_2' style='display: none;'>";        
+                print "<table class='table-sm table-hover table-bordered' align='center'>";
+                    print"<tr><th style='text-align: center'>Interaction</th></tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox'
+                            name = 'onstaff2'
+                            id = 'onstaff2'
+                            value = '1'/>";
+                            print"<label for='onstaff2'>On Staff</label>";
+                        print "</td>";
+                    print "</tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox' onchange='check(this)'
+                            name = 'presentincident2'
+                            id = 'presentincident2'
+                            value = '1'/>";
+                            print"<label for='presentincident2'>Present during incident</label>";
+                        print "</td>";
+                    print "</tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox' onchange='check(this)'
+                            name = 'presentintervention2'
+                            id = 'presentintervention2'
+                            value = '1'/>";
+                            print"<label for='presentintervention2'>Present during intervention</label>";
+                        print "</td>";
+                    print "</tr>";
+                print "</table>";
+            print"</div>";
+
+        print"</div>";
+
+
+// for select dropdown for staff 3 present  id='staff_present_3' id='staff_present_checkbox_div_3'
+        $i=0;
+        print"<div class='row justify-content-md-center'>";
+            print"<div class='col col-lg-auto pr-0'>";
+                print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_3' id='staff_present_3' style='display: none;' onchange='show3(this)'>";
+                    print "<option value=''>Select Staff Member</option>";
+                    foreach ($carer_data as $row) {
+                        if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                            print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+                        }
+                    }
+                    print "<option value='-2'>Temporary Staff</option>";
+                    print "<option value='-1'>Agency Staff</option>";
+                print"</select>";
+            print"</div>";
+
+
+            print"<div class='col col-lg-auto pr-0'>";
+                print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='temp_staff_present_3' id='temp_staff_present_3' style='display: none;' onchange='show3(this)'>";
+                    print "<option value=''>Select Staff Member</option>";
+
+                    foreach ($carer_data as $row) {
+                        if( $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                            print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+                        }
+                    }
+                print"</select>";
+            print"</div>";
+
+            print"<div class='col col-lg-auto ml-0 mb-2' id='alternative_staff3' style='display: none;'>";
+                print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_3_name'/></textarea>";
+            print"</div>";
+
+            print"<div class='col col-lg-auto ml-0 mb-2' id='staff_present_checkbox_div_3' style='display: none;'>";        
+                print "<table class='table-sm table-hover table-bordered' align='center'>";
+                    print"<tr><th style='text-align: center'>Interaction</th></tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox'
+                            name = 'onstaff3'
+                            id = 'onstaff3'
+                            value = '1'/>";
+                            print"<label for='onstaff3'>On Staff</label>";
+                        print "</td>";
+                    print "</tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox' onchange='check(this)'
+                            name = 'presentincident3'
+                            id = 'presentincident3'
+                            value = '1'/>";
+                            print"<label for='presentincident3'>Present during incident</label>";
+                        print "</td>";
+                    print "</tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox' 
+                            onchange='check(this)'
+                            name = 'presentintervention3'
+                            id = 'presentintervention3'
+                            value = '1'/>";
+                            print"<label for='presentintervention3'>Present during intervention</label>";
+                        print "</td>";
+                    print "</tr>";
+                print "</table>";
+            print"</div>";
+
+        print"</div>";
+
+    // for select dropdown for staff 1 present  id='staff_present_4' id='staff_present_checkbox_div_4'
+        $i=0;
+        print"<div class='row justify-content-md-center'>";
+            print"<div class='col col-lg-auto pr-0'>";
+                print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_4' id='staff_present_4' style='display: none;' onchange='show3(this)'>";
+                    print "<option value=''>Select Staff Member</option>";
+                    foreach ($carer_data as $row) {
+                        if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                            print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+                        }
+                    }
+                    print "<option value='-1'>Temporary Staff</option>";
+                print"</select>";
+
+            print"</div>";
+            print"<div class='col col-lg-auto ml-0 mb-2' id='staff_present_checkbox_div_4' style='display: none;'>";        
+                print "<table class='table-sm table-hover table-bordered' align='center'>";
+                    print"<tr><th style='text-align: center'>Interaction</th></tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox'
+                            name = 'onstaff4'
+                            id = 'onstaff4'
+                            value = '1'/>";
+                            print"<label for='onstaff4'>On Staff</label>";
+                        print "</td>";
+                    print "</tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox'
+                            onchange='check(this)'
+                            name = 'presentincident4'
+                            id = 'presentincident4'
+                            value = '1'/>";
+                            print"<label for='presentincident4'>Present during incident</label>";
+                        print "</td>";
+                    print "</tr>";
+                    print "<tr>";
+                        print "<td>";
+                            print"<input type = 'checkbox'
+                            onchange='check(this)'
+                            name = 'presentintervention4'
+                            id = 'presentintervention4'
+                            value = '1'/>";
+                            print"<label for='presentintervention4'>Present during intervention</label>";
+                        print "</td>";
+                    print "</tr>";
+                print "</table>";
+            print"</div>";
+            print"<div class='col col-lg-auto ml-0 mb-2' id='alternative_staff4' style='display: none;'>";
+                print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_4_name'/></textarea>";
+            print"</div>";
+        print"</div>";
+
+// END SELECT DROPDOWNS FOR STAFF PRESENT
+
 ?>  
         <div id="submit">
             <input  style="color:#A65100"
