@@ -52,16 +52,47 @@ function radiobutton(rb)
     return valid;
 }//end form validation function 
 
-function reload(selTag) {
+
+    function reload(selTag) {
+
+
+    
+    var hiddenField = document.createElement("input");
 
     if(selTag.name=='update_resident'){
-        self.location='residentdata.php?rk='+selTag.value;
+        var location='residentdata.php';
+        var rk = selTag.value;
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "rk");
+        hiddenField.setAttribute("value", rk);
     }else if(selTag.name=='update_caregiver'){
-        self.location='caregiverdata.php?ck='+selTag.value;  
+        var location='caregiverdata.php';
+        var ck = selTag.value;
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "ck");
+        hiddenField.setAttribute("value", ck);
     }else if(selTag.name=='update_admin'){
-        self.location='administratordata.php?ak='+selTag.value;      
+        var location='administratordata.php';
+        var ak = selTag.value;
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "ak");
+        hiddenField.setAttribute("value", ak);      
     }
+    form.setAttribute("action", location);
+    form.appendChild(hiddenField);
+    form.submit();
+
+
+
+    // if(selTag.name=='update_resident'){
+    //     self.location='residentdata.php?rk='+selTag.value;
+    // }else if(selTag.name=='update_caregiver'){
+    //     self.location='caregiverdata.php?ck='+selTag.value;  
+    // }else if(selTag.name=='update_admin'){
+    //     self.location='administratordata.php?ak='+selTag.value;      
+    // }
 }
+
 
 var $table = $('table.scroll'),
     $bodyCells = $table.find('tbody tr:first').children(),

@@ -52,6 +52,7 @@ set_css()
 </style>
 </head>
 <body class="container">
+
 	<?	
 		$names = build_page_pg();
 	?>

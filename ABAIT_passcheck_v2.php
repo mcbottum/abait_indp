@@ -1,12 +1,35 @@
 <?ob_start();
  include("autoLoader.php");
- $a=getallheaders();
+
+ //// FOR GET
+ // $a=getallheaders();
+ // $a=apache_request_headers();
+ // if(array_key_exists("abait",$a)){
+ // 	$remote_login_guid = $a['abait'];
+ // }else{
+ // 	$remote_login_guid = Null;
+ // }
+
+///// FOR POST
+// if(isset($_REQUEST['abait'])){
+// 	$remote_login_guid=$_REQUEST['abait'];
+// }else{
+// 	$remote_login_guid = Null;
+// }
+// error_log($a['abait']);
+$a = json_decode(file_get_contents('php://input'), true);
  if(array_key_exists("abait",$a)){
- 	$remote_login_guid = $a[abait];
+ 	$remote_login_guid = $a['abait'];
  	}else{
  		$remote_login_guid = Null;
  	}
- 	// echo $remote_login_guid;
+
+// if(isset($_POST["abait"])){
+// 	$remote_login_guid = htmlspecialchars($_POST["abait"]);
+// }else{
+// 	$remote_login_guid = Null;
+// }
+
 session_start();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -25,20 +48,21 @@ charset=utf-8"/>
 </head>
 <body><?
 //if host, user or database password is changed change script on lines 28  54-58 of this file
+
 //for local
 $db = 'agitation_indp';
 $_SESSION['db'] = $db;
-//$host = 'michael-bottums-MacBook-Pro.local';
 $host = 'localhost';
 $db_user = 'abait';  // for agitation
 $db_pwd = 'abait123!';
+
+// for remote:
+// $db = 'agitation_indp';
+// $_SESSION['db'] = $db;
+// $host = 'mysqlindp.abaitscale.com';
 // $db_user = 'abaitindp';
 // $db_pwd = 'h1$6T#5IWx';
-//for remote
-// $db = 'agitation';
-// $host = 'localhost';
-// $db_user = 'admin';
-// $db_pwd = 'abait';
+
 $_SESSION['passwordcheck']='fail';
 // $_SESSION['HOME']='index.php';
 $_SESSION['HOME']='ABAIT_Home.php';

@@ -133,7 +133,11 @@ set_css()
 	$resident = '';
 	$house=$_SESSION['house'];
 	if($_SESSION['privilege']=='caregiver' && !isset($_GET["k"])){
-		$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' AND house='$house' order by first";
+		if($house=='all'){
+			$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
+		}else{
+			$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' AND house='$house' order by first";
+		}
 		$session1=mysqli_query($conn, $_SESSION['sql']);
 
 		if(mysqli_num_rows($session1)==1){
@@ -209,7 +213,11 @@ set_css()
 		}elseif($_SESSION['privilege']=='admin'){
 			$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
 		}elseif($_SESSION['privilege']=='caregiver'){
-			$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' AND house='$house' order by first";
+			if($house=='all'){
+				$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
+			}else{
+				$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' AND house='$house' order by first";
+			}
 		}//end get residents elseif	
 	}
 	elseif($residentkey&&!$scale_name){
@@ -284,9 +292,9 @@ set_css()
 		//					}
 						$sn_array[]=$row3['scale_name'];
 					}
-					print "<optGroup>";
-						print  "<option class='red_text' value='unmapped_behavior'>Record a new Behavior</option>";
-					print "</optGroup>";
+					// print "<optGroup>";
+					// 	print  "<option class='red_text' value='unmapped_behavior'>Record a new Behavior</option>";
+					// print "</optGroup>";
 				print "</select>";
 				print"</td></tr>";
 	}

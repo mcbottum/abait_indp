@@ -63,18 +63,30 @@ print $_SESSION['SITE']
 	<h2 class="m-3" align='center'>ABAIT Tutorials and Education Resources</h2>
 
 
-			<table class='center'>
-				<tr><td align='center'>
+<!-- 			<table class='center'>
+				<tr><td align='center'> -->
+	<div class="row justify-content-md-center">
+		<div class='col col-lg-3 mt-4'>
 					<a  class="btn  btn-lg btn-block p-5" href='ABAIT_education_v2.php'>ABAIT Education Module</a>
-				</td></tr>
+			</div>
+		</div>
+<!-- 				</td></tr>
 
-				<tr><td align='center'>
-					<a class="btn  btn-lg btn-block p-5" href='ABAIT_triggers_and_interventions_v2.php'>Catalog of Scale Triggers and Interventions</a>
-				</td></tr>
-				<tr><td align='center'>
+				<tr><td align='center'> -->
+	<div class="row justify-content-md-center">
+		<div class='col col-lg-3 mt-4'>
+					<a class="btn  btn-lg btn-block p-5" href='ABAIT_triggers_and_interventions_v2.php'>Catalog of Triggers and Interventions</a>
+			</div>
+		</div>
+<!-- 				</td></tr>
+				<tr><td align='center'> -->
+	<div class="row justify-content-md-center">
+		<div class='col col-lg-3 mt-4'>
 					<a class="btn btn-lg btn-block p-5" href='ABAIT_resident_fact_sheet_v2.php'>Quick Reference to Resident Triggers and Interventions</a>
-				</td></tr>
-			</table>
+			</div>
+		</div>
+<!-- 				</td></tr>
+			</table> -->
 
 		<? build_footer_pg() ?>
 

@@ -201,7 +201,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 									print"<tr><th>Episode Date</th>\n";
 									print"<th>Episode Time</th>\n";
 									print"<th>Specific Behavior Description</th>\n";
-									print"<th>Thirty Minute Emergency Int Response</th></tr>\n";
+									print"<th>48 Hour Emergency Int Response</th></tr>\n";
 
 									print"<tr><td colspan='7' align='center'><i>During Two Week Observation Period</i></td></tr>";
 									$session8=mysqli_query($conn,$sql_rm4);
@@ -219,7 +219,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 												foreach (explode(',',$row8[post_PRN_observation]) as $key) {
 													foreach ($contact_data as $contact) {
 														if($contact[id]==$key){
-															print"--$contact[contact_type]--";
+															print"--$contact[contact_type]";
 														}
 													}
 												}
@@ -243,7 +243,15 @@ build_page($_SESSION['privilege'],$cgfirst);
 												print"<td>$row6[date]</td>";
 												print"<td>$row6[time]</td>";
 												print"<td>$row6[behavior_description]</td>";
-												print"<td>$row6[post_PRN_observation]</td>";
+												print"<td>";
+												foreach (explode(',',$row6[post_PRN_observation]) as $key) {
+													foreach ($contact_data as $contact) {
+														if($contact[id]==$key){
+															print"--$contact[contact_type]";
+														}
+													}
+												}
+												print"</td>";
 											print"</tr>";
 										}
 

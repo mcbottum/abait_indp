@@ -86,7 +86,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 					$privilegekey=$_SESSION['personaldatakey'];
 
 					if($action=='Enroll'){
-						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password','$accesslevel','$first','$last',null,null,null,null,null,null,null,null,'$privilegekey','$Target_Population','$house')");
+						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password','$accesslevel','$first','$last',null,null,null,null,null,null,null,null,null,'$privilegekey','$Target_Population','$house')");
 						print "<h4 align='center'>$first $last has been entered as a new Healthcare Provider.</h4>\n";
 						print "<h4 align='center'><a href='caregiverdata.php'>Return to Enroll New Caregiver Form</a></h4>\n";
 					}else if($action=='Update'){

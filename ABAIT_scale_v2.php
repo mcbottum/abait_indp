@@ -552,11 +552,16 @@ input {
                         <select class='selBox custom-select-background custom-select-lg mb-3' data-width='auto' name = "duration" id="durat">
                             <option value = "">Choose Minutes</option>
                             <?
-                            for($t = 1;$t <= 5;$t +=1){
-                                print "<option value = $t>$t</option>";
-                            }
+                            // for($t = 1;$t <= 5;$t +=1){
+                            //     print "<option value = $t>$t</option>";
+                            // }
+                            print "<option value = 5>less than 5</option>";
+                            print "<option value = 10>6-10</option>";
+                            print "<option value = 30>11-30</option>";
+                            print "<option value = 60>30-60</option>";
+                            print "<option value = 120>1-2 hrs</option>";
                             ?>
-                            <option value = "105">More than 5 minutes</option>
+<!--                             <option value = "105">More than 5 minutes</option> -->
                         </select>
         </div>
     </div>
@@ -806,7 +811,7 @@ input {
             print"</div>";
 
             print"<div class='col col-lg-auto ml-0 mb-2' id='alternative_staff1' style='display: none;'>";
-                print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_1_name'/></textarea>";
+                print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_1_name' name='alternative_staff_1_name'/></textarea>";
             print"</div>";
 
             print"<div class='col col-lg-auto ml-0 mb-2' id='staff_present_checkbox_div_1' style='display: none;'>";        
@@ -874,7 +879,7 @@ input {
             print"</div>";
 
             print"<div class='col col-lg-auto ml-0 mb-2' id='alternative_staff2' style='display: none;'>";
-                print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_2_name'/></textarea>";
+                print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_2_name' name='alternative_staff_2_name'/></textarea>";
             print"</div>";
 
             print"<div class='col col-lg-auto ml-0 mb-2' id='staff_present_checkbox_div_2' style='display: none;'>";        
@@ -943,7 +948,7 @@ input {
             print"</div>";
 
             print"<div class='col col-lg-auto ml-0 mb-2' id='alternative_staff3' style='display: none;'>";
-                print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_3_name'/></textarea>";
+                print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_3_name' name='alternative_staff_3_name'/></textarea>";
             print"</div>";
 
             print"<div class='col col-lg-auto ml-0 mb-2' id='staff_present_checkbox_div_3' style='display: none;'>";        

@@ -33,15 +33,16 @@ $names = build_page_pg();
 		$date=date('Y-m-d');
 		$date_start=date('Y-m-d',(strtotime('- 2 days')));	
 		//print"$date_start";
-		$title1='Thirty Minute Post Emergency Intervention Follow-Up';
+		$title1='Post Emergency Intervention Follow-Up';
 		$title2='Residents Experiencing Emergency Intervention Within the Last 48 Hours';
 		#$residentkey=$_REQUEST['resident_choice'];
 
 		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
 		if($_SESSION['Target_Population']!='all'){
-		$Population_strip=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
-		$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip'";
-		}else{$sql1="SELECT * FROM residentpersonaldata";
+			$Population_strip=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
+			$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip'";
+		}else{
+			$sql1="SELECT * FROM residentpersonaldata";
 		}
 		$session1=mysqli_query($conn,$sql1);
 		$row1=mysqli_fetch_assoc($session1);
@@ -65,9 +66,6 @@ $names = build_page_pg();
 		$session_rm4=mysqli_query($conn,$sql_rm4);
 		$session5=mysqli_query($conn,$sql5);
 		$row5=mysqli_fetch_assoc($session5);
-		$res_first=$row1['first'];
-		$res_last=$row1['last'];
-		//print(mysqli_num_rows ( $session4 ));
 
 
 		print"<div class='row justify-content-md-center'>";
@@ -103,8 +101,6 @@ $names = build_page_pg();
 
 							$session8=mysqli_query($conn,$sql_rm4);
 
-							$session4=mysqli_query($conn,$sql4);
-
 							$table = NULL;
 
 							$mapkey = NULL;
@@ -114,12 +110,13 @@ $names = build_page_pg();
 									while($row8=mysqli_fetch_assoc($session8)){//non-mapped  PRNs
 										if($first){
 											if(!$row8['post_PRN_observation']){
+												$sql2="SELECT * FROM residentpersonaldata WHERE residentkey='$row8[residentkey]'";
 												$do_submit=true;
 												$table = "resident_mapping";
 												$mapkey= $row8['mapkey'];
 												print"<tr>";
 													print"<td class='align-middle p-1'><table class='table-borderless'><tr><td>$row8[date]</td></tr><tr><td>$row8[time]</td></tr></table></td>";
-													$session2=mysqli_query($conn,$sql1);
+													$session2=mysqli_query($conn,$sql2);
 													while($row2=mysqli_fetch_assoc($session2)){
 
 														if($row2['residentkey']==$row8['residentkey']){

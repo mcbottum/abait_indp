@@ -395,10 +395,10 @@ div.radio-input {
 #greyline{
 	border-bottom:#999999  1px solid;
 }
-#dataform #email{
+/*#dataform #email{
 	padding-right:50px;
 	padding-bottom:10px;
-}
+}*/
 
 #dataform input[type="text"] {
 	position:relative;

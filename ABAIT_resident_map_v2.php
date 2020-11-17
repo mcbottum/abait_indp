@@ -24,6 +24,10 @@ set_css()
 <script>
 function validate_form()
 {
+
+	var scale_name = document.getElementById("scale_name");
+	var scale_name_value = scale_name.options[scale_name.selectedIndex].value;
+
 	valid=true;
 	var alertstring=new String("");
 
@@ -36,14 +40,14 @@ function validate_form()
 	}//end scale_name check
 	
 	if(document.form.trigger.selectedIndex=="0"){
-		alertstring=alertstring+"\n-choose Behavior Intensity-";
+		alertstring=alertstring+"\n-choose Behavior Trigger-";
 		document.form.trigger.style.background = "Yellow";
 		valid=false;
 	}else{
 		document.form.trigger.style.background = "Lightgrey";
 	}//end trigger check
 
-	if(document.form.intensity.selectedIndex=="0"){
+	if(document.form.intensity.selectedIndex=="0" && scale_name_value!='Slow_Trigger'){
 		alertstring=alertstring+"\n-choose Behavior Intensity-";
 		document.form.intensity.style.background = "Yellow";
 		valid=false;
@@ -51,7 +55,7 @@ function validate_form()
 		document.form.intensity.style.background = "Lightgrey";
 	}//end intensity check
 	
-	if(document.form.behave_class.selectedIndex==""){
+	if(document.form.behave_class.selectedIndex=="" && scale_name_value!='Slow_Trigger'){
 		alertstring=alertstring+"\n-choose Behavior Classification-";
 		document.form.behave_class.style.background = "Yellow";
 		valid=false;
@@ -125,24 +129,44 @@ function validate_form()
 
 function reload(form){
 	var val=form.scale_name.options[form.scale_name.options.selectedIndex].value;
-	self.location='ABAIT_resident_map_v2.php?scale_name='+val;
+	self.location='ABAIT_resident_map_v2.php?scale_name='+val;	
 }
 
 function show( selTag ) {
+
 	obj1 = document.getElementById("pre_PRN_observation_tag");
 	obj = document.getElementById("pre_PRN_observation");
 	customTrig = document.getElementById("custom_trigger");
 	customSlowTrig = document.getElementById("custom_slow_trigger");
 
+	var scale_name = document.getElementById("scale_name");
+	var scale_name_value = scale_name.options[scale_name.selectedIndex].value;
+	var all_hide_elements = document.getElementsByClassName("hide");
+	var all_show_elements = document.getElementsByClassName("show");
+
+
 	if ( selTag.value== 'other' ){
 		customTrig.style.display = "block";
 	}else if ( selTag.value== 'new' ){
 		customSlowTrig.style.display = "block";
-	} else if (selTag.id=="PRN_div" && selTag.selectedIndex == 1 ) {
+	}else if (selTag.id=="PRN_div" && selTag.selectedIndex == 1 ) {
+		alert ("here")
 		obj1.style.display = "block";
 		obj.style.display = "block";
 		obj1.style.align="center";
-	} else {
+	
+	}else if (scale_name_value == "Slow_Trigger") {
+		document.getElementById("hide_step3_if_slow").style.display = "none";
+		document.getElementById("hide_step4_if_slow").style.display = "none";
+		for(var i=0; i < all_hide_elements.length; i++) {
+			all_hide_elements[i].style.display = "none";
+		 }
+		for(var i=0; i < all_show_elements.length; i++) {
+			all_show_elements[i].style.display = "block";
+		 }
+		// document.getElementsByClassName("hide").style.display = "none";
+
+	}else {
 		obj1.style.display = "none";
 		obj.style.display = "none";
 	}
@@ -283,10 +307,11 @@ function check(selTag) {
 
 </style>
 </head>
-<body class="container">
+<body id='body' class="container" onload="show(this)">
 
 	<?
 	$names = build_page_pg();
+
 	if(isset($_REQUEST['scale_name'])){
 		$scale_name=str_replace('_',' ',$_REQUEST['scale_name']); // Use this line or below line if register_global is off
 	}else{
@@ -441,7 +466,7 @@ function check(selTag) {
 		print "</div>";
 
 		print"<div class='row justify-content-md-center'>";
-			print "<div class='col col-lg-3'>";
+			print "<div class='col col-lg-6'>";
 
 					print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='trigger' id='trigger' onchange='show(this)'><option value=''>Select Cause (trigger)</option>";
 						print "<option value='other'>None of the below</option>";
@@ -458,28 +483,28 @@ function check(selTag) {
 					reset($row3);
 				}
 			print "</div>";
-			print "<div class='col col-lg-3'>";
+			// print "<div class='col col-lg-3'>";
 			
-					print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='slow_trigger' id='slow_trigger' onchange='show(this)'><option value=''>Slow Trigger (optional) </option>";
-						print "<option value='new'>None of the below</option>";
-						foreach($slow_triggers as $st){
-							$st_strip=str_replace(' ','_',$st);
-							print "<option value=$st_strip>$st</option>";
-						}
+			// 		print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='slow_trigger' id='slow_trigger' onchange='show(this)'><option value=''>Slow Trigger (optional) </option>";
+			// 			print "<option value='new'>None of the below</option>";
+			// 			foreach($slow_triggers as $st){
+			// 				$st_strip=str_replace(' ','_',$st);
+			// 				print "<option value=$st_strip>$st</option>";
+			// 			}
 						
-					print "</select>";
-					print "<input type = 'text' name ='custom_slow_trigger' id='custom_slow_trigger' class='textBox' style='display: none; background-color: GreenYellow' placeholder='Enter new slow trigger here' value=''  autofocus='autofocus' onfocus=\"if(this.value==this.defaultValue) this.value='';\"/>";
+			// 		print "</select>";
+			// 		print "<input type = 'text' name ='custom_slow_trigger' id='custom_slow_trigger' class='textBox' style='display: none; background-color: GreenYellow' placeholder='Enter new slow trigger here' value=''  autofocus='autofocus' onfocus=\"if(this.value==this.defaultValue) this.value='';\"/>";
 			
-				if($row3){	
-					reset($row3);
-				}
-			print "</div>";
+			// 	if($row3){	
+			// 		reset($row3);
+			// 	}
+			// print "</div>";
 		print "</div>";
 		
 
 
 
-
+	print"<div id='hide_step3_if_slow'>";
 		print"<div class='row justify-content-md-center'>";
 			print "<div class='col col-lg-auto'>";
 				print"<h3 style='color: grey'>STEP 3</h3>";
@@ -506,8 +531,9 @@ function check(selTag) {
 					echo "</select>";
 			print"</div>";
 		print "</div>";
+	print "</div>";
 
-
+	print"<div id='hide_step4_if_slow' style='display:block'>";
 		print "<div class='row justify-content-md-center'>";
 			print"<div class='col col-lg-auto'>";
 				print"<h3 style='color: grey'>STEP 4</h3>";
@@ -537,17 +563,18 @@ function check(selTag) {
 					reset($row3);
 				}
 		print "</div>";
+	print "</div>";
 	?>
 		<div class="row justify-content-md-center">
 			<div class='col col-lg-auto'>
 				<div id = "trigger">
-					<h3 style='color: grey'>STEP 5</h3>
+					<h3 style='color: grey'><span class='hide'>STEP 5</span> <span class='show' style='display: none'>STEP 3</span></h3>
 				</div>
 			</div>
 		</div>
 		<div class="row justify-content-md-center">
 			<div class='col col-lg-auto'>
-					<h4>Any other unique comments about behavior?</h4>
+					<h4>Any other <span class='hide'>unique</span> comments about the behavior?</h4>
 			</div>
 		</div>
 		<div class="row justify-content-md-center">
@@ -558,7 +585,7 @@ function check(selTag) {
 		<div class="row justify-content-md-center">
 			<div class='col col-lg-auto'>
 				<div id = "intervention">
-					<h3 style='color: grey'>STEP 6</h3>
+					<h3 style='color: grey'><span class='hide'>STEP 6</span> <span class='show' style='display: none'>STEP 4</span></h3>
 				</div>
 			</div>
 		</div>
@@ -576,7 +603,7 @@ function check(selTag) {
 		<div class="row justify-content-md-center">
 			<div class='col col-lg-auto'>
 				<div id = "intervention_avoid">
-					<h3 style='color: grey'>STEP 7</h3>
+					<h3 style='color: grey'><span class='hide'>STEP 7</span> <span class='show' style='display: none'>STEP 5</span></h3>
 				</div>
 			</div>
 		</div>
@@ -596,7 +623,7 @@ function check(selTag) {
 		<div class="row justify-content-md-center">
 			<div class='col col-lg-auto'>
 				<div id = "onstaff">
-					<h3 style='color: grey'>STEP 8</h3>
+					<h3 style='color: grey'><span class='hide'>STEP 8</span> <span class='show' style='display: none'>STEP 6</span></h3>
 				</div>
 			</div>
 		</div>
@@ -638,7 +665,7 @@ function check(selTag) {
 			print"</div>";
 
 			print"<div class='col col-lg-auto ml-0 mb-2' id='alternative_staff1' style='display: none;'>";
-				print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_1_name'/></textarea>";
+				print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_1_name' name='alternative_staff_1_name'/></textarea>";
 			print"</div>";
 
 			print"<div class='col col-lg-auto ml-0 mb-2' id='staff_present_checkbox_div_1' style='display: none;'>";		
@@ -706,7 +733,7 @@ function check(selTag) {
 			print"</div>";
 
 			print"<div class='col col-lg-auto ml-0 mb-2' id='alternative_staff2' style='display: none;'>";
-				print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_2_name'/></textarea>";
+				print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_2_name' name='alternative_staff_2_name'/></textarea>";
 			print"</div>";
 
 			print"<div class='col col-lg-auto ml-0 mb-2' id='staff_present_checkbox_div_2' style='display: none;'>";		
@@ -775,7 +802,7 @@ function check(selTag) {
 			print"</div>";
 
 			print"<div class='col col-lg-auto ml-0 mb-2' id='alternative_staff3' style='display: none;'>";
-				print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_3_name'/></textarea>";
+				print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_3_name' name='alternative_staff_3_name'/></textarea>";
 			print"</div>";
 
 			print"<div class='col col-lg-auto ml-0 mb-2' id='staff_present_checkbox_div_3' style='display: none;'>";		
@@ -909,7 +936,7 @@ function check(selTag) {
 		<div class="row justify-content-md-center">
 			<div class='col col-lg-auto'>
 				<div id = "PRN">
-					<h3 style='color: grey'>STEP 9</h3>
+					<h3 style='color: grey'><span class='hide'>STEP 9</span> <span class='show' style='display: none'>STEP 7</span></h3>
 				</div>
 			</div>
 		</div>
@@ -975,7 +1002,7 @@ function check(selTag) {
 		</div>
 		<div class="row justify-content-md-center">
 			<div class='col col-lg-auto'>
-				<h3 style='color: grey'>STEP 10</h3>
+				<h3 style='color: grey'><span class='hide'>STEP 10</span> <span class='show' style='display: none'>STEP 8</span></h3>
 			</div>
 		</div>
 
@@ -992,7 +1019,7 @@ function check(selTag) {
 		</div>
 		<div class="row justify-content-md-center">
 			<div class='col col-lg-auto'>
-				<h3 style='color: grey'>STEP 11</h3>
+				<h3 style='color: grey'><span class='hide'>STEP 11</span> <span class='show' style='display: none'>STEP 9</span></h3>
 			</div>
 		</div>
 		<div class="row justify-content-md-center">
@@ -1006,11 +1033,15 @@ function check(selTag) {
 				<select class='custom-select-background custom-select-lg mb-3' data-width='auto' name = "duration" id="duration" onchange='validate_form()'>
 				<option value = "">Choose Minutes</option>
 				<?
-				for($t = 1;$t <= 5;$t +=1){
-					print "<option value = $t>$t</option>";
-				}
+				// for($t = 1;$t <= 5;$t +=1){
+				// 	print "<option value = $t>$t</option>";
+				// }
+				print "<option value = 5>less than 5</option>";
+				print "<option value = 10>6-10</option>";
+				print "<option value = 30>11-30</option>";
+				print "<option value = 60>30-60</option>";
+				print "<option value = 120>1-2 hrs</option>";
 				?>
-					<option value = "other">More than 5</option>
 				</select>
 			</div>
 		</div>

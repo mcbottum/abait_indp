@@ -1,8 +1,6 @@
 <?
 session_start();
 include("ABAIT_function_file.php");
-include("ABAIT_mailer.php");
-
 
 if($_SESSION['passwordcheck']!='pass'){
 	header("Location:".$_SESSION['logout']);
@@ -155,14 +153,30 @@ $names = build_page_pg();
 
 						if(isset($_REQUEST['staff_present_1'])){
 							$staff1 = $_REQUEST['staff_present_1'];
-							if($staff1=='-1'){
+							if($staff1=='-2'){
 								$staff1 = $_REQUEST['temp_staff_present_1'];
-							}elseif($staff1=='-2'){
-								$staff_name = explode($_REQUEST['alternative_staff_1_name']);
-								print_r($staff_name);
-								// # insert new staff into personaldata table, retrive it to get personaldatakey
-								// $staff1 = $row['personaldatakey'];
 							}
+
+							elseif($staff1=='-1'){
+								$staff_name = explode(' ',$_REQUEST['alternative_staff_1_name']);
+								$check = mysqli_query($conn, "SELECT * FROM personaldata WHERE first='$staff_name[0]' AND last='$staff_name[1]'");
+								if(mysqli_num_rows($check)>0){
+									$temp_carers=$check->fetch_all(MYSQLI_ASSOC);
+									$staff1=$temp_carers[0]['personaldatakey'];
+								}else{
+								mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','temp','temp','$staff_name[0]','$staff_name[1]',null,null,null,null,null,null,null,null,null,'0','$Target_Population','temp')");
+									$sql="SELECT personaldatakey FROM personaldata WHERE first='$staff_name[0]' AND last='$staff_name[1]'";
+									if ($result = $mysqli -> query($conn, $sql)) {
+										while ($row = $result -> fetch_row()) {
+											$staff1=$row['personaldatakey'];
+										}
+										$result -> free_result();
+									}
+								}
+							}
+
+
+
 							if(isset($_REQUEST['onstaff1'])){
 								array_push($onstaff, $staff1);
 							}
@@ -175,41 +189,64 @@ $names = build_page_pg();
 						}
 						if(isset($_REQUEST['staff_present_2'])){
 							$staff2 = $_REQUEST['staff_present_2'];
-							if($staff2=='-1'){
-								$staff1 = $_REQUEST['temp_staff_present_2'];
-							}elseif($staff2=='-2'){
-								$staff_name = explode($_REQUEST['alternative_staff_2_name']);
-								print_r($staff_name);
-								// # insert new staff into personaldata table, retrive it to get personaldatakey
-								// $staff1 = $row['personaldatakey'];
+							if($staff2=='-2'){
+								$staff2 = $_REQUEST['temp_staff_present_2'];
 							}
-							// if($staff1=='-1'){
-							// 	$staff_name = explode($_REQUEST['alternative_staff_2_name']);
-							// 	$staff_name_sql = "SELECT * FROM personaldata WHERE first=$staff_name[0] and last=$staff_name[1]";
 
-							// }
+
+							elseif($staff2=='-1'){
+								$staff_name = explode(' ',$_REQUEST['alternative_staff_2_name']);
+								$check = mysqli_query($conn, "SELECT * FROM personaldata WHERE first='$staff_name[0]' AND last='$staff_name[1]'");
+								if(mysqli_num_rows($check)>0){
+									$temp_carers=$check->fetch_all(MYSQLI_ASSOC);
+									$staff2=$temp_carers[0]['personaldatakey'];
+								}else{
+								mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','temp','temp','$staff_name[0]','$staff_name[1]',null,null,null,null,null,null,null,null,null,'0','$Target_Population','temp')");
+									$sql="SELECT personaldatakey FROM personaldata WHERE first='$staff_name[0]' AND last='$staff_name[1]'";
+									if ($result = $mysqli -> query($conn, $sql)) {
+										while ($row = $result -> fetch_row()) {
+											$staff2=$row['personaldatakey'];
+										}
+										$result -> free_result();
+									}
+								}
+							}
+
 							if(isset($_REQUEST['onstaff2'])){
 								array_push($onstaff, $staff2);
 							}
-							if(isset($_REQUEST['presentincident2'])){
+							if(isset($_REQUEST['presentincident1'])){
 								array_push($presentincident, $staff2);
 							}
-							if(isset($_REQUEST['presentintervention2'])){
+							if(isset($_REQUEST['presentintervention1'])){
 								array_push($presentintervention, $staff2);
 							}
 						}
 						if(isset($_REQUEST['staff_present_3'])){
 							$staff3 = $_REQUEST['staff_present_3'];
-							if($staff3=='-1'){
+							if($staff3=='-2'){
 								$staff3 = $_REQUEST['temp_staff_present_3'];
-							}elseif($staff1=='-2'){
-								$staff_name = explode($_REQUEST['alternative_staff_3_name']);
-								print_r($staff_name);
-								// # insert new staff into personaldata table, retrive it to get personaldatakey
-								// $staff1 = $row['personaldatakey'];
 							}
 
-							// }
+
+							elseif($staff3=='-1'){
+								$staff_name = explode(' ',$_REQUEST['alternative_staff_3_name']);
+								$check = mysqli_query($conn, "SELECT * FROM personaldata WHERE first='$staff_name[0]' AND last='$staff_name[1]'");
+								if(mysqli_num_rows($check)>0){
+									$temp_carers=$check->fetch_all(MYSQLI_ASSOC);
+									$staff3=$temp_carers[0]['personaldatakey'];
+								}else{
+								mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','temp','temp','$staff_name[0]','$staff_name[1]',null,null,null,null,null,null,null,null,null,'0','$Target_Population','temp')");
+									$sql="SELECT personaldatakey FROM personaldata WHERE first='$staff_name[0]' AND last='$staff_name[1]'";
+									if ($result = $mysqli -> query($conn, $sql)) {
+										while ($row = $result -> fetch_row()) {
+											$staff3=$row['personaldatakey'];
+										}
+										$result -> free_result();
+									}
+								}
+							}
+
 							if(isset($_REQUEST['onstaff3'])){
 								array_push($onstaff, $staff3);
 							}
@@ -255,7 +292,6 @@ $names = build_page_pg();
 
 
 						if($PRN){
-							// sendMail();
 							$sender='admin@abehave.com';
 							$recipient='michael@abehave.com';
 
@@ -264,8 +300,17 @@ $names = build_page_pg();
 							$session_contact = mysqli_query($conn,$sql_contact);
 							$contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);
 
-							$contact_string="";
+							//get notification recipients
+							$sql_notify = "SELECT * from personaldata  WHERE Target_Population='$_SESSION[Target_Population]' AND notify='1'";
+							$session_notify = mysqli_query($conn, $sql_notify);
+							$notify_data=$session_notify->fetch_all(MYSQLI_ASSOC);
+							$recipients = [];
+							foreach ($notify_data as  $value) {
+								array_push($recipients, $value['personaldatakey']);
+							}
+							$recipients = implode(',',$recipients);
 
+							$contact_string="";
 							foreach ($contact_data as $row) {
 								foreach ($service as $key) {	
 									if($key==$row[id]){
@@ -274,11 +319,13 @@ $names = build_page_pg();
 								}
 							}
 
-							$body = "<h3><p>".$carer. " managed an episode involving ".$resident."</p></h3>";
-							$body .= "<p><b>The episode occured at: </b>".$time. "on ".$date."</p><p><b>Duration: </b>".$duration." minutes.</p><p><b>Behavior Descriptions: </b>".$behavior." ,".$behavior_description."</p><p><b>Trigger: </b>".$trigger."</p><p><b>Additional services  required to manage the episode: </b>".$contact_string;
 
-							echo $body;
-							// sendMail($sender,$recipeint,$body);
+							$body = "<h3><p>".$carer. " managed an episode involving ".$resident."</p></h3>";
+							$body .= "<p><b>The episode occured at: </b>".$time. " on ".$date."</p><p><b>Duration: </b>".$duration." minutes.</p><p><b>Behavior Descriptions: </b>".$behavior." ,".$behavior_description."</p><p><b>Trigger: </b>".$trigger."</p><p><b>Additional services  required to manage the episode: </b>".$contact_string;
+
+							// echo $body;
+
+							mysqli_query($conn, "INSERT INTO notification_queue VALUES(null,'$body','$recipients',null)");
 						}
 
 

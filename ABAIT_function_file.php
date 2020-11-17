@@ -354,8 +354,8 @@ function build_page_pg($display='none'){
     $date=date('Y-m-d');
     $date_start=date('Y-m-d',(strtotime('- 2 days')));
     if($_SESSION['privilege']=='caregiver'){
-        $sql_show="SELECT * from resident_mapping WHERE date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND post_PRN_observation IS NULL ORDER BY date";
-        $sql_show_map="SELECT * from behavior_map_data WHERE date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND post_PRN_observation IS NULL ORDER BY date";
+        $sql_show="SELECT * from resident_mapping WHERE date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND PRN=1 AND post_PRN_observation IS NULL ORDER BY date";
+        $sql_show_map="SELECT * from behavior_map_data WHERE date > '$date_start' AND personaldatakey='$_SESSION[personaldatakey]' AND PRN=1 AND post_PRN_observation IS NULL ORDER BY date";
     	$session1=mysqli_query($conn,$sql_show);
     	$session2=mysqli_query($conn,$sql_show_map);
     	if($session1->num_rows > 0 || $session2->num_rows > 0){
@@ -406,7 +406,7 @@ function build_page_pg($display='none'){
 function build_footer_pg(){
 	?>
 	<div class="m-2 p-4 footer_div align-middle text-center">  
-		<a class="footer" href='https://centerfordementiabehaviors.com/'>Center for Agitated Behaviors</a>
+		<a class="footer" href='https://centerfordementiabehaviors.com/'><span>Center for Agitated Behaviors</a></br>ABAIT Proprietary</span>
 	</div>
 	<?
 }
@@ -463,7 +463,7 @@ ini_set('session.bug_compat_42',0);
 ini_set('session.bug_compat_warn',0);
 	?>
 	<!-- <div id= "footer"><p>&nbsp;Copyright &copy; 2012 ABAIT<br>ABAIT LLC</br></p></div> -->
-	<div id= "footer"><br><a href='https://centerfordementiabehaviors.com/'>Center for Agitated Behaviors</a></br></div>
+	<div id= "footer"><a href='https://centerfordementiabehaviors.com/'><span><br>Center for Agitated Behaviors</a></br>ABAIT Proprietary</span></div>
 	
 	<?}
 	

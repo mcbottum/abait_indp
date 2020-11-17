@@ -143,7 +143,7 @@ foreach($scale_array as $value){
 
     // GET CAREGIVERS
     if($personaldatakey=='all_careproviders'){
-        print"<div id='head'> $title for <em>All Care Providers</em> from $date_start - $date_stop</div>\n";
+        print"<div id='head'> $title for <em>All Carers</em> from $date_start - $date_stop</div>\n";
         $Population_strip=mysqli_real_escape_string($conn,$Population);
         $sql="SELECT * FROM personaldata WHERE Target_Population='$Population_strip' order by first";
         $providers=mysqli_query($conn,$sql);
@@ -152,14 +152,14 @@ foreach($scale_array as $value){
         $sql="SELECT * FROM personaldata WHERE personaldatakey='$personaldatakey'";
         $provider_session=mysqli_query($conn,$sql);
         $providers=mysqli_query($conn,$sql);
-        print"<div id='head'><em>Provider Summary from $date_start to $date_stop</em></div>\n";
+        print"<div id='head'><em>Carer Summary from $date_start to $date_stop</em></div>\n";
     }else{
 
-        print"<h4 align='center'>A Provider selection was not made, please return to the previous page.</h4>";
+        print"<h4 align='center'>A Carer selection was not made, please return to the previous page.</h4>";
         print "<h4 align='center'><a href='ABAIT_careprovider_review.php'>Return to Provider Selection  form</a></h4>\n";
         die;
     }
-    print"<h4 align='center'>Click on Provider Name to view episode analysis</h4>";
+    print"<h4 align='center'>Click on Carer Name to view episode analysis</h4>";
     print "<table width='100%'><tr align='right'><td>";
             ?>
                 <FORM>
@@ -184,11 +184,11 @@ foreach($scale_array as $value){
                 print "<thead>";
 
                     print"<tr align='center'>\n";
-                        print"<th>Provider</th>\n";
+                        print"<th>Carer</th>\n";
                         print"<th>Total Episodes</th>\n";
                         print"<th>Total Duration (min)</th>\n";
                         print"<th>Total Intensity Units</th>\n";
-                        print"<th>Police Int</th>\n";
+                        print"<th>Emergency Int</th>\n";
                         print"<th>Most Recent Scale Entry</th>\n";
                     print"</tr>\n";
                 print "</thead>";

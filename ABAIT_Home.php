@@ -74,7 +74,8 @@ window.onload = function() {
 		<h1>Adaptive Behavior Assessment and Intervention Tool</h1> 
 	</div>
 </fieldset>
-		<form 	onsubmit='return formValidator()'
+		<form 	
+				onsubmit='return formValidator()'
 				action = "ABAIT_passcheck_v2.php" 
 				method = "get">
 	<table class="center">

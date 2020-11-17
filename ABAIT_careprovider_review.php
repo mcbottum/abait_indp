@@ -105,7 +105,7 @@ if($_SESSION['cgfirst']!=""){
 build_page($_SESSION['privilege'],$cgfirst);
 ?>
 <div id="head"><h3>
-Care Provider Review
+Carer Review
 </h3></div>
 <?
 $conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
@@ -198,7 +198,7 @@ $scale_array=array();
 
         print "<table class='center'><tr><td>";
                 ?>
-                    <h3 align='center'>Select Care Provider <input type='submit' align='block' value='Tap for more Info' onClick="alert('Choose either a single individual or all care providers for review.  Note, All Care Provider Summary provides a comparison of intervention effectiveness.');return false"></h3>
+                    <h3 align='center'>Select Carer <input type='submit' align='block' value='Tap for more Info' onClick="alert('Choose either a single individual or all carers for review.  Note, All Carer Summary provides a comparison of intervention effectiveness.');return false"></h3>
                 <?
             print "<table class='scroll local hover' border='1' bgcolor='white'>";
                 print "<thead>";
@@ -212,7 +212,7 @@ $scale_array=array();
                         print "<span class='tab'><input type = 'radio'
                                 name = 'personaldatakey'
                                 value ='all_careproviders'></span>";
-                        print "<span class='tab'><strong>All Care Provider</strong></span>";
+                        print "<span class='tab'><strong>All Carers</strong></span>";
                         print "<span class='tab'><strong>Summary</strong></span>";
                         print "</label></td></tr>\n";
                     while($row1=mysqli_fetch_assoc($session1)){

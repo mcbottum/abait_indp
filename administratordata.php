@@ -80,6 +80,31 @@ function validate_form()
 	return valid;
 }
 
+function check(selTag) {
+	if(selTag.checked == true){
+		document.getElementById("email").style.display = "block";
+		document.getElementById("email").focus();
+	}else{
+		document.getElementById("email").value = "";
+		document.getElementById("email").style.display = "none";
+		document.getElementById('email_message').innerHTML = "";
+	}
+}
+
+function check_email(selTag){
+	var emailExp = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+	if (selTag.value.length > 0 && selTag.value.match(emailExp)){
+		document.getElementById('email_message').innerHTML = "";
+		selTag.style.background = 'lightgreen';
+	}else if (selTag.value.length > 0){
+		document.getElementById('email_message').innerHTML = "Please check that email is valid.";
+		selTag.style.background = 'white';
+	}else{
+		selTag.style.background = 'white';
+	}
+
+}
+
 function check_pass(){
 	if (document.form.password1.value == document.form.password2.value){
 		if (document.form.password1.value.length > 0 && document.form.password2.value.length > 0){
@@ -119,8 +144,8 @@ $sql="SELECT * FROM scale_table";
 $conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
 $session=mysqli_query($conn,$sql);
 
-if(isset($_GET["ak"])){
-		$key=$_GET["ak"];
+if(isset($_POST["ak"])){
+		$key=$_POST["ak"];
 		$action="Update";
 		$sql1=mysqli_query($conn,"SELECT * FROM personaldata WHERE personaldatakey=$key");
 		$data=mysqli_fetch_assoc($sql1);
@@ -189,6 +214,35 @@ if(isset($_GET["ak"])){
 								name = 'last'/>";	
 					}
 				print"</td>";
+			print"</tr>";
+		print"</div>";
+
+
+/// Notifications
+
+		print"<div id = 'notify'>";
+			print"<tr>";
+				print"<td colspan=2>";
+					print"<h3><label>Check for Emergency Intervention Notifications</label></h3>";
+
+				print"</td>";
+			print"</tr>";
+			print"<tr>";
+				print"<td><span>";
+						if($data && array_key_exists('notify', $data)){
+							print"<input type='checkbox' id = 'notify' name = 'notify' onchange='check(this)' value='1' " .(($data['notify']) ? " checked='checked'" : "0") . ">";
+						}else{
+							print"<input type='checkbox' id = 'notify' name = 'notify' value='1' onchange='check(this)'/>";
+						}
+						if($data && $data['mail']){
+							print "<input type='text' value='$data[mail]' name='email' id='email' style='display: block;' oninput='check_email(this);'/>";
+						}else{
+							print "<input type='text' placeholder=' Enter Notification Email' name='email' id='email' style='display: none;' oninput='check_email(this);'/>";
+						}
+						print"<div style='color:red' id='email_message'></div>";
+
+
+				print"</span></td>";
 			print"</tr>";
 		print"</div>";
 

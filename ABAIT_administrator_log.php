@@ -60,20 +60,26 @@ build_page($_SESSION['privilege'],$cgfirst);
 					$password=$newpassword1;
 					$first=$_REQUEST['first'];
 					$last=$_REQUEST['last'];
-					/*
-					$gender=$_REQUEST['gender'];
-					$_SESSION['gender']=$gender;
-					$year=$_REQUEST['year'];
-					$month=$_REQUEST['month'];
-					$day=$_REQUEST['day'];
-					$birthdate=$year.$month.$day;
-					$street_address=$_REQUEST['street_address'];
-					$city=$_REQUEST['city'];
-					$state=$_REQUEST['state'];
-					$zipcode=$_REQUEST['zipcode'];
-					$phone=$_REQUEST['phone'];
-					$email=$_REQUEST['email'];
-					*/
+					
+					// $gender=$_REQUEST['gender'];
+					// $_SESSION['gender']=$gender;
+					// $year=$_REQUEST['year'];
+					// $month=$_REQUEST['month'];
+					// $day=$_REQUEST['day'];
+					// $birthdate=$year.$month.$day;
+					// $street_address=$_REQUEST['street_address'];
+					// $city=$_REQUEST['city'];
+					// $state=$_REQUEST['state'];
+					// $zipcode=$_REQUEST['zipcode'];
+					// $phone=$_REQUEST['phone'];
+					if(isset($_REQUEST['notify'])){
+						$notify = $_REQUEST['notify'];
+						$mail = $_REQUEST['email'];
+					}else{
+						$mail = null;
+						$notify = null;
+					}
+					
 					$Target_Population=str_replace('_',' ',$_REQUEST['Target_Population']);
 					$Target_Population=mysqli_real_escape_string($conn,$Target_Population);
 					$date=date("Y,m,d");
@@ -81,12 +87,12 @@ build_page($_SESSION['privilege'],$cgfirst);
 					$house='all';
 					$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
 					if($action=='Enroll'){
-						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password','$accesslevel','$first','$last',null,null,null,null,null,null,null,null,'$privilegekey','$Target_Population','$house')");
+						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password','$accesslevel','$first','$last',null,null,null,null,null,null,'$mail','$notify','$privilegekey','$Target_Population','$house')");
 
 						print "<h4 align='center'>$first $last has been entered as a new Administrator.</h4>\n";
 						print "<h4 align='center'><a href='administratordata.php'>Return to Enroll New Administrator Form</a></h4>\n";
 					}else if($action=='Update'){
-						mysqli_query($conn,"UPDATE personaldata SET first='$first', last='$last', date='$date', password='$password' WHERE personaldatakey='$key'");
+						mysqli_query($conn,"UPDATE personaldata SET first='$first', last='$last', date='$date', password='$password', notify='$notify', mail='$mail' WHERE personaldatakey='$key'");
 						print "<h4 align='center'>Administrator $first $last has been Updated.</h4>\n";
 						print "<h4 align='center'><a href='updateMembers.php'>Return to Update Members Form</a></h4>\n";	
 					}

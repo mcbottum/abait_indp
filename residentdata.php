@@ -137,8 +137,8 @@ $home_sql="SELECT DISTINCT house FROM (
 
 $home_session=mysqli_query($conn,$home_sql);
 
-if(isset($_GET["rk"])){
-		$residentkey=$_GET["rk"];
+if(isset($_POST["rk"])){
+		$residentkey=$_POST["rk"];
 		$action="Update";
 		$sql1=mysqli_query($conn,"SELECT * FROM residentpersonaldata WHERE residentkey=$residentkey");
 		$data=mysqli_fetch_assoc($sql1);
