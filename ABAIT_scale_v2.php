@@ -4,6 +4,7 @@ if($_SESSION['passwordcheck']!='pass'){
     header("Location:".$_SESSION['logout']);
     print $_SESSION['passwordcheck'];
 }
+date_default_timezone_set("Europe/London");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -513,12 +514,12 @@ input {
 
 
     <div class="row justify-content-md-center">
-        <div class="col col-lg-auto d-flex justify-content-center">
+<!--         <div class="col col-lg-auto d-flex justify-content-center">
                    <h5>Select if episode is taking place now</h5>
-        </div>
+        </div> -->
     </div>
 
-    <div class="row justify-content-md-center">
+<!--     <div class="row justify-content-md-center">
         <div class="col col-lg-auto d-flex justify-content-center">
                         <input  
                                 name = "date"
@@ -528,17 +529,41 @@ input {
                                 onclick="hide('now')"
                                 value = "NOW">
         </div>
-    </div>
+    </div> -->
     <div class="row justify-content-md-center">
         <div class="col col-lg-auto d-flex justify-content-center">
-                    <h5>Or select date and time</h5>
+                    <h5>Select date and time</h5>
         </div>
     </div>
     <div class="row justify-content-md-center">
         <div class="col col-lg-auto d-flex justify-content-center">
-                        <div class="input-wrapper" id="datetimepicker5_cell">
-                            <input onchange="checkDate()" class="form-control" id="datetimepicker5"  name="datetimepicker"  autocomplete="off" type="text" placeholder='Touch to enter'/>
-                        </div>
+                        <!-- <div class="input-wrapper" id="datetimepicker5_cell"> -->
+                            <!-- <input onchange="checkDate()" class="form-control" id="datetimepicker5"  name="datetimepicker"  autocomplete="off" type="text" placeholder='Touch to enter'/> -->
+
+
+                            <?
+                            ####  Parsing time formats for html5 datetime-local form element
+                            $now = date("Y-m-d H:i");
+                            $now = str_replace(" ", "T",$now);
+                            $now = str_replace(":pm", "", $now);
+
+                            $min_time = date("Y-m-d H:i",strtotime('-7 days'));
+                            $min_time = str_replace(" ", "T",$min_time);
+                            $min_time = str_replace(":pm", "", $min_time);
+                            ?>
+
+                            <input type="datetime-local"
+                                    onchange="checkDate()"
+                                    class="form-control custom-select-lg custom-select-background col-xs-4" 
+                                    width="auto" 
+                                    id="datetimepicker2"
+                                    name="datetimepicker" value="<? echo $now ?>"
+                                    min="<? echo $min_time ?>" 
+                                    max="<? echo $now ?>">
+
+
+
+                        <!-- </div> -->
 
         </div>
     </div>

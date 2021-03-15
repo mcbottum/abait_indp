@@ -1,85 +1,48 @@
 <?
 // Script to auto update backend database with json encoded list of enrollees 
 // function autoEnroller($updates){
-	$updates='{
-		"pss_update": "2020-05-13T11:15:15Z",
-		"updates": [{
-				"name": "Jane admin",
-				"guid": "123qweasdzxc1",
-				"role": "admin",
-				"facility": [
-					"1233456qweasdzxc"
-				]
-			},
-			{
-				"name": "Jane carer",
-				"guid": "123qweasdzxc2",
-				"role": "carer",
-				"facility": [
-					"1233456qweasdzxc"
-				]
-			},
-			{
-				"name": "Jane resident",
-				"guid": "123qweasdzxc3",
-				"role": "resident",
-				"facility": [
-					"1233456qweasdzxc"
-				]
-			},
-			{
-				"name": "Jane",
-				"guid": "123qweasdzxc4",
-				"role": "carer",
-				"facility": [
-					"1233456qweasdzxc"
-				]
-			}
-		]
-	}';
 
 
-
-$live_updates='[{
-"communityID": "1aa2b85d-e42b-401a-a725-176091514777",
-"communityName": "Pembroke House ",
-"workerName": "Paul Williams ",
-"jobDescription": "Assistant Manager",
-"jobTitle": "Manager",
-"roleDescription": "View limited information about service users",
-"connectionID": "df11a632-81a7-421b-8e67-04db9b4d691b",
-"personID": "cb810996-0e0e-4210-825e-b63f5d9ee86a"
-},
-{
-"communityID": "1b14fbdf-8148-4647-a0ef-1d5b29faed52",
-"communityName": "Mount Pleasant",
-"workerName": "Paul Williams ",
-"jobDescription": "Assistant Manager",
-"jobTitle": "Manager",
-"roleDescription": "View service users information including reports, charts and processes",
-"connectionID": "df11a632-81a7-421b-8e67-04db9b4d691b",
-"personID": "cb810996-0e0e-4210-825e-b63f5d9ee86a"
-},
-{
-"communityID": "713fd960-c015-4dc5-94b4-48e1bd55a4dd",
-"communityName": "Old House /Training",
-"workerName": "Jenny Jones",
-"jobDescription": "Carer",
-"jobTitle": "Carer",
-"roleDescription": "Change communities/sites and organisation customisation",
-"connectionID": "20845b67-d018-496f-b319-2cc4e06504df",
-"personID": "d2764e20-c13a-44e3-a135-d8bb8ff12542"
-},
-{
-"communityID": "7cb23cde-65c9-4a34-9711-d1ceefe1e835",
-"communityName": "Westwood/Training",
-"workerName": "Katy Payne ",
-"jobDescription": "Team leader",
-"jobTitle": "Senior carer",
-"roleDescription": "Allowed to Enrol Devices for carers to use",
-"connectionID": "743da373-882b-4c10-ad74-64af265df02c",
-"personID": "2ee8c596-1e66-4afd-8514-ca205bb383c7"
-}]';
+// $live_updates='[{
+// "communityID": "1aa2b85d-e42b-401a-a725-176091514777",
+// "communityName": "Pembroke House ",
+// "workerName": "Paul Williams ",
+// "jobDescription": "Assistant Manager",
+// "jobTitle": "Manager",
+// "roleDescription": "View limited information about service users",
+// "connectionID": "df11a632-81a7-421b-8e67-04db9b4d691b",
+// "personID": "cb810996-0e0e-4210-825e-b63f5d9ee86a"
+// },
+// {
+// "communityID": "1b14fbdf-8148-4647-a0ef-1d5b29faed52",
+// "communityName": "Mount Pleasant",
+// "workerName": "Paul Williams ",
+// "jobDescription": "Assistant Manager",
+// "jobTitle": "Manager",
+// "roleDescription": "View service users information including reports, charts and processes",
+// "connectionID": "df11a632-81a7-421b-8e67-04db9b4d691b",
+// "personID": "cb810996-0e0e-4210-825e-b63f5d9ee86a"
+// },
+// {
+// "communityID": "713fd960-c015-4dc5-94b4-48e1bd55a4dd",
+// "communityName": "Old House /Training",
+// "workerName": "Jenny Jones",
+// "jobDescription": "Carer",
+// "jobTitle": "Carer",
+// "roleDescription": "Change communities/sites and organisation customisation",
+// "connectionID": "20845b67-d018-496f-b319-2cc4e06504df",
+// "personID": "d2764e20-c13a-44e3-a135-d8bb8ff12542"
+// },
+// {
+// "communityID": "7cb23cde-65c9-4a34-9711-d1ceefe1e835",
+// "communityName": "Westwood/Training",
+// "workerName": "Katy Payne ",
+// "jobDescription": "Team leader",
+// "jobTitle": "Senior carer",
+// "roleDescription": "Allowed to Enrol Devices for carers to use",
+// "connectionID": "743da373-882b-4c10-ad74-64af265df02c",
+// "personID": "2ee8c596-1e66-4afd-8514-ca205bb383c7"
+// }]';
 
 
 
@@ -87,23 +50,23 @@ $live_updates='[{
 
 	$houses = ["Mount Pleasant","Old House","Westwood", "Howard","Oxford","Pembroke"];
 
-    $live_updates = file_get_contents('https://pcspublicfiles.blob.core.windows.net/integration-poc/abait/IndependencePathways/AllStaff.json?sv=2019-10-10&se=2020-12-31T00%3A00%3A00Z&si=ABAIT&sr=b&sig=dwn9qeLbl1epJPW4HVf5lg6bZrpkLGHhMXCLbPjbCqM%3D');
+    $live_updates = file_get_contents('https://pcspublicfiles.blob.core.windows.net/integration-poc/abait/IndependencePathways/AllStaff.json?sv=2019-10-10&se=2021-04-30T23%3A00%3A00Z&si=ABAIT&sr=b&sig=t%2FR2JTchJK2Sug7SV8pp7Lu%2FiS6xzQpLLx1QU7vmm20%3D');
 
 	$decoded_update = json_decode($live_updates, true);
 
 
 
 // FOR LOCAL TESTING
-	$db = 'agitation_indp';
-	$db_pwd = 'abait123!';
-	$host = 'localhost';
-	$db_user = 'abait';
+	//$db = 'agitation_indp';
+	//$db_pwd = 'abait123!';
+	//$host = 'localhost';
+	//$db_user = 'abait';
 
 // FOR DREAMHOST LIVE
-    // $db = 'agitation_indp';
-    // $db_pwd = 'h1$6T#5IWx';
-    // $host = 'mysqlindp.abaitscale.com';
-    // $db_user = 'abaitindp';
+    $db = 'agitation_indp';
+    $db_pwd = 'h1$6T#5IWx';
+    $host = 'mysqlindp.abaitscale.com';
+    $db_user = 'abaitindp';
 	
 	$conn=mysqli_connect($host,$db_user,$db_pwd, $db);
 
@@ -145,9 +108,24 @@ $live_updates='[{
 				$sql="SELECT * FROM residentpersonaldata WHERE guid='$value[guid]' ORDER by first";
 				$resident=true;
 			}else{
+				// NOTE - should take entire GUID going forward then match like in passcheck
+				$name = explode(" ", $value["workerName"]);
+				if(count($name)<1){
+					$first="";
+					$last="";
+				}elseif(count($name)==1)){
+					$first=$name[0];
+					$last="";
+				}else{
+					$first=$name[0];
+					$last=$name[1];
+				}
+				$pwd = $value["connectionID"];
 
-				$pwd = substr($value["personID"], 0, 5);
-				$sql="SELECT * FROM personaldata WHERE password LIKE '$pwd'";
+				$sql="SELECT * FROM personaldata WHERE password LIKE '$pwd' OR (first='$first' AND last='$last')";
+				// $full_pwd = $value["personID"];
+				// $connection_pwd = $value["connectionID"];
+
 			}
 
 			$check=mysqli_query($conn,$sql);
@@ -159,15 +137,15 @@ $live_updates='[{
 				}else if(stripos($value['jobTitle'],"carer")!==false){
 					$accesslevel='caregiver';
 				}
-				$name = explode(" ", $value["workerName"]);
-				if(count($name)<2){
-					$name[]="";
-				}else{
-					$first=$name[0];
-					$last=$name[1];
-				}
 				
 				if($resident){
+					$name = explode(" ", $value["workerName"]);
+					if(count($name)<2){
+						$name[]="";
+					}else{
+						$first=$name[0];
+						$last=$name[1];
+					}
 					mysqli_query($conn, "INSERT INTO residentpersonaldata VALUES(null,'$name[0]','$name[1]',null,'$gender','$privilegekey','$Target_Population','$facility[0]','$value[guid]')");
 				}else{
 					// echo $date,"  ";
@@ -185,15 +163,22 @@ $live_updates='[{
 				}
 			}elseif(mysqli_num_rows($check) > 0){
 				$row1=mysqli_fetch_assoc($check);
-				if($row1['house']!='all'){
+				$row_id = $row1['personaldatakey'];
 
-					if($row1['house']!=$house_match){
+				//mysqli_query($conn,"UPDATE personaldata SET password='$full_pwd' WHERE password LIKE '$pwd%'");
+
+				 if($row1['house']!='all'){
+
+				 	if($row1['house']!=$house_match){
 					
-							mysqli_query($conn,"UPDATE personaldata SET house='all' WHERE password LIKE '$pwd'");
+				 			mysqli_query($conn,"UPDATE personaldata SET house='all' WHERE password LIKE '$pwd'");
 						
-							// echo "updated  ";
-					}
-				}
+				 			// echo "updated  ";
+				 	}
+				 }
+				/// Do this only once !!!!! 1/29/2021
+				// mysqli_query($conn,"UPDATE personaldata SET password='$connection_pwd' WHERE personaldatakey='$row_id'"); 
+				// echo "Reset";
 
 			}
 		}

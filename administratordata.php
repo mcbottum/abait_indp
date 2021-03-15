@@ -286,7 +286,7 @@ if(isset($_POST["ak"])){
 		print"</div>";
 			
 
-
+	if($_SESSION['reset_password']){
 		print"<div id ='clientpassword'>";
 			print"<tr>";
 				print"<td colspan=2>";
@@ -318,7 +318,7 @@ if(isset($_POST["ak"])){
 			print"</tr>";
 			print"<tr>";
 				print"<td>";
-					if($data){
+					if($data && $_SESSION['reset_password']){
 						print"<input	type = 'password'
 								placeholder=$data[password]
 								name = 'password2'
@@ -334,6 +334,7 @@ if(isset($_POST["ak"])){
 				print"</td>";
 			print"</tr>";
 		print"</div>";
+	}
 	print"</table>";
 ?>	
 	<div style="color:red" id='message'></div>

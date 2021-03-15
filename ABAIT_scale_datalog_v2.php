@@ -33,7 +33,12 @@ $names = build_page_pg();
 		
 <?
 	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
-	$date_bool=$_REQUEST['date'];
+	
+	if(isset($_REQUEST['date'])){
+		$date_bool=$_REQUEST['date'];
+	}else{
+		$date_bool=null;
+	}
 
 	if($date_bool=="NOW"){
 		$raw_date=date("Y-m-d H:i:s");
@@ -43,7 +48,7 @@ $names = build_page_pg();
 		
 	}else{
 		$raw_date=$_REQUEST['datetimepicker'];
-		$date_time = explode(" ", $raw_date);
+		$date_time = explode("T", $raw_date);
 		$date = $date_time[0];
 		$time = $date_time[1];
 		$seconds='00';

@@ -4,6 +4,7 @@ if($_SESSION['passwordcheck']!='pass'){
 	header("Location:".$_SESSION['logout']);
 	print $_SESSION['passwordcheck'];
 }
+date_default_timezone_set("Europe/London");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -304,6 +305,9 @@ function check(selTag) {
 	label {
 		padding-left: 10px;
 	}
+	#datetimepicker2{
+		width: auto !important
+	}
 
 </style>
 </head>
@@ -360,7 +364,7 @@ function check(selTag) {
 	}
 
 	// For getting caregivers
-	$sql_carer = "SELECT * from personaldata WHERE Target_Population='$Population_strip'";
+	$sql_carer = "SELECT * from personaldata WHERE Target_Population='$Population_strip' ORDER BY last";
 	$session_carer = mysqli_query($conn,$sql_carer);
 	$carer_data=$session_carer->fetch_all(MYSQLI_ASSOC);
 
@@ -376,7 +380,7 @@ function check(selTag) {
 
 	// Get all Carer Names
 	$Population_strip=mysqli_real_escape_string($conn,$Target_Population);
-	$sql6="SELECT * FROM personaldata WHERE Target_Population='$Population_strip'";
+	$sql6="SELECT * FROM personaldata WHERE Target_Population='$Population_strip' ORDER BY last";
 	$session6=mysqli_query($conn,$sql6);
 
 	//Get slow triggers
@@ -1014,7 +1018,31 @@ function check(selTag) {
 
 		<div class="row justify-content-md-center">
 			<div class='col col-lg-auto'>
-				<input onchange="checkDate()" class="form-control custom-select-lg custom-select-background" id="datetimepicker5" name="datetimepicker" type="text" placeholder='Touch to enter' data-width='auto'/>
+
+
+<!-- 				<input onchange="checkDate()" class="form-control custom-select-lg custom-select-background" id="datetimepicker5" name="datetimepicker" type="text" placeholder='Touch to enter' data-width='auto'/> -->
+
+                            <?
+                            ####  Parsing time formats for html5 datetime-local form element
+                            $now = date("Y-m-d H:i");
+                            $now = str_replace(" ", "T",$now);
+                            $now = str_replace(":pm", "", $now);
+
+                            $min_time = date("Y-m-d H:i",strtotime('-7 days'));
+                            $min_time = str_replace(" ", "T",$min_time);
+                            $min_time = str_replace(":pm", "", $min_time);
+                            ?>
+
+                            <input type="datetime-local"
+                                    onchange="checkDate()"
+                                    class="form-control custom-select-lg custom-select-background col-xs-4" 
+                                    width="auto" 
+                                    id="datetimepicker2"
+                                    name="datetimepicker" value="<? echo $now ?>"
+                                    min="<? echo $min_time ?>" 
+                                    max="<? echo $now ?>">
+			
+
 			</div>
 		</div>
 		<div class="row justify-content-md-center">

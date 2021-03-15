@@ -171,7 +171,23 @@ if($filename=="Submit Resident for Global Analysis"){
 		}else{
 			$reviewtime=Null;
 		}
+		if(isset($_REQUEST['include_unmapped'])){
+			$include_unmapped=$_REQUEST['include_unmapped'];
+		}else{
+			$include_unmapped=Null;
+		}
 
+		// Default date end is now
+		$date_end=date("Y-m-d");
+
+		if($reviewtime==0){
+			$date_start=date('Y-m-d', strtotime('first day of last month'));
+			$date_end=date('Y-m-d', strtotime('last day of last month'));
+		}
+
+		if($reviewtime==1){
+		$date_start=date('Y-m-d',(strtotime('- 30 days')));
+		}
 		if($reviewtime==3){
 		$date_start=date('Y-m-d',(strtotime('- 90 days')));
 		}
@@ -181,12 +197,12 @@ if($filename=="Submit Resident for Global Analysis"){
 		if($reviewtime=='all'){
 		$date_start=date('Y-m-d',(strtotime('- 10000 days')));
 		}
-		if($reviewtime!=3 && $reviewtime!=6 && $reviewtime!=10 && $reviewtime!='all'){
-			$reviewtime=$_REQUEST['customtime'];
-		}
-		if(empty($reviewtime)){
-		$date_start=date('Y-m-d',(strtotime('- 30 days')));
-		}
+		//if($reviewtime!=3 && $reviewtime!=6 && $reviewtime!=10 && $reviewtime!='all'){
+		//	$reviewtime=$_REQUEST['customtime'];
+		//}
+		//if(empty($reviewtime)){
+		//$date_start=date('Y-m-d',(strtotime('- 30 days')));
+		//}
 
 		$title='Global Analysis';
 }
@@ -236,25 +252,30 @@ if($filename=="Submit Resident for Global Analysis"){
 		print "</td></tr></table>";
 
 
-	if($scale_totals){///////////////////////scale totals////////////////////////////
+if($scale_totals){///////////////////////scale totals////////////////////////////
 		$i=0;
 		unset($sql_array);
+
 	if($_REQUEST['all']=='all'){
+
+
 		if($residentkey=='all_residents'){
-			${'sql_all'}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+			${'sql_all'}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
 		}else{
-			${'sql_all'}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' order by date";
+			${'sql_all'}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date < '$date_end' order by date";
 		}
 		$sql_array[]=$sql_all;
 	}else{
+
+
 		foreach($_SESSION['scale_array'] as $behavior){//$i counts the sql variables!!
 			$behavior=str_replace(' ','_',$behavior);
 			${'behave_'.$i}=$_REQUEST[$behavior];
 			if(in_array(${'behave_'.$i},$_SESSION['scale_array'])){
 				if($residentkey=='all_residents'){
-					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND behavior='${'behave_'.$i}' order by date";
+					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='${'behave_'.$i}' order by date";
 				}else{
-					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND behavior='${'behave_'.$i}' order by date";
+					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date < '$date_end' AND behavior='${'behave_'.$i}' order by date";
 				}
 				$sql_array[]=${'sql'.$i};
 				$i=$i+1;
@@ -292,9 +313,9 @@ if($filename=="Submit Resident for Global Analysis"){
 				print"<tr>";
 					print"<td>";
 						if($j==count($sql_array)-1&&in_array($sql_all,$sql_array)){
-							print"<h3 class='center_header'>Scale Totals for <em>All</em> Triggers Since <em>$date_start</em></h3>\n";
+							print"<h3 class='center_header'>Scale Totals for <em>All</em> Triggers From <em>$date_start</em> - <em>$date_end</em></h3>\n";
 						}else{
-							print"<h3 class='center_header'>Scale Totals for <em>${'behave_'.$j}</em> Triggers Since <em>$date_start</em></h3>\n";
+							print"<h3 class='center_header'>Scale Totals for <em>${'behave_'.$j}</em> Triggers From <em>$date_start</em> - <em>$date_end</em></h3>\n";
 						}
 					print"</td>";
 					print"<td align='right'>";
@@ -325,7 +346,7 @@ if($filename=="Submit Resident for Global Analysis"){
 							print"<tr align='center'>\n";
 
 									print"<td>$date_start</td>";
-									print"<td>$date</td>";
+									print"<td>$date_end</td>";
 									print"<td>$sum_episodes</td>";
 									print"<td>$sum_duration</td>";
 									print"<td>$sum_PRN</td>";
@@ -349,9 +370,9 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 		unset($sql_array);
 	if($_REQUEST['all']=='all'){
 		if($residentkey=='all_residents'){
-			${'sql_all'}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+			${'sql_all'}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
 		}else{
-			${'sql_all'}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start'";
+			${'sql_all'}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date < '$date_end'";
 		}
 		$sql_array[]=$sql_all;
 	}else{
@@ -360,9 +381,9 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 			${'behave_'.$i}=$_REQUEST[$behavior];
 			if(in_array(${'behave_'.$i},$_SESSION[scale_array])){
 				if($residentkey=='all_residents'){
-					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND behavior='${'behave_'.$i}'";
+					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='${'behave_'.$i}'";
 				}else{
-					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND behavior='${'behave_'.$i}'";
+					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date < '$date_end' AND behavior='${'behave_'.$i}'";
 				}
 				$sql_array[]=${'sql'.$i};
 				$i=$i+1;
@@ -390,70 +411,70 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 							${'sum_duration_array'.$j}[$i]=${'sum_duration'.$i};
 						}
 				}
-// section for printing episode time of day table follows
+		// section for printing episode time of day table follows
 
-	//call graph function
-		$values_bar_e=${'episode_count_array'.$j};
-		$graphTitle_bar='Count of Episodes per Three Hour Interval';
-		$yLabel_bar=' Episode Count';
-		$xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
-	if(count($values_bar_e!=0)){
-	ABAIT_bar_graph($values_bar_e, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j);
-	}
-	//call graph function
-		$values_bar_d=${'sum_duration_array'.$j};
-		$graphTitle_bar='Duration of Behavior Episodes per Three Hour Interval';
-		$yLabel_bar='Total Episode Duration (minutes)';
-		$xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
-	if(count($values_bar_d!=0)){
-	ABAIT_bar_graph($values_bar_d, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+10);
-	}
+			//call graph function
+				$values_bar_e=${'episode_count_array'.$j};
+				$graphTitle_bar='Count of Episodes per Three Hour Interval';
+				$yLabel_bar=' Episode Count';
+				$xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+			if(count($values_bar_e!=0)){
+			ABAIT_bar_graph($values_bar_e, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j);
+			}
+			//call graph function
+				$values_bar_d=${'sum_duration_array'.$j};
+				$graphTitle_bar='Duration of Behavior Episodes per Three Hour Interval';
+				$yLabel_bar='Total Episode Duration (minutes)';
+				$xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+			if(count($values_bar_d!=0)){
+			ABAIT_bar_graph($values_bar_d, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+10);
+			}
 
-	if($j==count($sql_array)-1&&in_array($sql_all,$sql_array)){
-		print"<h3 class='center_header'>Episode per Time of Day for <em>All</em> Triggers</h3>\n";
-	}else{
-		print"<h3 class='center_header'>Episode per Time of Day for <em>${'behave_'.$j}</em> Triggers Since <em>$date_start</em></h3>\n";
-	}
-	print "<table width='100%'>";//table for more info copy this line
-			print "<tr><td>";//table in table data for more info
-				print "<table width='100%' class='table hover local' border='1' bgcolor='white'>";
-					print "<thead>";
-						print"<tr>\n";
+			if($j==count($sql_array)-1&&in_array($sql_all,$sql_array)){
+				print"<h3 class='center_header'>Episode per Time of Day for <em>All</em> Triggers</h3>\n";
+			}else{
+				print"<h3 class='center_header'>Episode per Time of Day for <em>${'behave_'.$j}</em> Triggers From <em>$date_start</em> - <em>$date_end</em></h3>\n";
+			}
+			print "<table width='100%'>";//table for more info copy this line
+					print "<tr><td>";//table in table data for more info
+						print "<table width='100%' class='table hover local' border='1' bgcolor='white'>";
+							print "<thead>";
+								print"<tr>\n";
 
-								print"<th>Time Interval (Hours)</th>";
-								foreach($episode_start_array as $i){
-									$k=$i+3;
-									if($k==25){
-										$k=1;
-									}
-									print"<th>$i-$k</th>";
-								}
-								print"<th>Graph</th>";
+										print"<th>Time Interval (Hours)</th>";
+										foreach($episode_start_array as $i){
+											$k=$i+3;
+											if($k==25){
+												$k=1;
+											}
+											print"<th>$i-$k</th>";
+										}
+										print"<th>Graph</th>";
 
-						print"</tr>\n";
-					print "</thead>";
-					print "<tbody>";
-						print"<tr>\n";
+								print"</tr>\n";
+							print "</thead>";
+							print "<tbody>";
+								print"<tr>\n";
 
-								print "<td>Total Episodes</td>";
-								foreach($episode_start_array as $i){
-									print "<td>${'episode_count'.$i}</td>";
-								}
-								print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+$j+'.png','','width=700px,height=400')\"></td>";
+										print "<td>Total Episodes</td>";
+										foreach($episode_start_array as $i){
+											print "<td>${'episode_count'.$i}</td>";
+										}
+										print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+$j+'.png','','width=700px,height=400')\"></td>";
 
-						print"</tr>\n";
-						print"<tr>\n";
+								print"</tr>\n";
+								print"<tr>\n";
 
-								print"<td>Total Episode Duration (min)</td>";
-								foreach($episode_start_array as $i){
-										print "<td>${'sum_duration'.$i}</td>";
-								}
-								print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+10)+'.png','','width=700px,height=400')\"></td>";
+										print"<td>Total Episode Duration (min)</td>";
+										foreach($episode_start_array as $i){
+												print "<td>${'sum_duration'.$i}</td>";
+										}
+										print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+10)+'.png','','width=700px,height=400')\"></td>";
 
-						print"</tr>\n";
-					print "</tbody>";
-				print"</table>";
-		print"</td></tr></table>";
+								print"</tr>\n";
+							print "</tbody>";
+						print"</table>";
+				print"</td></tr></table>";
 
 	}//end for
 }//end if
@@ -503,9 +524,9 @@ print "<table width='100%'>";//table for more info copy this line
 				$intv6=0;
 				//print"<tr>\n";
 				if($residentkey=='all_residents'){
-					$sql3="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+					$sql3="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
 				}else{
-					$sql3="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND behavior='$behavior' AND date > '$date_start'";
+					$sql3="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND behavior='$behavior' AND date > '$date_start' AND date < '$date_end'";
 				}
 
 					$session3=mysqli_query($conn,$sql3);
@@ -551,7 +572,7 @@ print "<table width='100%'>";//table for more info copy this line
             print "<table class='center scroll local eoi hover'  bgcolor='white'>";
                 print "<thead>";
 					print "<tr>";
-						print "<th colspan='8'>$behavior Behavior Episodes Since <em>$date_start</em></th>";
+						print "<th colspan='8'>$behavior Behavior Episodes From <em>$date_start</em> - <em>$date_end</em></th>";
 					print "</tr>";
 					print"<tr>";
 						print"<th class='first'>Trigger (episodes/duration)</th>";
@@ -640,7 +661,7 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
             print "<tr><td>";
             print "<table align=center class='table scroll local' border='1' bgcolor='white'>";
                 print "<thead>";
-                    print"<tr><th colspan='5'>$behavior Behavior Episodes Since <em>$date_start</em></th></tr>";
+                    print"<tr><th colspan='5'>$behavior Behavior Episodes From <em>$date_start</em> - <em>$date_end</em></th></tr>";
                     print"<tr>";
                     		print"<th>----Trigger----</th>";
                     		print"<th>Number of Episodes</th>";
@@ -668,9 +689,9 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
                                     print "<td> $behavior_maps_row[trig] </td>";
 
 																			if($residentkey=='all_residents'){
-																				$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+																				$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
 																			}else{
-																				$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND behavior='$behavior' AND date > '$date_start'";
+																				$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND behavior='$behavior' AND date > '$date_start' AND date < '$date_end'";
 																			}
 								                                $behavior_map_data_session=mysqli_query($conn,$behavior_map_data_sql);
 
@@ -782,7 +803,7 @@ $dataPoints2 = array(
     	$carer_presence_array[$row[personaldatakey]]=array("name"=> $row[first]." ".$row[last],"On Staff"=>0,"Present During Incident"=>0,"Present During Intervention"=>0);
     }
 
-    $behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+    $behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
     $behavior_map_data_session=mysqli_query($conn,$behavior_map_data_sql);
 
     while($row=mysqli_fetch_assoc($behavior_map_data_session)){
@@ -799,7 +820,7 @@ $dataPoints2 = array(
     	}
     }
 
-    $resident_mapping_data_sql="SELECT * FROM resident_mapping WHERE date > '$date_start' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+    $resident_mapping_data_sql="SELECT * FROM resident_mapping WHERE date > '$date_start'  AND date < '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
     $resident_mapping_data_session=mysqli_query($conn,$resident_mapping_data_sql);
     while($row=mysqli_fetch_assoc($resident_mapping_data_session)){
 
@@ -828,7 +849,7 @@ $dataPoints2 = array(
             // print "<tr><td>";
             print "<table align=center class=' scroll local' border='1' bgcolor='white'>";
                 print "<thead>";
-                    print"<tr><th colspan='5'>Carer Interactions with $res_name Since <em>$date_start</em></th></tr>";
+                    print"<tr><th colspan='5'>Carer Interactions with $res_name From <em>$date_start</em> - <em>$date_end</em></th></tr>";
                     print"<tr>";
                     		print"<th>Carer</th>";
                     		print"<th>On Staff</th>";
@@ -945,15 +966,15 @@ print"</div>";
 
 if($all_episode){//////////////////////////////////////////all_episode/////////////////////////////////////////
 		if($residentkey=='all_residents'){
-			$sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' ORDER BY date, residentkey";
+			$sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' ORDER BY date, residentkey";
 		}else{
-			$sql="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' ORDER BY date";
+			$sql="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date <'$date_end' ORDER BY date";
 		}
 		$session=mysqli_query($conn,$sql);
 
 			print "<table width='100%'>";//
 				print "<tr><td>";//table in table data for more info
-				print"<h3 class='center_header'>All Episode Report</h3>";
+				print"<h3 class='center_header'>All Mapped Behavior Episode Report</h3>";
 				print"</td></tr>";
 
         print "<table class='center noScroll local hover'  bgcolor='white'>";
@@ -964,7 +985,7 @@ if($all_episode){//////////////////////////////////////////all_episode//////////
 							print "<th>Start Date</th>";
 							print "<th>$date_start</th>";
 							print "<th>End Date</th>";
-							print "<th>$date</th>";
+							print "<th>$date_end</th>";
 							print "<th></th>";
 
 							print "</tr>";
@@ -1009,6 +1030,76 @@ if($all_episode){//////////////////////////////////////////all_episode//////////
 
 }//end all_epsisode if
 
+if($include_unmapped){//////////////////////////////////////////include_unmapped/////////////////////////////////////////
+		if($residentkey=='all_residents'){
+			$sql="SELECT * FROM resident_mapping WHERE date > '$date_start' AND date < '$date_end' ORDER BY date, residentkey";
+		}else{
+			$sql="SELECT * FROM resident_mapping WHERE residentkey='$residentkey' AND date > '$date_start' AND date <'$date_end' ORDER BY date";
+		}
+		$session=mysqli_query($conn,$sql);
+
+			print "<table width='100%'>";//
+				print "<tr><td>";//table in table data for more info
+				print"<h3 class='center_header'>Unmapped Behavior Episode Report</h3>";
+				print"</td></tr>";
+
+        print "<table class='center noScroll local hover'  bgcolor='white'>";
+          print "<thead>";
+						print "<tr>";
+
+							print "<th></th>";
+							print "<th>Start Date</th>";
+							print "<th>$date_start</th>";
+							print "<th>End Date</th>";
+							print "<th>$date_end</th>";
+							print "<th></th>";
+
+							print "</tr>";
+						print "<tr>";
+
+							print "<th>Resident</th>";
+							print "<th>Date</th>";
+							print "<th>Time</th>";
+							print "<th>Behavior Classification</th>";
+							print "<th>Trigger</th>";
+							print "<th>PRN Given</th>";
+
+					print "</tr>";
+				print"</thead>";
+				print"<tbody>";
+				$total_duration = 0;
+				while($row=mysqli_fetch_assoc($session)){
+					$total_duration += $row['duration'];
+					$rk = $row['residentkey'];
+					//$residentkey_assoc_array[$rk]
+					print "<tr>";
+
+							print"<td>$residentkey_assoc_array[$rk]</td>";
+							print"<td>$row[date]</td>";
+							print"<td>$row[time]</td>";
+							print"<td>$row[behavior]</td>";
+							print"<td>$row[trigger]</td>";
+							if($row['PRN']==1){
+								print"<td>Yes</td>";
+							}else{
+								print"<td>None</td>";
+							}
+
+					print "</tr>";
+				}
+					print "<tr>";
+						print "<td colspan=3>Total Duration of Episodes (min) </td>";
+						print "<td colspan=3>$total_duration</tr>";
+					print "</tr>";
+				print"</tbody>";
+			print "</table>";
+		print "</td></tr>";
+	print "</table>";
+
+
+}//end include_unmapped if
+
+print "<br>";
 print "<p class='backButton'>";
 	print "<input	type = 'button'
 				name = ''

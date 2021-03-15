@@ -74,8 +74,7 @@ window.onload = function() {
 		<h1>Adaptive Behavior Assessment and Intervention Tool</h1> 
 	</div>
 </fieldset>
-		<form 	
-				onsubmit='return formValidator()'
+		<form 	onsubmit='return formValidator()'
 				action = "ABAIT_passcheck_v2.php" 
 				method = "get">
 	<table class="center">
@@ -83,7 +82,35 @@ window.onload = function() {
 			<td>
 				<div id = "homename">
 				<fieldset id='login' class="shadow">
+
+
 					<table>
+
+<?
+                    if($_SESSION['remote_login']){
+                        print"<tr><td align='center'>";
+						    print "You have not yet been logged in to the ABAIT system.<br>";
+						    print "Please speak with your administrator.";
+                        print"</tr></td>";
+						print"<tr><td align='center' margin-bottum='5px'>";
+                            print "<input type=button onClick=\"location.href='$_SESSION[returnurl]'\" value='Leave ABAIT'>";
+						print"</tr></td>";
+
+
+
+
+					if($_SESSION['remote_login']){
+						print"<input type='hidden' name='abait' value='xxx'></input>";
+					}
+					if($_SESSION['remote_login']){
+						print"<input type='hidden' name='client' value='xxx'></input>";
+					}
+					if($_SESSION['remote_login']){
+						print"<input type='hidden' name='returnurl' value='xxx'></input>";
+                    }
+?>
+
+
 							<tr><th span=2>Login ID</th></tr>
 							<tr><td align="center" margin-bottum="5px">
 								<input	type = "password" id = 'password' name = "password" autocomplete="off"/>
@@ -95,10 +122,23 @@ window.onload = function() {
 									name = "submit"
 									value = "Submit Login ID">
 							</td></tr>
+
+
+
 					</table>
 				</fieldset>
 				</div>
 				</td></tr>
+
+
+
+<tr><td align='center'>
+
+
+
+</td></tr>
+
+
 				<tr><td align='center'>
 				
 					<FORM>

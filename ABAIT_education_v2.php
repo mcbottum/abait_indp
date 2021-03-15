@@ -73,7 +73,7 @@ print "</h2>";
 	<ol type="I">
 		<li><h4>When Behaviors Occur</h4></li>
 			<ul class="m-2">
-				<li class="m-2"><a href='chooseresident_map.php'>STEP 1 - Record in 2 Week Resident Observation</a></li>
+				<li class="m-2"><a href='ABAIT_quick_scales.php'>STEP 1 - Record in 2 Week Resident Observation</a></li>
 					<ol>
 						<li>What behaviors occured?</li>
 						<li>Where behaviors happened?</li>

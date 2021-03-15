@@ -15,9 +15,7 @@ if($_SESSION['passwordcheck']!='pass'){
 <meta http-equiv="Content-Type" content="text/html;
 	charset=utf-8" />
 <title>
-<?
-print $_SESSION['SITE']
-?>
+ABAIT Resident Triggers and Interventions
 </title>
 <?
 	set_css()

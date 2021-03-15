@@ -161,6 +161,8 @@ set_css()
 		$row_name=mysqli_fetch_assoc($name);
 		$_SESSION['first']=$row_name['first'];
 		$_SESSION['last']=$row_name['last'];
+	}else{
+		$row_name=null;
 	}
 	if(isset($_GET["scale_name"])){
 		$scale_name=$_GET["scale_name"];
@@ -244,8 +246,13 @@ set_css()
 		print"<tr><td>";
 			$session1=mysqli_query($conn,$_SESSION['sql']);
 			$resident_count = mysqli_num_rows($session1);
+			if($row_name){
+				$select_option=$row_name['first']." ".$row_name['last'];
+			}else{
+				$select_option="Select a Resident";
+			}
 
-				print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='residentkey' onchange=\"reload(this.form)\"><optGroup><option value=''>Select a Resident</option></optGroup>"."<BR>";
+				print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='residentkey' onchange=\"reload(this.form)\"><optGroup><option value=''>$select_option</option></optGroup>"."<BR>";
 
 					while($row1= mysqli_fetch_array($session1)) { 
 							if($row1[residentkey]==$residentkey){

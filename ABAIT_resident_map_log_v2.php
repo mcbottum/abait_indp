@@ -57,11 +57,17 @@ set_css()
 						$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
 
 						$raw_date=$_REQUEST['datetimepicker'];
-
-						$date_time = explode(" ", $raw_date);
+						## new datepicker
+						$date_time = explode("T", $raw_date);
 						$date = $date_time[0];
-						$date = str_replace('/',',',$date);
-						$time = $date_time[1];
+						$time = $date_time[1].":00";
+
+						## old datepicker
+						// $date_time = explode(" ", $raw_date);
+						// $date = $date_time[0];
+						// $date = str_replace('/',',',$date);
+						// $time = $date_time[1];
+
 						$duration=$_REQUEST['duration'];
 
 						if($duration=="More than 5"){

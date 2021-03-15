@@ -87,7 +87,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 					$house='all';
 					$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
 					if($action=='Enroll'){
-						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password','$accesslevel','$first','$last',null,null,null,null,null,null,'$mail','$notify','$privilegekey','$Target_Population','$house')");
+						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password','$accesslevel','$first','$last',null,null,null,null,null,null,null,'$mail','$notify','$privilegekey','$Target_Population','$house')");
 
 						print "<h4 align='center'>$first $last has been entered as a new Administrator.</h4>\n";
 						print "<h4 align='center'><a href='administratordata.php'>Return to Enroll New Administrator Form</a></h4>\n";

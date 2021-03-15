@@ -288,7 +288,7 @@ if(isset($_POST["ck"])){
 						print"</select>";
 				print"</td></tr>";
 			print"</div>";
-
+		if($_SESSION['reset_password']){
 			print"<div id ='clientpassword'>";
 				print"<tr>";
 					print"<td colspan=2>";
@@ -336,6 +336,7 @@ if(isset($_POST["ck"])){
 					print"</td>";
 				print"</tr>";
 			print"</div>";
+		}
 	print"</table>";
 ?>
 	<div style="color:red" id='message'></div>

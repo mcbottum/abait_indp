@@ -367,6 +367,13 @@ function build_page_pg($display='none'){
     }
 
 	?>
+<!-- FUNCTION TO REDIRECT TO PCS IF NEED TO EXIT ABAIT -->
+			<script type="text/javascript">
+				function goHome() {
+					window.location.href = document.referrer;
+				}
+			</script>
+
 			<div class="page-header p-2">  </div>
 
 			<nav class="navbar navbar-expand-md navbar-dark">
@@ -392,7 +399,18 @@ function build_page_pg($display='none'){
 		      			</a>
 		      			</span>";?>
 			      	<li class="nav-item">
-			        <a class="navbar-brand p-3" href="ABAIT_logout_v2.php">Logout</a>
+<?
+					if($_SESSION['remote_login']){
+
+						print"<a class='navbar-brand p-3' href='$_SESSION[returnurl]'>Leave ABAIT</a>";
+						?><!-- <button type="button" class="btn btn-danger" onclick="goHome()">EXIT ABAIT</button> --><?
+	
+					}else{
+?>
+			        	<a class="navbar-brand p-3" href="ABAIT_logout_v2.php">Logout</a>
+<?
+					}
+?>
 			      </li>
 			    </ul>
 			  </div>
@@ -423,17 +441,25 @@ function build_page($privilege,$first){
 	$_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
 
 	if($privilege=='globaladmin'||$privilege=='admin'){
+
+
 	$adminfirst=$_SESSION['adminfirst'];
 		print"<table style='margin-top:2px; margin-bottom:4px' width='100%'>\n";
 			print"<tr>\n";
-				print"<td valign='bottom' align='right'>$first logged in | <a href='ABAIT_logout_v2.php'>logout</a></td>\n";
+				if($_SESSION['remote_login']){
+				    print"<td valign='bottom' align='right'>$first logged in | <a href='$_SESSION[returnurl]'>Leave ABAIT</a></td>\n";
+				    $logout_location = $_SESSION['returnurl'];
+				}else{
+				    print"<td valign='bottom' align='right'>$first logged in | <a href='ABAIT_logout_v2.php'>logout</a></td>\n";
+				    $logout_location = "ABAIT_logout_v2.php";
+				}
 			print"</tr>\n";
 		print"</table>\n";
 		?>
 		<div id="globalheader">
 			<ul id="globalnav">
 				<li id="gn-home"><a href="adminhome.php"></a></li>
-				<li id="gn-logout"><a href="ABAIT_logout_v2.php"></a></li>
+				<? print"<li id='gn-logout'><a href='$logout_location'></a></li>"; ?>
 			</ul>
 		</div>
 		<?
