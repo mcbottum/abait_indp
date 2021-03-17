@@ -87,27 +87,15 @@ window.onload = function() {
 					<table>
 
 <?
-                    if($_SESSION['remote_login']){
-                        print"<tr><td align='center'>";
-						    print "You have not yet been logged in to the ABAIT system.<br>";
-						    print "Please speak with your administrator.";
-                        print"</tr></td>";
+                                            if($_SESSION['remote_login']){
+                                                print"<tr><td align='center'>";
+						     print "You have not yet been logged in to the ABAIT system.<br>";
+						     print "Please speak with your administrator.";
+                                                print"</tr></td>";
 						print"<tr><td align='center' margin-bottum='5px'>";
-                            print "<input type=button onClick=\"location.href='$_SESSION[returnurl]'\" value='Leave ABAIT'>";
+                                             		print "<input type=button onClick=\"location.href='$_SESSION[returnurl]'\" value='Leave ABAIT'>";
 						print"</tr></td>";
-
-
-
-
-					if($_SESSION['remote_login']){
-						print"<input type='hidden' name='abait' value='xxx'></input>";
-					}
-					if($_SESSION['remote_login']){
-						print"<input type='hidden' name='client' value='xxx'></input>";
-					}
-					if($_SESSION['remote_login']){
-						print"<input type='hidden' name='returnurl' value='xxx'></input>";
-                    }
+                                        }else{
 ?>
 
 
@@ -123,7 +111,9 @@ window.onload = function() {
 									value = "Submit Login ID">
 							</td></tr>
 
-
+<?
+					}
+?>
 
 					</table>
 				</fieldset>

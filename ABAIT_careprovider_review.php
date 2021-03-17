@@ -166,7 +166,7 @@ if($_SESSION['Target_Population']!='all'){
     $sql1="SELECT * FROM personaldata WHERE Target_Population='$Population_strip' order by first";
     $sql2="SELECT * FROM behavior_maps WHERE Target_Population='$Population_strip'";
     $sql3="SELECT * FROM scale_table WHERE Target_Population='$Population_strip'";
-    $Population=$_SESSION[Target_Population];
+    $Population=$_SESSION['Target_Population'];
 }//end target population if
 else{
     $Population_strip=mysqli_real_escape_string($conn,$Population);

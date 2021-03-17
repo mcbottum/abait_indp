@@ -116,7 +116,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 						$total_duration=$total_duration+$row4['duration'];
 					}
 					while($row_rm4=mysqli_fetch_assoc($session_rm4)){
-						$sum_PRN_rm=$sum_PRN_rm+$row_rm4[PRN];
+						$sum_PRN_rm=$sum_PRN_rm+$row_rm4['PRN'];
 						$sum_episodes_rm=$sum_episodes_rm+1;
 						if($row_rm4['PRN']==1){
 							$PRN_duration_rm=$PRN_duration_rm+$row_rm4['duration'];
@@ -207,7 +207,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 									$session8=mysqli_query($conn,$sql_rm4);
 									$PRN_given = False;
 									while($row8=mysqli_fetch_assoc($session8)){
-										if($row8[PRN]=='1'){
+										if($row8['PRN']=='1'){
 											$PRN_given = True;
 											print"<tr>";
 												print"<td>$row8[date]</td>";
@@ -216,9 +216,9 @@ build_page($_SESSION['privilege'],$cgfirst);
 												print"<td>$row8[behavior_description]</td>";
 												// print"<td>$row8[post_PRN_observation]</td>";
 												print"<td>";
-												foreach (explode(',',$row8[post_PRN_observation]) as $key) {
+												foreach (explode(',',$row8['post_PRN_observation']) as $key) {
 													foreach ($contact_data as $contact) {
-														if($contact[id]==$key){
+														if($contact['id']==$key){
 															print"--$contact[contact_type]";
 														}
 													}
@@ -264,7 +264,7 @@ build_page($_SESSION['privilege'],$cgfirst);
 								print"</table>";
 
 				print"<h3> Enter Administrative Emergency Int Review Comments Here </h3>";
-					$report_name = 'PRNreport_'.$row1[residentkey];
+					$report_name = 'PRNreport_'.$row1['residentkey'];
 					print"<input type='text' name=$report_name style='background-color: yellow; font-size: 14px; width:99%;' size='130'>";
 		}//end row1 while for residents in Target_Population
 

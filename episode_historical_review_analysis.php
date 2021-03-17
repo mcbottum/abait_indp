@@ -313,7 +313,7 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
 				print"<tr>";
 					print"<td>";
 						if($j==count($sql_array)-1&&in_array($sql_all,$sql_array)){
-							print"<h3 class='center_header'>Scale Totals for <em>All</em> Triggers From <em>$date_start</em> - <em>$date_end</em></h3>\n";
+							print"<h4 class='center_header'>Scale Totals for <em>All</em> Triggers From <em>$date_start</em> - <em>$date_end</em></h4>\n";
 						}else{
 							print"<h3 class='center_header'>Scale Totals for <em>${'behave_'.$j}</em> Triggers From <em>$date_start</em> - <em>$date_end</em></h3>\n";
 						}
@@ -418,7 +418,7 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 				$graphTitle_bar='Count of Episodes per Three Hour Interval';
 				$yLabel_bar=' Episode Count';
 				$xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
-			if(count($values_bar_e!=0)){
+			if(empty($values_bar_e!=0)){
 			ABAIT_bar_graph($values_bar_e, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j);
 			}
 			//call graph function
@@ -426,7 +426,7 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 				$graphTitle_bar='Duration of Behavior Episodes per Three Hour Interval';
 				$yLabel_bar='Total Episode Duration (minutes)';
 				$xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
-			if(count($values_bar_d!=0)){
+			if(empty($values_bar_d!=0)){
 			ABAIT_bar_graph($values_bar_d, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+10);
 			}
 
@@ -485,7 +485,7 @@ if($behavior_units){///////////////////////////////////////////// behavior units
 			print"<h3 class='center_header'>Effect of Interventions on Agitated Behavior Episodes</h3>";
 		print"</td></tr>";
 		print"<tr><td>";
-			print"<h4 class='center_header'>Intervention values are the sum of improvement levels on behavior intensity rating scale.</h4>";
+			print"<h5 class='center_header'>Intervention values are the sum of improvement levels on behavior intensity rating scale.</h5>";
 		print"</td>";
 		print"<td align='right' valign-'bottom'>";
 
@@ -657,9 +657,9 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
         $behavior_maps_sql="SELECT * FROM behavior_maps WHERE behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
         //$sql2="SELECT * FROM behavior_maps WHERE behavior='$behavior' AND residentkey='$residentkey'";
         $behavior_maps_session=mysqli_query($conn,$behavior_maps_sql);
-            print "<table width='100%'>";
+            print "<table align='center'>";
             print "<tr><td>";
-            print "<table align=center class='table scroll local' border='1' bgcolor='white'>";
+            print "<table  class='table scroll local' border='1' bgcolor='white'>";
                 print "<thead>";
                     print"<tr><th colspan='5'>$behavior Behavior Episodes From <em>$date_start</em> - <em>$date_end</em></th></tr>";
                     print"<tr>";
@@ -800,7 +800,7 @@ $dataPoints2 = array(
     $carers_session=mysqli_query($conn,$carers_sql);
     $carer_presence_array=array();
     while($row=mysqli_fetch_assoc($carers_session)){
-    	$carer_presence_array[$row[personaldatakey]]=array("name"=> $row[first]." ".$row[last],"On Staff"=>0,"Present During Incident"=>0,"Present During Intervention"=>0);
+    	$carer_presence_array[$row['personaldatakey']]=array("name"=> $row['first']." ".$row['last'],"On Staff"=>0,"Present During Incident"=>0,"Present During Intervention"=>0);
     }
 
     $behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
@@ -808,13 +808,13 @@ $dataPoints2 = array(
 
     while($row=mysqli_fetch_assoc($behavior_map_data_session)){
     	foreach($carer_presence_array as $x => $x_value) {
-    		if(in_array($x,explode(",", $row[on_staff]))){
+    		if(in_array($x,explode(",", $row['on_staff']))){
     			$carer_presence_array[$x]['On Staff']+=1;
     		}
-    		if(in_array($x,explode(",", $row[staff_present_incident]))){
+    		if(in_array($x,explode(",", $row['staff_present_incident']))){
     			$carer_presence_array[$x]['Present During Incident']+=1;
     		}
-    		if(in_array($x,explode(",", $row[staff_present_intervention]))){
+    		if(in_array($x,explode(",", $row['staff_present_intervention']))){
     			$carer_presence_array[$x]['Present During Intervention']+=1;
     		}
     	}
@@ -825,14 +825,14 @@ $dataPoints2 = array(
     while($row=mysqli_fetch_assoc($resident_mapping_data_session)){
 
     	foreach($carer_presence_array as $x => $x_value) {
-    		if(in_array($x,explode(",", $row[on_staff]))){
+    		if(in_array($x,explode(",", $row['on_staff']))){
     			$carer_presence_array[$x]['On Staff']+=1;
 
     		}
-    		if(in_array($x,explode(",", $row[staff_present_incident]))){
+    		if(in_array($x,explode(",", $row['staff_present_incident']))){
     			$carer_presence_array[$x]['Present During Incident']+=1;
     		}
-    		if(in_array($x,explode(",", $row[staff_present_intervention]))){
+    		if(in_array($x,explode(",", $row['staff_present_intervention']))){
     			$carer_presence_array[$x]['Present During Intervention']+=1;
     		}
     	}

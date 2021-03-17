@@ -104,7 +104,7 @@ if(isset($_GET['number_of_scales'])){
 
 
 if(isset($_GET['id'])&&$_GET['id']!=='null'){
-	mysqli_select_db($_SESSION['database']);
+	//mysqli_select_db($_SESSION['database']);
 	$residentkey = $_GET['id'];
 	$res_sql="SELECT * FROM residentpersonaldata WHERE residentkey='$residentkey'";
 	$res_query=mysqli_query($conn,$res_sql);
@@ -172,7 +172,7 @@ if(isset($residentkey)&&$residentkey!=null){
 }
 
 print"<table align='center' width='95%'>";
-print"<tr><td><h4>Triggers and Interventions for the <em>$Population </em> Population</td>";
+//print"<tr><td><h4>Triggers and Interventions for the <em>$Population </em> Population</td>";
 
 ?>
 <td align='right'><INPUT TYPE="button" value="Print Page" onClick="window.print()"></td></tr>
@@ -235,8 +235,10 @@ print "<table class='noScroll local hover' border='1' bgcolor='white'>";
 		}
 		print"</table>";
 		if(isset($package)&&$package){
-			print "<h3 align='right'>Return to Plan Creation Page (click):";
+			//print "<h3 align='right'>Return to Plan Creation Page (click):";
+			print "</br>";
 			print "<input	type = 'button'
+			        style='float:right'
 					name = 'subtract_one'
 					id = 'subtract_one'
 					value = 'Return to Plan Creation Page'

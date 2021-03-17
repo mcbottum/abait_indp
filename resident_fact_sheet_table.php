@@ -44,7 +44,7 @@ if($_SESSION['cgfirst']!=""){
 build_page($_SESSION['privilege'],$cgfirst);
 ?>
 									
-			<h3><label>Resident Fact Sheet</label></h3>
+			<h3 align='center'><label>Resident Fact Sheet</label></h3>
 <form action="adminhome.php" method="post">
 		
 <?
