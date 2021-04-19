@@ -22,6 +22,11 @@ if(isset($_REQUEST['client'])){
 }else{
 	$k=Null;
 }
+if(isset($_REQUEST['locationid'])){
+	$locationid=$_REQUEST['locationid'];
+}else{
+	$locationid=Null;
+}
 //TESTING
 //$remote_login_guid = '1234567890';
 ?>

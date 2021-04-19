@@ -21,6 +21,52 @@ print $_SESSION['SITE']
 <link 	rel = "stylesheet"
 		type = "text/css"
 		href = "ABAIT_admin.css">
+
+<script>
+function validate_form()
+{
+
+	var scale_name = document.getElementById("scale_name");
+	var scale_name_value = scale_name.options[scale_name.selectedIndex].value;
+
+	valid=true;
+	var alertstring=new String("");
+
+	var id = document.getElementsByName('residentkey');
+	if(checkRadio(id)==false){
+		alertstring = alertstring + +"\nPlease select a Resident.";
+		valid=false;
+	}
+	var id = document.getElementsByName('review_time');
+	if(checkRadio(id)==false){
+		alertstring = alertstring + +"\nPlease select an analysis interval.";
+		valid=false;
+	}
+
+
+
+	if(valid==false){
+		alert("Please enter the following data;" + alertstring);
+	}//generate the conncanated alert message
+
+	document.form.submit.style.color = "#A65100";
+	return valid;
+}//end form validation function	
+
+function checkRadio(id) {
+
+  var check = document.getElementsById(id);
+  for (var i=0; i<check.length; i++) {
+    if (check[i].checked) {
+      return true;
+    } 
+  }
+  // End of the loop, return false
+  return false;
+}
+
+</script>
+
 <style>
     table.local thead th{
         width:500px;
@@ -223,7 +269,7 @@ $scale_array=array();
 							print "<label>";
 							print "<input type='radio'
 								name= 'review_time'
-								value= '0'>Previous Month</label></td></tr>\n";
+								value= 'previous'>Previous Month</label></td></tr>\n";
 								
 							print "<tr><td>";
 							print "<label>";

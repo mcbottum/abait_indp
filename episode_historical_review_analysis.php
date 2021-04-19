@@ -180,7 +180,7 @@ if($filename=="Submit Resident for Global Analysis"){
 		// Default date end is now
 		$date_end=date("Y-m-d");
 
-		if($reviewtime==0){
+		if($reviewtime=="previous"){
 			$date_start=date('Y-m-d', strtotime('first day of last month'));
 			$date_end=date('Y-m-d', strtotime('last day of last month'));
 		}
@@ -260,9 +260,9 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
 
 
 		if($residentkey=='all_residents'){
-			${'sql_all'}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+			${'sql_all'}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date <= '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
 		}else{
-			${'sql_all'}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date < '$date_end' order by date";
+			${'sql_all'}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date <= '$date_end' order by date";
 		}
 		$sql_array[]=$sql_all;
 	}else{
@@ -273,9 +273,9 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
 			${'behave_'.$i}=$_REQUEST[$behavior];
 			if(in_array(${'behave_'.$i},$_SESSION['scale_array'])){
 				if($residentkey=='all_residents'){
-					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='${'behave_'.$i}' order by date";
+					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date <= '$date_end' AND behavior='${'behave_'.$i}' order by date";
 				}else{
-					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date < '$date_end' AND behavior='${'behave_'.$i}' order by date";
+					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date <= '$date_end' AND behavior='${'behave_'.$i}' order by date";
 				}
 				$sql_array[]=${'sql'.$i};
 				$i=$i+1;
@@ -370,9 +370,9 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 		unset($sql_array);
 	if($_REQUEST['all']=='all'){
 		if($residentkey=='all_residents'){
-			${'sql_all'}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+			${'sql_all'}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date <= '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
 		}else{
-			${'sql_all'}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date < '$date_end'";
+			${'sql_all'}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date <= '$date_end'";
 		}
 		$sql_array[]=$sql_all;
 	}else{
@@ -381,9 +381,9 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 			${'behave_'.$i}=$_REQUEST[$behavior];
 			if(in_array(${'behave_'.$i},$_SESSION[scale_array])){
 				if($residentkey=='all_residents'){
-					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='${'behave_'.$i}'";
+					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date <= '$date_end' AND behavior='${'behave_'.$i}'";
 				}else{
-					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date < '$date_end' AND behavior='${'behave_'.$i}'";
+					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date <= '$date_end' AND behavior='${'behave_'.$i}'";
 				}
 				$sql_array[]=${'sql'.$i};
 				$i=$i+1;
@@ -524,9 +524,9 @@ print "<table width='100%'>";//table for more info copy this line
 				$intv6=0;
 				//print"<tr>\n";
 				if($residentkey=='all_residents'){
-					$sql3="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+					$sql3="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date <= '$date_end' AND behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
 				}else{
-					$sql3="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND behavior='$behavior' AND date > '$date_start' AND date < '$date_end'";
+					$sql3="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND behavior='$behavior' AND date > '$date_start' AND date <= '$date_end'";
 				}
 
 					$session3=mysqli_query($conn,$sql3);
@@ -689,9 +689,9 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
                                     print "<td> $behavior_maps_row[trig] </td>";
 
 																			if($residentkey=='all_residents'){
-																				$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+																				$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date <= '$date_end' AND behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
 																			}else{
-																				$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND behavior='$behavior' AND date > '$date_start' AND date < '$date_end'";
+																				$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND behavior='$behavior' AND date > '$date_start' AND date <= '$date_end'";
 																			}
 								                                $behavior_map_data_session=mysqli_query($conn,$behavior_map_data_sql);
 
@@ -803,7 +803,7 @@ $dataPoints2 = array(
     	$carer_presence_array[$row['personaldatakey']]=array("name"=> $row['first']." ".$row['last'],"On Staff"=>0,"Present During Incident"=>0,"Present During Intervention"=>0);
     }
 
-    $behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+    $behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date <= '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
     $behavior_map_data_session=mysqli_query($conn,$behavior_map_data_sql);
 
     while($row=mysqli_fetch_assoc($behavior_map_data_session)){
@@ -820,7 +820,7 @@ $dataPoints2 = array(
     	}
     }
 
-    $resident_mapping_data_sql="SELECT * FROM resident_mapping WHERE date > '$date_start'  AND date < '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+    $resident_mapping_data_sql="SELECT * FROM resident_mapping WHERE date > '$date_start'  AND date <= '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
     $resident_mapping_data_session=mysqli_query($conn,$resident_mapping_data_sql);
     while($row=mysqli_fetch_assoc($resident_mapping_data_session)){
 
@@ -966,9 +966,9 @@ print"</div>";
 
 if($all_episode){//////////////////////////////////////////all_episode/////////////////////////////////////////
 		if($residentkey=='all_residents'){
-			$sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' ORDER BY date, residentkey";
+			$sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date <= '$date_end' ORDER BY date, residentkey";
 		}else{
-			$sql="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date <'$date_end' ORDER BY date";
+			$sql="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND date > '$date_start' AND date <= '$date_end' ORDER BY date";
 		}
 		$session=mysqli_query($conn,$sql);
 
@@ -1032,9 +1032,9 @@ if($all_episode){//////////////////////////////////////////all_episode//////////
 
 if($include_unmapped){//////////////////////////////////////////include_unmapped/////////////////////////////////////////
 		if($residentkey=='all_residents'){
-			$sql="SELECT * FROM resident_mapping WHERE date > '$date_start' AND date < '$date_end' ORDER BY date, residentkey";
+			$sql="SELECT * FROM resident_mapping WHERE date > '$date_start' AND date <= '$date_end' ORDER BY date, residentkey";
 		}else{
-			$sql="SELECT * FROM resident_mapping WHERE residentkey='$residentkey' AND date > '$date_start' AND date <'$date_end' ORDER BY date";
+			$sql="SELECT * FROM resident_mapping WHERE residentkey='$residentkey' AND date > '$date_start' AND date <= '$date_end' ORDER BY date";
 		}
 		$session=mysqli_query($conn,$sql);
 
