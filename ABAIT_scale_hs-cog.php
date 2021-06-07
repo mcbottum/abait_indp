@@ -365,10 +365,9 @@ if($_SESSION['country_location']=='UK'){
     $first=$_SESSION['first'];
     $last=$_SESSION['last'];
 
-    // print"<h2 class='m-3' align='center'>\n";
-    //     print $scale_name." Support Plan for  ".$first."  ".$last;
-    // print"</h2>\n";
-    print "<h2 class='m-3 p-2 footer_div' align='center'>$scale_name Support Plan for  $first $last</h2>";
+    print"<h2 class='m-3' align='center'>\n";
+        print $scale_name." Support Plan for  ".$first."  ".$last;
+    print"</h2>\n";
     print "<input type='hidden' id='residentkey', name='residentkey' value='".$residentkey."'>";
     print "<input type='hidden', name='trig' value='".$trig."'>";
         ?>
@@ -377,11 +376,33 @@ if($_SESSION['country_location']=='UK'){
 
 
 
-            <table class="center table-sm">
-
-                <tr align="center">
-                    <td align="center"><h5>Select Date and Time of the Episode</h5></td>
+            <table class="center table-sm table-hover ">
+<!--                 <tr align="center">
+                    <th align="center" > Select if episode is taking place now</th>
                 </tr>
+                <tr align="center">
+                    <td height='40' align="center" id = "date_header">
+                        <input  
+                                name = "date"
+                                id = "now"
+                                class="custom-red  btn-lg btn-danger "
+                                style="width:29%"
+                                onclick="hide('now')"
+                                value = "NOW">
+                    </td>
+                </tr> -->
+                <tr align="center">
+                    <th align="center">select date and time</th>
+                </tr>
+<!--                 <tr align="center">
+                    <td height='40' align="center" id="datetimepicker5_cell">
+                        <div class="input-wrapper">
+                            <input onchange="checkDate()" class="form-control" id="datetimepicker5"  name="datetimepicker"  autocomplete="off" type="text" placeholder='Touch to enter'/>
+                        </div>
+
+                    </td>
+                </tr> -->
+
                 <tr>
                     <td  align='center'>
                        
@@ -411,7 +432,7 @@ if($_SESSION['country_location']=='UK'){
 
 
                 <tr align="center">
-                    <td align="center"><h5>Duration of the Episode</h5></td>
+                    <th align="center">Duration of episode</th>
                 </tr>
                 <tr align="center">
                     <td height='40'  align="center">
@@ -439,8 +460,8 @@ if($_SESSION['country_location']=='UK'){
     $color_array = ['#FF000','#00FF00','#ADFF2F','#FFD700','#FF7F50','#FF0000'];
     // $color_array = ['red','orange','yellow','lightgreen','green','blue'];
 
-    print"<h3 align='center'><label>Episode $behavior_spelling Intensity Tracking</label></h3>\n";
-        print"<table align='center' class='table-sm'>\n";
+    print"<h3 align='center'><label>Select $behavior_spelling Intensity</label></h3>\n";
+        print"<table align='center' class='table-sm table-hover'>\n";
 
             // THESE ARE THE BEHAVIOR BEFORE 
             print "<div id='behaviorIntensityBefore'>";
@@ -472,7 +493,7 @@ if($_SESSION['country_location']=='UK'){
                     print "<td  colspan='6' align: center'><h3>Intervention $int <span style='color:Lime'>(optional)</span></h3</td></tr>";
                 }
         }elseif($int<6 && $int>2){  //allow five interventions
-            print"<tr id='intensityAfterHeader_$int' align='center' class='mt-3behaviorIntensityAfter' style='display:none'>";
+            print"<tr id='intensityAfterHeader_$int' align='center' class='behaviorIntensityAfter' style='display:none'>";
                 print "<td  colspan='6'><h3>Intervention $int <span style='color:Lime'>(optional)</span></h3></td></tr>";
         }else{
             print"<tr align='center' class='behaviorIntensityAfter'>";
@@ -539,7 +560,7 @@ if($_SESSION['country_location']=='UK'){
       
 print "<tr><td colspan=2 style='padding:0px'>";
 
-            print "<table class='table-sm'>";
+            print "<table class='table-sm table-hover'>";
                     if($int==1){
                         print "<tbody colspan=4 id='behaviorIntensityAfterButton_$int'>";
                     }else{

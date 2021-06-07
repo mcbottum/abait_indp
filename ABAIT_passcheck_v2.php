@@ -40,19 +40,22 @@ charset=utf-8"/>
 //if host, user or database password is changed change script on lines 28  54-58 of this file
 
 //for local
-// $db = 'agitation_indp';
-// $_SESSION['db'] = $db;
-// $host = 'localhost';
-// $db_user = 'abait';  // for agitation
-// $db_pwd = 'abait123!';
+ $db = 'abait_indp';
+ $_SESSION['db'] = $db;
+ $host = 'mysql';
+ $db_user = 'root';
+ $db_pwd = 'abaitroot';
+
+ $db_user = 'root';  
+ $db_pwd = 'abaitroot';
 
 // for remote:
-$db = 'agitation_indp';
-$_SESSION['db'] = $db;
-$host = 'mysqlindp.abaitscale.com';
-$db_user = 'abaitindp';
-$db_pwd = 'h1$6T#5IWx';
-$_SESSION['reset_password'] = False;
+//$db = 'agitation_indp';
+//$_SESSION['db'] = $db;
+//$host = 'mysqlindp.abaitscale.com';
+//$db_user = 'abaitindp';
+//$db_pwd = 'h1$6T#5IWx';
+$_SESSION['reset_password'] = True;
 
 $_SESSION['passwordcheck']='fail';
 // $_SESSION['HOME']='index.php';
@@ -76,7 +79,7 @@ $filename =$_REQUEST["submit"];
 		$password="";
 	}
 	if($password!=""){
-		#$conn=mysqli_connect($host,$db_user,$db_pwd);
+		#$con:=mysqli_connect($host,$db_user,$db_pwd);
 		$conn=mysqli_connect($host,$db_user,$db_pwd,$db);
 		if (mysqli_connect_errno()) {
 			printf("Connect failed: %s\n", mysqli_connect_error());
@@ -104,12 +107,12 @@ $filename =$_REQUEST["submit"];
 					$_SESSION['cgfirst'] = '';
 					$_SESSION['cglast'] = '';
 					$_SESSION['personaldatakey']=$row1['personaldatakey'];
-					$nextfile="adminhome.php";
+					$nextfile="ABAIT_adminhome_v2.php";
 					$_SESSION['passwordcheck']='pass';
 					$_SESSION['privilege']='globaladmin';
 					$_SESSION['Target_Population']='all';
 					$_SESSION['house']='all';
-					$_SESSION['home_page']='adminhome.php';
+					$_SESSION['home_page']='ABAIT_adminhome_v2.php';
 				}
 				elseif($row1['accesslevel']=='admin'&& strpos($row1['password'], $password)!== false){
 
@@ -120,10 +123,10 @@ $filename =$_REQUEST["submit"];
                                                 if($row=mysqli_fetch_assoc($session)){
                                                         $nextfile="ABAIT_quick_scales_v2.php?k=".$k;
                                                 }else{
-                                                        $nextfile="adminhome.php";
+                                                        $nextfile="ABAIT_adminhome_v2.php";
                                                 }
                                         }else{
-                                                $nextfile="adminhome.php";
+                                                $nextfile="ABAIT_adminhome_v2.php";
                                         }
 
 					$_SESSION['adminfirst']=$row1['first'];
@@ -131,8 +134,8 @@ $filename =$_REQUEST["submit"];
                     			$_SESSION['cgfirst'] = '';
 					$_SESSION['cglast'] = '';
 					$_SESSION['personaldatakey']=$row1['personaldatakey'];
-					$nextfile="adminhome.php";
-					$_SESSION['home_page']='adminhome.php';
+					$nextfile="ABAIT_adminhome_v2.php";
+					$_SESSION['home_page']='ABAIT_adminhome_v2.php';
 					$_SESSION['passwordcheck']='pass';
 					$_SESSION['privilege']='admin';
 					$_SESSION['privilegekey']=$row1['privilegekey'];

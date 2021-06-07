@@ -1,6 +1,5 @@
 <?
 function ABAIT_bar_graph($values,$graphTitle,$yLabel,$xlabel,$graphNumber){
-	//print_r($values);
 	$img_width=700;
 	$img_height=400; 
 	$margins=20;
@@ -13,7 +12,8 @@ function ABAIT_bar_graph($values,$graphTitle,$yLabel,$xlabel,$graphNumber){
 	$graph_width=$img_width - $margins * 2;
 	$graph_height=$img_height - ($margins*4);
 	$img=imagecreate($img_width,$img_height);
-	
+
+
 	if($values){
 		$total_bars=count($values);
 		$bar_width=$graph_width/($total_bars*(2+1));
@@ -35,11 +35,12 @@ function ABAIT_bar_graph($values,$graphTitle,$yLabel,$xlabel,$graphNumber){
 	# ------- Max value is required to adjust the scale	-------
 	if($values){
 	$max_value=max($values);
-		if ($max_value==0){
+	if ($max_value==0){
 		$max_value=.1;
 	}
 	}else{$max_value=1;
 	}
+
 	$ratio= $graph_height/$max_value;
 
 	# -------- Create scale and draw horizontal lines  --------
@@ -60,11 +61,14 @@ function ABAIT_bar_graph($values,$graphTitle,$yLabel,$xlabel,$graphNumber){
 		$b=10*$i;
 		$bar_color=imagecolorallocate($img,$r,$g,$b);
 		# ------ Extract key and value pair from the current pointer position
-		list($key,$value)=each($values); 
+		list($key,$value)=each($values);
+
 		$x1= $margins + $gap + $i * ($gap+$bar_width) ;
 		$x2= $x1 + $bar_width; 
-		$y1=$margins*2+$graph_height- intval($value * $ratio) ;
+		$y1=$margins*2+$graph_height - intval($value * $ratio) ;
 		$y2=$img_height-$margins*2;
+
+
 		imagestring($img,$font,$x1+3+5,$y1-$fontheight,$value,$bar_color);
 		// x labels
 		//imagestring($img,$font,$x1+3,$img_height-15,$key,$bar_color);
@@ -88,13 +92,15 @@ function ABAIT_bar_graph($values,$graphTitle,$yLabel,$xlabel,$graphNumber){
 	imagestring($img,$font+1, ($img_width/2)-(strlen($graphTitle)*$fontwidth)/2, $c1['y']-($fontheight/2)-($margins/2), $graphTitle, $label_color);
 	//x labels
 	if($xlabel=='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|'){
-	imagestring($img,$font+1, ($margins*2), $img_height-$c1['y']+($fontheight)/1.5-($margins/2), $xlabel, $label_color);
+		imagestring($img,$font+1, ($margins*2), $img_height-$c1['y']+($fontheight)/1.5-($margins/2), $xlabel, $label_color);
 	}else{
 		imagestring($img,$font+2, ($img_width/2)-(strlen($xlabel)*$fontwidth)/2, $img_height-$c1['y']+($fontheight)/1.5-($margins/2), $xlabel, $label_color);
 	}
 	//y labels	
 	ImageStringUp($img,$font,$c1['x']/2-$fontheight/2, $img_height/2+(strlen($yLabel)*$fontwidth)/2, $yLabel, $label_color);
+
 	imagepng($img,'behaviorgraph'.$graphNumber.'.png');
+	imagedestroy($img);
 		
 }
 function ABAIT_pie_graph($values,$graphTitle,$yLabel,$graphNumber){
@@ -259,8 +265,6 @@ function toggleDataSeries(e){
 }
 
 function set_css(){
-	// set CSS file for either admin or caregiver role
-	if ($_SESSION['privilege'] == 'caregiver'){
 		?>
 		<link rel="stylesheet" href="bootstrap-4.4.1-dist/css/fontawesome-free-5.13.0-web/css/all.css">
 		<link rel="stylesheet" type="text/css" href="bootstrap-4.4.1-dist/css/bootstrap.min.css">
@@ -268,17 +272,31 @@ function set_css(){
 		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-		<script type='text/javascript' src="bootstrap-4.4.1-dist/js/bootstrap.min.js"></script>
-		<link 	rel = "stylesheet"
-				type = "text/css"
-				href = "ABAIT_v2.css">
+		<!-- <script type='text/javascript' src="bootstrap-4.4.1-dist/js/bootstrap.min.js"></script> -->
 		<link 	rel="stylesheet" 
 		type="text/css" 
 		href="datetimepicker-master/jquery.datetimepicker.css"/ >
 		<script type='text/javascript' src="datetimepicker-master/jquery.js"></script>
 		<script type='text/javascript' src="datetimepicker-master/jquery.datetimepicker.js"></script>
 		<script type='text/javascript' src="static/js/custom_js.js"></script>
+	
+	<?
+	// set CSS file for either admin or caregiver role
+	if ($_SESSION['privilege'] == 'caregiver'){
+		?>
 
+		<link 	rel = "stylesheet"
+				type = "text/css"
+				href = "ABAIT_v2.css">
+
+
+		<?
+	}else if ($_SESSION['privilege'] == 'admin' || $_SESSION['privilege'] == 'globaladmin'){
+		?>
+
+		<link 	rel = "stylesheet"
+				type = "text/css"
+				href = "ABAIT_v2_admin.css">
 		<?
 	}else{
 		?>
@@ -377,7 +395,7 @@ function build_page_pg($display='none'){
 			<div class="page-header p-2">  </div>
 
 			<nav class="navbar navbar-expand-md navbar-dark">
-			<img src="favicon6.ico" class="img-fluid" alt="Responsive image">
+			<img src="abait_leaf.png" class="img-fluid" alt="Responsive image">
 			<a class="navbar-brand p-3 icon-ginko" href= <? print $home ?> >ABAIT Home</a>
 			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>

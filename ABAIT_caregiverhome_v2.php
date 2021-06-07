@@ -71,7 +71,7 @@ set_css()
 		</div>
 	<div class="row justify-content-md-center">
 		<div class='col col-lg-3 mt-4'>
-			<a  class="btn  btn-lg btn-block p-5" href='ABAIT_prn_effect_v2.php'>Post Emergency Intervention</a>
+			<a  class="btn  btn-lg btn-block p-5" href='ABAIT_prn_effect_v2.php'>Record Medication Effect</a>
 			
 			</div>
 		</div>

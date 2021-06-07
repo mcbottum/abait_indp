@@ -25,38 +25,17 @@ ABAIT Resident Triggers and Interventions
     	padding-top: 5px;
     	padding-bottom: 5px;
     }
-
-	.center {
-		width: 30%;
-	}
-	.btn.btn-lg {
-	    background-color: #03DAC5;
-	    border-radius: 10px;
-	    font-size: 1.5em;
-	    color: black;
-	}
-	.btn-lg:hover {
-		background-color: #1FC4B4;
-		box-shadow: 1px 1px 15px #888888;
-	    border-style:solid;
-	    border-width:1px;
-	    color: black;
-	}
-	.footer_div {
-		background-color: #F5F5F5;
-	}
-	.footer {
-		color: black;
-	}
-
+    .table th {
+    background-color: lightgrey;
+    }
 </style>
 </head>
 <body class="container">
 	<?			
 		$names = build_page_pg();
+		print"<h2 class='m-3 p-2 footer_div' align='center'>Resident Fact Sheet</h2>";
 	?>
-									
-<h2 class="text-center mt-4"><label>Resident Fact Sheet</label></h2>
+
 
 <form action="adminhome.php" method="post">
 		
@@ -147,13 +126,13 @@ if($filename=="Submit Resident Choice"){
 				
 
                     if($residentkey=='all_residents'){
-                        print"<div id='head'> $title for <em>All Residents</em></div>\n";
+                        print"<div id='head' align='center'><h4> $title for <em>All Residents</em></h4></div>\n";
                     }else{
                             print"<div id='head'> $title $res_first $res_last</div>\n";         
                     }
 			
-			print "<table class='center table-responsive-md table-hover table-sm' border='1' bgcolor='white' style='width:auto'>";
-				print "<thead>";
+			print "<table class='table center table-responsive-md table-hover table-sm' border='1'  style='width:auto'>";
+
 					print"<tr>\n";
 						print"<th align='center'>Scale</th>\n";
 						print"<th align='center'>Trigger</th>\n";
@@ -163,8 +142,7 @@ if($filename=="Submit Resident Choice"){
 						print"<th align='center'>Intv. 4</th>\n";
 						print"<th align='center'>Intv. 5</th>\n";											
 					print"</tr>\n";
-				print "</thead>";
-				print "<tbody>";
+
 						while($row1=mysqli_fetch_assoc($session1)){
 							$row=array($row1['intervention_1'], $row1['intervention_2'], $row1['intervention_3'], $row1['intervention_4'], $row1['intervention_5']);
 							$sql2="SELECT SUM(intervention_score_1), SUM(intervention_score_2), SUM(intervention_score_3), SUM(intervention_score_4), SUM(intervention_score_5) FROM behavior_map_data WHERE mapkey ='$row1[mapkey]'";
@@ -182,7 +160,7 @@ if($filename=="Submit Resident Choice"){
 								}
 							print"</tr>\n";
 						}
-				print "</tbody>";
+
 				print "<p></p>";	
 			print "</table>";
 		}else{
@@ -194,10 +172,10 @@ if($filename=="Submit Resident Choice"){
 		print "<p></p>";
 		if($int_avoid){
 
-			print"<div id='head'> $title2 </div>\n"; 
+			print"<div id='head' align='center'><h4> $title2 </h4></div>\n"; 
 			
 
-			print "<table class='center  table-hover table-sm' border='1' bgcolor='white' style='width:100%'>";
+			print "<table class='table center  table-hover table-sm' border='1' bgcolor='white' style='width:100%'>";
 				print"<tr>\n";
 					print"<th align='center'>Behavior</th>\n";
 					print"<th align='center'>Trigger</th>\n";
@@ -225,8 +203,8 @@ if($filename=="Submit Resident Choice"){
 // SLOW TRIGGER
 		
 		if($slow_trigger){
-			print"<div id='head'> $title3 </div>\n";
-			print "<table class='center table-responsive-sm table-hover table-lg' border='1' bgcolor='white' style='width:100%'>";
+			print"<div id='head' align='center'><h4> $title3 </h4></div>\n";
+			print "<table class='table center table-responsive-sm table-hover table-lg' border='1' bgcolor='white' style='width:100%'>";
 				print"<tr>\n";
 					print"<th align='center'>Behavior</th>\n";
 					print"<th align='center'>Trigger</th>\n";

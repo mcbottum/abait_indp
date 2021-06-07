@@ -57,9 +57,7 @@ else{
 $Population_strip=mysqli_real_escape_string($conn,$Population);
 $sql="SELECT * FROM triggers_and_interventions WHERE Target_Population='$Population_strip' ORDER BY Trigger_Class";
 
-print "<h2 class='m-3' align='center'>";
-print $names[0]."'s Interactive Education Module";
-print "</h2>";
+print "<h2 class='m-3 p-2 footer_div' align='center'>". $names[0]."'s Interactive Education Module</h2>";
 
 ?>
 
@@ -73,7 +71,7 @@ print "</h2>";
 	<ol type="I">
 		<li><h4>When Behaviors Occur</h4></li>
 			<ul class="m-2">
-				<li class="m-2"><a href='ABAIT_quick_scales.php'>STEP 1 - Record in 2 Week Resident Observation</a></li>
+				<li class="m-2"><a href='ABAIT_quick_scales_v2.php'>STEP 1 - Record in 2 Week Resident Observation</a></li>
 					<ol>
 						<li>What behaviors occured?</li>
 						<li>Where behaviors happened?</li>
@@ -163,25 +161,7 @@ print "</h2>";
 	</div>
 	</td>
 	</tr>
-	<tr>
-	<td>
-		<img class="center" id="datamap" src = "ABAITflowchart_one_button500.png" ismap usemap="#datamap" style="border:none;">
-		<map name="datamap">
-<!-- 			<?
-				if($_SESSION['privilege']=='globaladmin'||$_SESSION['privilege']=='admin'){
-			?> -->
-<!-- 				<area shape="rect"  coords="245,133,372,267" href="ABAIT_setup.php"/>
-				<area shape="rect"  coords="245,281,372,342" href="chooseresident_for_map_review.php"/>
-				<area shape="rect"  coords="245,354,372,494" href="ABAIT_analysis.php"/>
-				<area shape="rect"  coords="113,527,236,592" href="ABAIT_education.php"/>
-				<area shape="rect"  coords="246,527,369,592" href="chooseresident_for_map_review.php"/>
-				<area shape="rect"  coords="379,527,503,592" href="ABAIT_admin_report.php"/> -->
-			<!-- <?}?> -->
-<!-- 				<area shape="rect"  coords="7,177,115,307" href="chooseresident_map.php"/>
-				<area shape="rect"  coords="7,323,115,455" href="ABAIT_quick_scales.php"/>  -->
-		</map>
-	</td>
-</tr></table>	
+</table>	
 
 
 <?build_footer_pg()?>

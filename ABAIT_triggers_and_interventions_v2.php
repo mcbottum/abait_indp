@@ -42,12 +42,9 @@ ABAIT Triggers and Interventions
 	    border-width:1px;
 	    color: black;
 	}
-	.footer_div {
-		background-color: #F5F5F5;
-	}
-	.footer {
-		color: black;
-	}
+    .table th {
+    background-color: lightgrey;
+    }
 
 </style>
 </head>
@@ -57,7 +54,7 @@ ABAIT Triggers and Interventions
 	$names = build_page_pg();
 ?>
 
-<h2 class="text-center mt-4"><label>Trigger and Intervention Catalog</label></h2>
+<h2 class='m-3 p-2 footer_div' align='center'>Trigger and Intervention Catalog</label></h2>
 
 	
 <?
@@ -121,12 +118,12 @@ else{
 	$sql2="SELECT * FROM triggers_and_interventions WHERE Target_Population='$Population_strip' ORDER BY Trigger_Class";
 
 	print"<table align='center' width='95%'>";
-	print"<tr><td><h4>Triggers and Interventions for the <em>$Population </em> Population</td>";
+	print"<tr align='center'><td><h4>Triggers and Interventions for the <em>$Population </em> Population</td>";
 
 	?>
 		<td align='right'><INPUT TYPE="button" class="btn btn-light" value="Print Page" onClick="window.print()"></td></tr></table>
 	<?
-	print "<table class='table' align='center' width='95%'border='1' bgcolor='white'>";
+	print "<table class='table   table-hover' align='center' width='95%'border='1' bgcolor='white'>";
 
 		$session2=mysqli_query($conn,$sql2);
 

@@ -23,32 +23,9 @@ print $_SESSION['SITE']
 	set_css()
 ?>
 <style>
-    td {
-    	padding-top: 5px;
-    	padding-bottom: 5px;
-    }
+	input[type=radio]{
+	  	transform:scale(1.5);
 
-	.center {
-		width: 30%;
-	}
-	.btn.btn-lg {
-	    background-color: #03DAC5;
-	    border-radius: 10px;
-	    font-size: 1.5em;
-	    color: black;
-	}
-	.btn-lg:hover {
-		background-color: #1FC4B4;
-		box-shadow: 1px 1px 15px #888888;
-	    border-style:solid;
-	    border-width:1px;
-	    color: black;
-	}
-	.footer_div {
-		background-color: #F5F5F5;
-	}
-	.footer {
-		color: black;
 	}
 
 </style>
@@ -56,12 +33,8 @@ print $_SESSION['SITE']
 <body class="container">
 	<?			
 		$names = build_page_pg();
-	?>
-	<h2 class="text-center mt-4">
-		Resident Fact Sheet
-	</h2>
+		print"<h2 class='m-3 p-2 footer_div' align='center'>Resident Fact Sheet</h2>";
 
-	<?
 	if(isset($_REQUEST['Population'])){
 		$Population=str_replace('_',' ',$_REQUEST['Population']);
 	}else{
@@ -155,8 +128,9 @@ print $_SESSION['SITE']
 					print "</thead>";
 					print "<tbody>";
 						while($row1=mysqli_fetch_assoc($session1)){
-							print"<tr align='center'>\n";
+							print"<tr class='m-2' align='center'>\n";
 							print"<td><input type = 'radio'
+								class='m-2'
 								name = 'residentkey'
 								value = $row1[residentkey]></td>\n";
 							print "<td> $row1[residentkey]</td>\n";
@@ -166,7 +140,9 @@ print $_SESSION['SITE']
 							print "<td> $row1[Target_Population]</td>\n";
 							print "</tr>\n";
 						}
-							print "<tr align='center'><td><input type = 'radio'
+							print "<tr align='center'><td><input 
+									type = 'radio'
+									class='m-2'
 									name = 'residentkey'
 									value ='all_residents'></td>\n";
 							print "<td colspan='5'>All Resident Summary</td></tr>\n";

@@ -328,6 +328,7 @@ span.tab{
 
 .footer_div {
   background-color: #F5F5F5;
+  box-shadow: .5px .5px 1px .5px darkgrey;
 
 }
 .footer {
