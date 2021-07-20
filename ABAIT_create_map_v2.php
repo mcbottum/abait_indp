@@ -59,7 +59,7 @@ function verifyDelete(id){
 }
 
 function reload(form, id, population){
-	alert(document.getElementById(id).value)
+	
 	var checkedValue = document.getElementById(id).value;
     var intervention_array = [];
     var location_vars = '&id=' + checkedValue;
@@ -113,7 +113,7 @@ function seeAllTriggers(population, id, checkedValue, residentkey=null) {
     		}
     	}
     }
-	self.location='ABAIT_trigger_intervention_catalog.php?Population='+population+'&number_of_scales='+checkedValue+'&package='+location_vars+'&id='+residentkey;
+	self.location='ABAIT_ti_catalog_v2.php?Population='+population+'&number_of_scales='+checkedValue+'&package='+location_vars+'&id='+residentkey;
 }
 </script>
 

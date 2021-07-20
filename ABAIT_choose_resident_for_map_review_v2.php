@@ -84,15 +84,24 @@ function radiobutton(rb)
 
     <?  
         $names = build_page_pg();
-    ?>
+	if($_SESSION['country_location']=='UK'){
+	    $behavior_spelling = 'Behaviour';
+	    $vocalization_spelling = 'Vocalisation';
+	    $characterization_spelling = 'Characterization';
+	    $date_format = 'dd-mm-yyyy';
+	}else{
+	    $behavior_spelling = 'Behavior';
+	    $vocalization_spelling = 'Vocalization';
+	    $characterization_spelling = 'Characterisation';
+	    $date_format = 'mm-dd-yyyy';
+	}
+  
+
+	print "<h2 class='m-3 p-2 footer_div' align='center'>";
+		print "Resident List of Created And Not Yet Created $behavior_spelling Plans";
+	print "</h2>";
 
 
-
-	<h2 class="m-3 p-2 footer_div" align='center'>
-		Resident List of Created And Not Yet Created Behavior Plans
-	</h2>
-
-<?
 if(isset($_GET['tp'])){
 	$Population=str_replace('_',' ',$_GET['tp']);
 }elseif(isset($_REQUEST['Population'])){
@@ -182,14 +191,14 @@ $scale_array=array();
 	//$session2=mysqli_query($sql2,$conn);
 	//print"<h4>Residents from <em>$Population</em> Population Database</h4>\n";
 	print "<table width='100%'>\n";//table for more info copy this line
-	print"<tr><td><h3 align='center'>Select Resident's Behavior to Review</h3></td>\n";
-	print"<td align='right'>\n";
+	print "<tr><td><h3 align='center'>Select Resident's $behavior_spelling to Review</h3></td>\n";
+	print "<td align='right'>\n";
 ?>
 <input style='float:inline-right' type='submit' value='Info' onClick="alert('This list presents created and not yet created behavior maps.  Clickable buttons appear where maps have not yet been created.');return false">
 <?
 				print "</td>";
 				print "</tr>";
-				print "<tr><td  align='center' style='color:red'><h4>Red Indicates Un-mapped, Un-checked Behavior recorded <em>after</em> Last Plan Creation</h4></td></tr>\n";
+				print "<tr><td  align='center' style='color:red'><h4>Red Indicates Un-mapped, Un-checked $behavior_spelling recorded <em>after</em> Last Plan Creation</h4></td></tr>\n";
 				print "<tr><td colspan='2'>";//table in table data for more info
 					print "<table class='table table-hover'  border='1' bgcolor='white'>";
 
@@ -312,7 +321,7 @@ $scale_array=array();
 			<div id="submit">
 				<input 	type = "submit"
 						name = "submit"
-						value = "Submit Resident for Behavior Review">
+						value = "Submit Resident for Review">
 			</div>
 
 	</form>

@@ -14,6 +14,7 @@ if($_SESSION['passwordcheck']!='pass'){
 <meta http-equiv="Content-Type" content="text/html;
 	charset=utf-8" />
 <title>
+
 <?
 print $_SESSION['SITE']
 ?>
@@ -66,10 +67,24 @@ set_css()
 
 </head>
 
+
+
 <body class="container">
 
 <?  
-$names = build_page_pg();
+	$names = build_page_pg();
+
+	if($_SESSION['country_location']=='UK'){
+		$behavior_spelling = 'Behaviour';
+		$vocalization_spelling = 'Vocalisation';
+		$characterization_spelling = 'Characterization';
+		$date_format = 'dd-mm-yyyy';
+	}else{
+		$behavior_spelling = 'Behavior';
+		$vocalization_spelling = 'Vocalization';
+		$characterization_spelling = 'Characterisation';
+		$date_format = 'mm-dd-yyyy';
+	}
 
 
 print"<h2 class='m-3 p-2 footer_div' align='center'>Resident Espisode Historical Review</h2>";
@@ -227,30 +242,25 @@ $scale_array=array();
 
 
 			<h4 align='center'>Design Review <input type='submit' value='Info' onClick="alert('Selecting checkboxes allows a customizable analysis. Review dates are from selected interval to present.');return false"></h4>
-			<h5 align='center'><label><input type='checkbox'
-								class='space'
-								name='include_unmapped'
-								value='1'>Include Unmapped Behavior Report</label></h5>
-		<?
+		<?	
+		print "<h5 align='center'><label><input type='checkbox'
+							class='space'
+							name='include_unmapped'
+							value='1'>Include Unmapped $behavior_spelling Report</label></h5>";
+
 
 		print "<table class='center'><tr><td>";
 			print "<table class='table local' border='0' bgcolor='white'>";
 				print "<thead>";
 					print "<tr>\n";
 						print "<th align='center'>Review Duration</th>\n";
-						print "<th align='center'>Behavior</th>\n";
+						print "<th align='center'>$behavior_spelling</th>\n";
 						print "<th align='center'>Analysis</th>\n";
 					print "</tr>\n";
 				print "</thead>";
 				print "<tbody>";
 					print "<tr><td>\n";
 						print "<table class='table table-hover local' width='100%' >\n";
-							print "<tr><td>";
-							print "<label>";
-							print "<input type='radio'
-								class='space'
-								name= 'review_time'
-								value= '0'>Previous Month</label></td></tr>\n";
 								
 							print "<tr><td>";
 							print "<label>";
@@ -280,6 +290,13 @@ $scale_array=array();
 									name='review_time'
 									value='all'>All Time</label></td></tr>\n";
 
+							print "<tr><td>";
+							print "<label>";
+							print "<input type='radio'
+								class='space'
+								name= 'review_time'
+								value= '0'>Previous Month</label></td></tr>\n";
+
 							//print "<tr><td><input type='textbox' size='5'
 								//name='custom_time'>Select Date</td></tr>\n";
 						print "</table>\n";
@@ -293,11 +310,16 @@ $scale_array=array();
 									print"<tr>";
 									print "<td>\n";
 									print "<label>";
-									print"<input type='checkbox' class='space' name='$count_' value='$count'>$count";
+									print"<input type='checkbox' class='space' name='$count_' id='$count' value='$count'>$count";
 									print "</label>";
 									print"</td></tr>\n";
 								}
-								print"<tr><td><label><input type='checkbox' class='space' name='all' value='all'>All Behavior</label></td></tr>";
+								print"<tr><td><label><input type='checkbox' 
+									class='space' 
+									name='all' 
+									value='all' 									
+									id='check_all'
+									onchange='checkothers();' />All ".$behavior_spelling."s</label></td></tr>";
 						print"</table>\n";
 					print"</td>\n";
 					print"<td>\n";
@@ -307,7 +329,7 @@ $scale_array=array();
 									print "<input type='checkbox'
 											class='space'
 											name='scale_totals'
-											value='1'>Behavior Episode Totals</label>";
+											value='1'>$behavior_spelling Episode Totals</label>";
 							print "</td></tr>\n";
 						
 								
@@ -317,7 +339,8 @@ $scale_array=array();
 							print "<input type='checkbox'
 									class='space'
 									name='behavior_units'
-									value='1'>Behavior Units Improved vs. Intervention</label>";
+									id='behavior_units'
+									value='1'>$behavior_spelling Units Improved vs. Intervention</label>";
 							print "</td></tr>\n";
 
 							//print"<tr><td><input type='checkbox'
@@ -329,6 +352,7 @@ $scale_array=array();
 							print "<input type='checkbox'
 									class='space'
 									name='episode_time_of_day'
+									id='episode_time_of_day'
 									value='1'>Episode Time of Day</label>";
 							print "</td></tr>\n";
 
@@ -337,16 +361,20 @@ $scale_array=array();
 							print "<input type='checkbox'		
 									class='space'
 									name='trigger_breakdown'
+									id='trigger_breakdown'
 									value='1'>Trigger Breakdown / Most Effective Intervention</label>";
 							print "</td></tr>\n";
 
+if ($_SESSION['population_type']==='behavioral'){
 							print"<tr><td>";
 							print "<label>";
 							print "<input type='checkbox'
 									class='space'
 									name='carer_breakdown'
+									id='carer_breakdown'
 									value='1'>Carer Involvement</label>";
 							print "</td></tr>";
+}
 
 							print"<tr><td>";
 							print "<label>";
@@ -375,5 +403,23 @@ $scale_array=array();
 
 	</form>
 	<?build_footer_pg()?>
+
+<script type="text/javascript" language="JavaScript">
+	function checkothers(){
+		if(document.getElementById('check_all').checked){
+			document.getElementById('Anxiety').checked = true;
+			document.getElementById('Care').checked = true;
+			document.getElementById('Vocalizations').checked = true;
+			document.getElementById('Aggression').checked = true;
+		}else{
+			document.getElementById('Anxiety').checked = false;
+			document.getElementById('Care').checked = false;
+			document.getElementById('Vocalizations').checked = false;
+			document.getElementById('Aggression').checked = false;
+		}
+	}
+
+</script>
+
 </body>
 </html>

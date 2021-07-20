@@ -39,6 +39,19 @@ set_css()
 
 <?  
 $names = build_page_pg();
+
+if($_SESSION['country_location']=='UK'){
+	$behavior_spelling = 'Behaviour';
+	$vocalization_spelling = 'Vocalisation';
+	$characterization_spelling = 'Characterization';
+	$date_format = 'dd-mm-yyyy';
+}else{
+	$behavior_spelling = 'Behavior';
+	$vocalization_spelling = 'Vocalization';
+	$characterization_spelling = 'Characterisation';
+	$date_format = 'mm-dd-yyyy';
+}
+
 print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Review</h2>";
 ?>
 <form 	action = "ABAIT_PRN_review_log_v2.php"
@@ -68,7 +81,8 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 <table width='100%'>
 	<tr class='floatRight' />
 		<td>
-			<input type='submit' value='Tap for more Info' onClick="alert('This data compares PRN to Non-PRN recorded behavior episodes.  Additionally, each PRN requiring behavior episode is listed in the second table along with a specific description of the aggitated behavior.');return false">
+			<? print "<input type='submit' value='Tap for more Info' onClick=\"alert('This data compares PRN to Non-PRN recorded $behavior_spelling episodes.  Additionally, each PRN requiring $behavior_spelling episode is listed in the second table along with a specific description of the aggitated behavior.');return false\">";
+			?>
 		</td>
 	</tr>
 	<tr class='floatRight' />
@@ -177,7 +191,7 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 										print"<td>$ave_PRN_duration_rm</td>\n";
 										print"<td>$ave_nonPRN_duration_rm</td>\n";
 									print"</tr>\n";
-									print"<tr><td colspan='7' align='center'><i>After Behavior Plan Creation</i></td></tr>";
+									print"<tr><td colspan='7' align='center'><i>After $behavior_spelling Plan Creation</i></td></tr>";
 									print"<tr>\n";
 										print"<td>$date_start</td>\n";
 										print"<td>$date</td>\n";
@@ -195,7 +209,7 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 
 									print"<tr><th>Episode Date</th>\n";
 									print"<th>Episode Time</th>\n";
-									print"<th>Specific Behavior Description</th>\n";
+									print"<th>Specific $behavior_spelling Description</th>\n";
 									print"<th>Thirty Minute PRN Response</th></tr>\n";
 
 									print"<tr><td colspan='7' align='center'><i>During Two Week Observation Period</i></td></tr>";
@@ -218,7 +232,7 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 										print"</tr>";
 									}
 
-									print"<tr><td colspan='7' align='center'><i>After Behavior Plan Creation</i></td></tr>";
+									print"<tr><td colspan='7' align='center'><i>After $behavior_spelling Plan Creation</i></td></tr>";
 									$session6=mysqli_query($conn,$sql4);
 									$PRN_given = False;
 									while($row6=mysqli_fetch_assoc($session6)){

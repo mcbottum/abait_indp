@@ -64,7 +64,7 @@ print $_SESSION['SITE']
 
 		if($first&&$last&&$gender&&$Target_Population&&$action=='Enroll'){
 			$Target_Population=mysqli_real_escape_string($conn,$Target_Population);
-			mysqli_query($conn, "INSERT INTO residentpersonaldata VALUES(null,'$first','$last',null,'$gender','$privilegekey','$Target_Population','$house',null,'')");
+			mysqli_query($conn, "INSERT INTO residentpersonaldata VALUES(null,'$first','$last',null,'$gender','$privilegekey','$Target_Population','$house',null,'',null)");
 			print "<h4 align='center'>$first $last has been entered as a new resident.</h4>\n";
 			print "<h4 align='center'><a href='ABAIT_add_resident_v2.php'>Return to Enroll New Resident Form</a></h4>\n";
 		}else if($first&&$last&&$gender&&$Target_Population&&$action=='Update'){

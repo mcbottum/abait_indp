@@ -52,12 +52,22 @@ ABAIT Triggers and Interventions
 
 <?			
 	$names = build_page_pg();
-?>
 
-<h2 class='m-3 p-2 footer_div' align='center'>Trigger and Intervention Catalog</label></h2>
+        if($_SESSION['country_location']=='UK'){
+            $behavior_spelling = 'Behaviour';
+            $vocalization_spelling = 'Vocalisation';
+            $characterization_spelling = 'Characterization';
+            $date_format = 'dd-mm-yyyy';
+            $catalog_spelling  = 'Catalogue';
+        }else{
+            $behavior_spelling = 'Behavior';
+            $vocalization_spelling = 'Vocalization';
+            $characterization_spelling = 'Characterisation';
+            $date_format = 'mm-dd-yyyy';
+            $catalog_spelling  = 'Catalog';
+        }
 
-	
-<?
+print "<h2 class='m-3 p-2 footer_div' align='center'>Trigger and Intervention $catalog_spelling</label></h2>";
 
 //Need to have some type of exeption here TODO
 $conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
@@ -118,7 +128,7 @@ else{
 	$sql2="SELECT * FROM triggers_and_interventions WHERE Target_Population='$Population_strip' ORDER BY Trigger_Class";
 
 	print"<table align='center' width='95%'>";
-	print"<tr align='center'><td><h4>Triggers and Interventions for the <em>$Population </em> Population</td>";
+	print"<tr align='center'><td><h4>Triggers and Interventions for the <em>Neurodiversities </em> Populations</td>";
 
 	?>
 		<td align='right'><INPUT TYPE="button" class="btn btn-light" value="Print Page" onClick="window.print()"></td></tr></table>

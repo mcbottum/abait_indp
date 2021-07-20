@@ -119,7 +119,19 @@ set_css()
 </head>
 <body class="container">
 
-<?  
+<?
+if($_SESSION['country_location']=='UK'){
+	$behavior_spelling = 'Behaviour';
+	$vocalization_spelling = 'Vocalisation';
+	$characterization_spelling = 'Characterization';
+	$date_format = 'dd-mm-yyyy';
+}else{
+	$behavior_spelling = 'Behavior';
+	$vocalization_spelling = 'Vocalization';
+	$characterization_spelling = 'Characterisation';
+	$date_format = 'mm-dd-yyyy';
+}
+
 $names = build_page_pg();
 
 $filename=$_REQUEST['submit'];
@@ -319,9 +331,9 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
 			}
 			//call graph function
 			$values_bar=$sum_behaviorarray;
-			$graphTitle_bar='Duration of Behavior Episodes vs. Behavior';
+			$graphTitle_bar='Duration of '.$behavior_spelling .'Episodes vs. '.$behavior_spelling;
 			$yLabel_bar='Total Duration (minutes)';
-			$xLabel_bar='Behaviors';
+			$xLabel_bar=$behavior_spelling.'s';
 			ABAIT_bar_graph($values_bar, $graphTitle_bar, $yLabel_bar,$xLabel_bar,'bar');
 
 
@@ -432,7 +444,7 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 			}
 			//call graph function
 				$values_bar_d=${'sum_duration_array'.$j};
-				$graphTitle_bar='Duration of Behavior Episodes per Three Hour Interval';
+				$graphTitle_bar='Duration of '.$behavior_spelling.' Episodes per Three Hour Interval';
 				$yLabel_bar='Total Episode Duration (minutes)';
 				$xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
 			if(!empty($values_bar_d)){
@@ -493,14 +505,14 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 if($behavior_units){///////////////////////////////////////////// behavior units////////////////////////////////////////
 	print"<table width='100%'>";
 		print"<tr><td colspan='2'>";
-			print"<h3 class='center_header'>Effect of Interventions on Agitated Behavior Episodes</h3>";
+			print"<h3 class='center_header'>Effect of Interventions on Agitated $behavior_spelling Episodes</h3>";
 		print"</td></tr>";
 		print"<tr><td>";
-			print"<h5 class='center_header'>Intervention values are the sum of improvement levels on behavior intensity rating scale.</h5>";
+			print"<h5 class='center_header'>Intervention values are the sum of improvement levels on $behavior_spelling intensity rating scale.</h5>";
 		print"</td>";
 		print"<td align='right' valign-'bottom'>";
 
-			print"<input type='submit' value='Tap for more Info' onClick=\"alert('This table breaks down improved behavior by the interventions of each trigger. Numerical values represent the sum of behavior improvement as measured by the behavior rating scale.  The behavior rating scales contain five levels, ranging from extremely agitated to normal.  Each level has a value of one point.');return false\">";
+			print"<input type='submit' value='Tap for more Info' onClick=\"alert('This table breaks down improved $behavior_spelling by the interventions of each trigger. Numerical values represent the sum of $behavior_spelling improvement as measured by the $behavior_spelling rating scale.  The $behavior_spelling rating scales contain five levels, ranging from extremely agitated to normal.  Each level has a value of one point.');return false\">";
 
 		print"</td></tr>";
 	print"</table>";
@@ -584,7 +596,7 @@ print "<table width='100%'>";//table for more info copy this line
             print "<table class='table table-bordered'>";
                 // print "<thead>";
 					print "<tr>";
-						print "<th colspan='8'>$behavior Behavior Episodes.  Start Date: <em>$date_start</em>   End Date:   <em>$date_end</em></th>";
+						print "<th colspan='8'>$behavior $behavior_spelling Episodes.  Start Date: <em>$date_start</em>   End Date:   <em>$date_end</em></th>";
 					print "</tr>";
 					print"<tr>";
 						print"<th class='first'>Trigger (episodes/duration)</th>";
@@ -671,7 +683,7 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
             print "<table class='table table-bordered'>";
             
                 // print "<thead>";
-                    print"<tr><th colspan='5'>$behavior Behavior Episodes From <em>$date_start</em> - <em>$date_end</em></th></tr>";
+                    print"<tr><th colspan='5'>$behavior $behavior_spelling Episodes From <em>$date_start</em> - <em>$date_end</em></th></tr>";
                     print"<tr>";
                     		print"<th>----Trigger----</th>";
                     		print"<th>Number of Episodes</th>";
@@ -985,7 +997,7 @@ if($all_episode){//////////////////////////////////////////all_episode//////////
 
 			print "<table width='100%'>";//
 				print "<tr><td>";//table in table data for more info
-				print"<h3 class='center_header'>All Mapped Behavior Episode Report</h3>";
+				print"<h3 class='center_header'>All Mapped $behavior_spelling Episode Report</h3>";
 				print"</td></tr>";
 
         // print "<table class='center noScroll local hover'>";
@@ -1006,7 +1018,7 @@ if($all_episode){//////////////////////////////////////////all_episode//////////
 							print "<th>Resident</th>";
 							print "<th>Date</th>";
 							print "<th>Time</th>";
-							print "<th>Behavior Classification</th>";
+							print "<th>$behavior_spelling Classification</th>";
 							print "<th>Trigger</th>";
 							print "<th>PRN Given</th>";
 
@@ -1051,7 +1063,7 @@ if($include_unmapped){//////////////////////////////////////////include_unmapped
 
 			print "<table width='100%'>";//
 				print "<tr><td>";//table in table data for more info
-				print"<h3 class='center_header'>Unmapped Behavior Episode Report</h3>";
+				print"<h3 class='center_header'>Unmapped $behavior_spelling Episode Report</h3>";
 				print"</td></tr>";
 
         print "<table class='table table-hover' border='1'>";
@@ -1071,7 +1083,7 @@ if($include_unmapped){//////////////////////////////////////////include_unmapped
 							print "<th>Resident</th>";
 							print "<th>Date</th>";
 							print "<th>Time</th>";
-							print "<th>Behavior Classification</th>";
+							print "<th>$behavior_spelling Classification</th>";
 							print "<th>Trigger</th>";
 							print "<th>PRN Given</th>";
 
@@ -1098,7 +1110,7 @@ if($include_unmapped){//////////////////////////////////////////include_unmapped
 					print "</tr>";
 				}
 				if($total_duration==0){
-					print "<tr align='center'><td colspan='6'> Unmapped behavior episodes have not been recorded.</td></tr>";
+					print "<tr align='center'><td colspan='6'> Unmapped $behavior_spelling episodes have not been recorded.</td></tr>";
 				}else{
 					print "<tr>";
 						print "<td colspan=3>Total Duration of Episodes (min) </td>";

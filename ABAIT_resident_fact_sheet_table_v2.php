@@ -201,7 +201,7 @@ if($filename=="Submit Resident Choice"){
 	print "<p></p>";
 	print "<p></p>";
 // SLOW TRIGGER
-		
+	if($_SESSION['population_type']=='behavioral'){
 		if($slow_trigger){
 			print"<div id='head' align='center'><h4> $title3 </h4></div>\n";
 			print "<table class='table center table-responsive-sm table-hover table-lg' border='1' bgcolor='white' style='width:100%'>";
@@ -227,6 +227,7 @@ if($filename=="Submit Resident Choice"){
 		}else{
 			print"<h3 class='text-center mt-4'>Slow Triggers for $res_first $res_last have not been recorded.</h3>\n";
 		}
+	}
 
 
 		

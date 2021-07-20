@@ -22,7 +22,7 @@ print $_SESSION['SITE']
 <script>
 
 function reload2(Population,number_of_scales, payload){
-    self.location='ABAIT_create_map.php?Population='+Population+'&'+payload;
+    self.location='ABAIT_create_map_v2.php?Population='+Population+'&'+payload;
 }
 function backButton(target_population) {
 	self.location='ABAIT_choose_resident_for_map_review_v2.php?tp='+target_population;
@@ -61,6 +61,20 @@ set_css()
 <?  
 $names = build_page_pg();
 
+    if($_SESSION['country_location']=='UK'){
+        $behavior_spelling = 'Behaviour';
+        $vocalization_spelling = 'Vocalisation';
+        $characterization_spelling = 'Characterization';
+        $date_format = 'dd-mm-yyyy';
+        $catalog_spelling  = 'Catalogue';
+    }else{
+        $behavior_spelling = 'Behavior';
+        $vocalization_spelling = 'Vocalization';
+        $characterization_spelling = 'Characterisation';
+        $date_format = 'mm-dd-yyyy';
+        $catalog_spelling  = 'Catalog';
+    }
+
 $conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
 if (isset($_REQUEST['Population'])) {
 	$Population=str_replace('_',' ',$_REQUEST['Population']);
@@ -92,9 +106,9 @@ if(isset($_GET['id'])&&$_GET['id']!=='null'){
 }
 
 if(isset($residentkey)&&$residentkey!=null){
-	print"<h2 class='m-3 p-2 footer_div' align='center'>Trigger and Intervention Catalog for $resident_name</h2>";
+	print"<h2 class='m-3 p-2 footer_div' align='center'>Trigger and Intervention $catalog_spelling for $resident_name</h2>";
 }else{
-	print"<h2 class='m-3 p-2 footer_div' align='center'>Trigger and Intervention Catalog</h2>";
+	print"<h2 class='m-3 p-2 footer_div' align='center'>Trigger and Intervention $catalog_spelling</h2>";
 }
 
 if($_SESSION['Target_Population']=='all'&&!$Population){

@@ -33,6 +33,18 @@ function reload(form){
 <body class="container"
 <?
 	$names = build_page_pg();
+
+	if($_SESSION['country_location']=='UK'){
+		$behavior_spelling = 'Behaviour';
+		$vocalization_spelling = 'Vocalisation';
+		$characterization_spelling = 'Characterization';
+		$date_format = 'dd-mm-yyyy';
+	}else{
+		$behavior_spelling = 'Behavior';
+		$vocalization_spelling = 'Vocalization';
+		$characterization_spelling = 'Characterisation';
+		$date_format = 'mm-dd-yyyy';
+	}
 ?>
 <form 	name = 'form'
 		method = "post">
@@ -65,21 +77,25 @@ print "<h2 class='m-3 p-2 footer_div' align='center'>". $names[0]."'s Interactiv
 	<tr>
 	<td>
 <div id="label">
-	<h4 class='m-3'>Observing and Addressing Difficult Behaviors</h3>
+<?
+	print "<h4 class='m-3'>Observing and Addressing Difficult $behavior_spelling</h3>";
+?>
 </div>
 	<div id="menu">
 	<ol type="I">
-		<li><h4>When Behaviors Occur</h4></li>
+		<? print "<li><h4>When a $behavior_spelling Occurs</h4></li>"; ?>
 			<ul class="m-2">
 				<li class="m-2"><a href='ABAIT_quick_scales_v2.php'>STEP 1 - Record in 2 Week Resident Observation</a></li>
 					<ol>
-						<li>What behaviors occured?</li>
-						<li>Where behaviors happened?</li>
-						<li>When behavior took place (date and time)?</li>
-						<li>How long did behavior last?</li>
-						<li>Who was involved?</li>
-						<li>Why did behavior happen (triggers)?</li>
-						<li>What worked and what did not work to intervene?</li>
+<?
+						print "<li>What ".strtolower($behavior_spelling)." occured?</li>"; 
+						print "<li>Where ".strtolower($behavior_spelling)." happened?</li>"; 
+						print "<li>When ".strtolower($behavior_spelling)." took place (date and time)?</li>";
+						print "<li>How long did ".strtolower($behavior_spelling)." last?</li>";
+						print "<li>Who was involved?</li>";
+						print "<li>Why did ".strtolower($behavior_spelling)." happen (triggers)?</li>";
+						print "<li>What worked and what did not work to intervene?</li>";
+?>
 					</ol>
 				<li class="m-2">STEP 2 - What to Look For</li>
 					<ol>
@@ -143,7 +159,7 @@ print "<h2 class='m-3 p-2 footer_div' align='center'>". $names[0]."'s Interactiv
 					</ul>
 				</li>
 			</ul>
-		<li><h4>Addressing the Behavior </h4></li>
+		<? print "<li><h4>Addressing the $behavior_spelling </h4></li>"; ?>
 			<ol>
                 <li><a href="https://www.loom.com/share/cce71315910e481880969a2b54ff3d82" target="_blank">Phase1: Positive Interactions Bootcamp</a></li>
                 <li><a href="https://www.loom.com/share/78b7edc903fd4bbebec4334fa8a4749c" target="_blank">Phase2: Using the Caregiver Platform</a></li>

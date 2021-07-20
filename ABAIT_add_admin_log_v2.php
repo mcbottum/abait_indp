@@ -27,7 +27,6 @@ print $_SESSION['SITE']
 <?	
 	$names = build_page_pg();
 ?>
-?>
 		<form 	action = "ABAIT_adminhome_v2.php"
 				method = "post">
 									
@@ -80,7 +79,7 @@ print $_SESSION['SITE']
 					$house='all';
 					$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
 					if($action=='Enroll'){
-						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password','$accesslevel','$first','$last',null,null,null,null,null,null,null,'$mail','$notify','$privilegekey','$Target_Population','$house', null)");
+						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password',null,'$accesslevel','$first','$last',null,null,null,null,null,null,null,'$mail','$notify','$privilegekey','$Target_Population','$house', null)");
 
 						print "<h4 align='center'>$first $last has been entered as a new Administrator.</h4>\n";
 						print "<h4 align='center'><a href='ABAIT_add_admin_v2.php'>Return to Enroll New Administrator Form</a></h4>\n";
@@ -88,6 +87,10 @@ print $_SESSION['SITE']
 						mysqli_query($conn,"UPDATE personaldata SET first='$first', last='$last', date='$date', password='$password', notify='$notify', mail='$mail' WHERE personaldatakey='$key'");
 						print "<h4 align='center'>Administrator $first $last has been Updated.</h4>\n";
 						print "<h4 align='center'><a href='updateMembers.php'>Return to Update Members Form</a></h4>\n";	
+					}else if($action=='workstation_login'){
+						mysqli_query($conn,"UPDATE personaldata SET password2='$password' WHERE personaldatakey='$key'");
+						print "<h4 align='center'>Workstation Login Credential has been Updated.</h4>\n";
+
 					}
 					// mysqli_query("INSERT INTO personaldata VALUES(null,'$date','$password','$accesslevel','$first','$last','$gender','$birthdate','$street_address','$city','$state','$zipcode','$phone','$email','$privilegekey','$Target_Population')");
 

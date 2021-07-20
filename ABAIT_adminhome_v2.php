@@ -35,6 +35,19 @@ print $_SESSION['SITE']
 
     <?  
         $names = build_page_pg();
+        if($_SESSION['country_location']=='UK'){
+            $behavior_spelling = 'Behaviour';
+            $vocalization_spelling = 'Vocalisation';
+            $characterization_spelling = 'Characterization';
+            $date_format = 'dd-mm-yyyy';
+            $catalog_spelling  = 'Catalogue';
+        }else{
+            $behavior_spelling = 'Behavior';
+            $vocalization_spelling = 'Vocalization';
+            $characterization_spelling = 'Characterisation';
+            $date_format = 'mm-dd-yyyy';
+            $catalog_spelling  = 'Catalog';
+        }
     ?>
 
 
@@ -45,22 +58,30 @@ print $_SESSION['SITE']
     <div class="row justify-content-md-center">
         <div class='col col-lg-5 mt-4'>
             <div class="dropdown">
-                <button  class="btn  btn-lg btn-block  dropdown-toggle" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Behavior Plan Set-Up</button>
+<?
+                print" <button  class='btn  btn-lg btn-block  dropdown-toggle' id='dropdownMenuButton1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>$behavior_spelling Plan Set-Up</button>";
+?>
                         
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
                         <a class="dropdown-item" href='ABAIT_tutorials_v2.php'>ABAIT Education Module</a>
-                        <?
+<?
                         if($_SESSION['privilege']=='globaladmin'){
-                            print "<a class='dropdown-item' href='ABAIT_Scale_Create_v2.php'>Create New ABAIT Behavior Plans</a>";
+                            print "<a class='dropdown-item' href='ABAIT_Scale_Create_v2.php'>Create New ABAIT $behavior_spelling Plans</a>";
                         }
-                        ?>
-                        <a class="dropdown-item" href="ABAIT_trigger_v2.php">Edit or Delete ABAIT Behavior Plans</a>
+                        
+                        print "<a class='dropdown-item' href='ABAIT_trigger_v2.php'>Edit or Delete ABAIT $behavior_spelling Plans</a>";
+?>
 
                     </div>
             </div>
         </div>
     </div>
+
+
+
+
+
 
     <div class="row justify-content-md-center ">
         <div class='col col-lg-5 mt-3'>
@@ -68,12 +89,28 @@ print $_SESSION['SITE']
                 <button  class="btn  btn-lg btn-block dropdown-toggle" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Member Enrollment</button>
                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
 
-                        <a class="dropdown-item" href="ABAIT_add_resident_v2.php">Enroll New Resident</a>
-                        <a class="dropdown-item" href="ABAIT_add_care_v2.php">Enroll New Care Provider</a>
-                        <a class="dropdown-item" href="ABAIT_add_admin_v2.php">Enroll New Administrator</a>
-                        <div class="dropdown-divider"></div>
-                        <a class='dropdown-item' href='ABAIT_updateMembers_v2.php'>Update Admins, Caregivers or Residents</a>
-                        <a class='dropdown-item' href='ABAIT_remove_members_v2.php'>Remove Admins, Caregivers or Residents</a>
+                        <?
+                        if($_SESSION['privilege']=='globaladmin'){
+                            print "<a class='dropdown-item' href='ABAIT_add_resident_v2.php'>Enroll New Resident</a>";
+                            print "<a class='dropdown-item' href='ABAIT_add_care_v2.php'>Enroll New Care Provider</a>";
+                            print "<a class='dropdown-item' href='ABAIT_add_admin_v2.php'>Enroll New Administrator</a>";
+                            print "<div class='dropdown-divider'></div>";
+                            print "<a class='dropdown-item' href='ABAIT_updateMembers_v2.php'>Update Admins, Caregivers or Residents</a>";
+                            print "<a class='dropdown-item' href='ABAIT_remove_members_v2.php'>Remove Admins, Caregivers or Residents</a>";
+                            print "<a class='dropdown-item' href='ABAIT_add_admin_pwd_v2.php'>ADD Admin Password</a>";
+                        }else{
+                            print "<span class='d-inline-block' tabindex='0' data-toggle='tooltip' title='Please contact PCS admin for member enrollment and updates.'>";
+                                print "<a class='disabled dropdown-item' href='ABAIT_add_resident_v2.php'>Enroll New Resident</a>";
+                                print "<a class='disabled dropdown-item' href='ABAIT_add_care_v2.php'>Enroll New Care Provider</a>";
+                                print "<a class='disabled dropdown-item' href='ABAIT_add_admin_v2.php'>Enroll New Administrator</a>";
+                                print "<div class='dropdown-divider'></div>";
+                                print "<a class='disabled dropdown-item' href='ABAIT_updateMembers_v2.php'>Update Admins, Caregivers or Residents</a>";
+                                print "<a class='disabled dropdown-item' href='ABAIT_remove_members_v2.php'>Remove Admins, Caregivers or Residents</a>";
+                            print "</span>";
+                            print "<a class='dropdown-item' href='ABAIT_add_admin_pwd_v2.php'>ADD Admin Password</a>";
+
+                        }
+                        ?>
 
                     </div>
             </div>
@@ -89,9 +126,11 @@ print $_SESSION['SITE']
             <div class="dropdown">
                 <button  class="btn  btn-lg btn-block dropdown-toggle" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Plan Creation and Maintenance</button>
                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                        <a class="dropdown-item" href='ABAIT_ti_catalog_v2.php'>Catalog of Behavior Triggers and Interventions</a>
-                        <a class="dropdown-item" href="ABAIT_choose_resident_for_map_review_v2.php">Create and Review Residents' Behavior Plans</a>
-                        <a class="dropdown-item" href="ABAIT_quick_scales_v2.php">Record New Behavior</a>
+<?
+                        print "<a class='dropdown-item' href='ABAIT_ti_catalog_v2.php'>$catalog_spelling of $behavior_spelling Triggers and Interventions</a>";
+                        print "<a class='dropdown-item' href='ABAIT_choose_resident_for_map_review_v2.php'>Create and Review Residents' $behavior_spelling Plans</a>";
+                        print "<a class='dropdown-item' href='ABAIT_quick_scales_v2.php'>Record New $behavior_spelling</a>";
+?>
                         <a class="dropdown-item" href='ABAIT_prn_effect_v2.php'>Record Medication Effect</a>
                     </div>
             </div>

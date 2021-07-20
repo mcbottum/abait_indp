@@ -76,7 +76,7 @@ print $_SESSION['SITE']
 					$privilegekey=$_SESSION['personaldatakey'];
 
 					if($action=='Enroll'){
-						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password','$accesslevel','$first','$last',null,null,null,null,null,null,null,null,null,'$privilegekey','$Target_Population','$house', null)");
+						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password',null,'$accesslevel','$first','$last',null,null,null,null,null,null,null,null,null,'$privilegekey','$Target_Population','$house', null)");
 						print "<h4 align='center'>$first $last has been entered as a new Healthcare Provider.</h4>\n";
 						print "<h4 align='center'><a href='ABAIT_add_care_v2.php'>Return to Enroll New Caregiver Form</a></h4>\n";
 					}else if($action=='Update'){

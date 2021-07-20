@@ -24,44 +24,56 @@ if(isset($_REQUEST['client'])){
 }
 //TESTING
 //$remote_login_guid = '1234567890';
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<meta http-equiv="Content-Type"content="text/html;
-charset=utf-8"/>
-<head>
-<title>datalog.php </title>
 
-<style type="text/css">
-</style>
-</head>
-<body><?
-//if host, user or database password is changed change script on lines 28  54-58 of this file
+// *** CONFIGURATION SETTINGS *** ///
+//for db connection
+//$_SESSION['population_type']='behavioral'; 
+//$_SESSION['population_type']='cognitive';
+$_SESSION['population_type']='local';
+// for spellings
+//$_SESSION['country_location'] = 'UK';
+$_SESSION['country_location'] = 'USA';
 
-//for local
- $db = 'abait_indp';
- $_SESSION['db'] = $db;
- $host = 'mysql';
- $db_user = 'root';
- $db_pwd = 'abaitroot';
-
- $db_user = 'root';  
- $db_pwd = 'abaitroot';
-
-// for remote:
-//$db = 'agitation_indp';
-//$_SESSION['db'] = $db;
-//$host = 'mysqlindp.abaitscale.com';
-//$db_user = 'abaitindp';
-//$db_pwd = 'h1$6T#5IWx';
-$_SESSION['reset_password'] = True;
-
-$_SESSION['passwordcheck']='fail';
 // $_SESSION['HOME']='index.php';
 $_SESSION['HOME']='ABAIT_Home.php';
 $_SESSION['favicon'] = 'favicon3.ico';
+
 $_SESSION['provider_resident'] = 'Care Recipient';
+
+//Sending care notes:
+$_SESSION['send_care_note'] = True;
+$_SESSION['care_note_url'] = 'https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=8de7a68c-f962-4fb1-a98a-1d08e3263dd9&Apikey=a09a69a2-dbe0-4a47-bf9c-9d5cc92e8434';
+
+
+//DB connection
+if ($_SESSION['population_type']==='cognitive'){ // ***  for remote dementia (indp, cs, ):  ***//
+	$db = 'agitation_demo';
+	$_SESSION['db'] = $db;
+	$host = 'mysqlindp.abaitscale.com';
+	$db_user = 'abaitdemo';
+	$db_pwd = 'abaitdemo1!';
+	$_SESSION['reset_password'] = True;
+}elseif ($_SESSION['population_type']==='behavioral') { // *** for remote behavioral (cog, hs, ):   ***//
+	$db = 'agitation_cs';
+	$_SESSION['db'] = $db;
+	$host = 'mysqlcs.abaitscale.com';
+	$db_user = 'abaitcs';
+	$db_pwd = 'abaitcs13!';
+	$_SESSION['reset_password'] = False;
+}else{
+	//for local
+	$db = 'abait_indp';
+	$_SESSION['db'] = $db;
+	$host = 'mysql';
+	$db_user = 'root';
+	$db_pwd = 'abaitroot';
+
+	$db_user = 'root';  
+	$db_pwd = 'abaitroot';	
+}
+
+$_SESSION['passwordcheck']='fail';
+
 $filename =$_REQUEST["submit"];
 
 	if ($filename=="Submit Login ID"){
@@ -87,7 +99,7 @@ $filename =$_REQUEST["submit"];
 		}
 		$password=mysqli_real_escape_string($conn, $password);
 		//$sql1="SELECT * FROM personaldata WHERE password='$password'";	
-		$sql1="SELECT * FROM personaldata WHERE password LIKE '$password%'";
+		$sql1="SELECT * FROM personaldata WHERE password LIKE '$password%' OR password2='$password'";
 
 		#mysqli_select_db($db);
 		$session1=mysqli_query($conn,$sql1);
@@ -101,7 +113,7 @@ $filename =$_REQUEST["submit"];
 
 				}
 
-				else if($row1['accesslevel']=='globaladmin'&& strpos($row1['password'], $password)){
+				else if($row1['accesslevel']=='globaladmin'&& (strpos($row1['password'], $password)!== false) || (strpos($row1['password2'], $password)!== false)){
 					$_SESSION['adminfirst']=$row1['first'];
 					$_SESSION['adminlast']=$row1['last'];
 					$_SESSION['cgfirst'] = '';
@@ -114,7 +126,7 @@ $filename =$_REQUEST["submit"];
 					$_SESSION['house']='all';
 					$_SESSION['home_page']='ABAIT_adminhome_v2.php';
 				}
-				elseif($row1['accesslevel']=='admin'&& strpos($row1['password'], $password)!== false){
+				elseif($row1['accesslevel']=='admin'&& (strpos($row1['password'], $password)!== false) || (strpos($row1['password2'], $password)!== false)){
 
 
                                         if($k){
@@ -203,5 +215,4 @@ $filename =$_REQUEST["submit"];
 	}
 	header("Location:$nextfile");
 	?>
-	</body>
-	</html>
+

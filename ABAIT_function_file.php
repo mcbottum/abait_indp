@@ -1,4 +1,16 @@
 <?
+function make_guid()
+{
+    if (function_exists('com_create_guid') === true)
+        return trim(com_create_guid(), '{}');
+
+    $data = openssl_random_pseudo_bytes(16);
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+
+
 function ABAIT_bar_graph($values,$graphTitle,$yLabel,$xlabel,$graphNumber){
 	$img_width=700;
 	$img_height=400; 
@@ -420,7 +432,7 @@ function build_page_pg($display='none'){
 <?
 					if($_SESSION['remote_login']){
 
-						print"<a class='navbar-brand p-3' href='$_SESSION[returnurl]'>Leave ABAIT</a>";
+						print"<a class='navbar-brand p-3' href='$_SESSION[returnurl]'>Back to Care App</a>";
 						?><!-- <button type="button" class="btn btn-danger" onclick="goHome()">EXIT ABAIT</button> --><?
 	
 					}else{
@@ -440,11 +452,20 @@ function build_page_pg($display='none'){
 }
 
 function build_footer_pg(){
-	?>
-	<div class="m-2 p-4 footer_div align-middle text-center">  
-		<a class="footer" href='https://centerfordementiabehaviors.com/'><span>Center for Agitated Behaviors</a></br>ABAIT Proprietary</span>
-	</div>
-	<?
+	if($_SESSION['country_location']=='UK'){
+	    $behavior_spelling = 'Behaviour';
+	    $vocalization_spelling = 'Vocalisation';
+	    $characterization_spelling = 'Characterization';
+	    $date_format = 'dd-mm-yyyy';
+	}else{
+	    $behavior_spelling = 'Behavior';
+	    $vocalization_spelling = 'Vocalization';
+	    $characterization_spelling = 'Characterisation';
+	    $date_format = 'mm-dd-yyyy';
+	}
+	$behavior_spelling = $behavior_spelling.'s';
+	print"<div class='m-2 p-4 footer_div align-middle text-center'>  
+		<a class='footer' href='https://centerfordementiabehaviors.com/'><span>Center for Agitated $behavior_spelling</a></br>ABAIT Proprietary</span></div>";
 }
 
 
@@ -503,12 +524,11 @@ function build_page($privilege,$first){
 
 }
 function build_footer(){
-ini_set('session.bug_compat_42',0);
-ini_set('session.bug_compat_warn',0);
-	?>
-	<!-- <div id= "footer"><p>&nbsp;Copyright &copy; 2012 ABAIT<br>ABAIT LLC</br></p></div> -->
-	<div id= "footer"><a href='https://centerfordementiabehaviors.com/'><span><br>Center for Agitated Behaviors</a></br>ABAIT Proprietary</span></div>
+	ini_set('session.bug_compat_42',0);
+	ini_set('session.bug_compat_warn',0);
 	
-	<?}
+	print "<!-- <div id= 'footer'><p>&nbsp;Copyright &copy; 2012 ABAIT<br>ABAIT LLC</br></p></div> -->";
+	print" <div id= 'footer'><a href='https://centerfordementiabehaviors.com/'><span><br>Center for Agitated $behavior_spelling</a></br>ABAIT Proprietary</span></div>";
+}
 	
 ?>

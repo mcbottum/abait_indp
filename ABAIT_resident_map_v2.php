@@ -25,6 +25,10 @@ set_css()
 <script>
 function validate_form()
 {
+
+	var scale_name = document.getElementById("scale_name");
+	var scale_name_value = scale_name.options[scale_name.selectedIndex].value;
+
 	valid=true;
 	var alertstring=new String("");
 
@@ -37,14 +41,14 @@ function validate_form()
 	}//end scale_name check
 	
 	if(document.form.trigger.selectedIndex=="0"){
-		alertstring=alertstring+"\n-choose Behavior Intensity-";
+		alertstring=alertstring+"\n-choose Behavior Trigger-";
 		document.form.trigger.style.background = "Yellow";
 		valid=false;
 	}else{
 		document.form.trigger.style.background = "Lightgrey";
 	}//end trigger check
 
-	if(document.form.intensity.selectedIndex=="0"){
+	if(document.form.intensity.selectedIndex=="0" && scale_name_value!='Slow_Trigger'){
 		alertstring=alertstring+"\n-choose Behavior Intensity-";
 		document.form.intensity.style.background = "Yellow";
 		valid=false;
@@ -52,7 +56,7 @@ function validate_form()
 		document.form.intensity.style.background = "Lightgrey";
 	}//end intensity check
 	
-	if(document.form.behave_class.selectedIndex==""){
+	if(document.form.behave_class.selectedIndex=="" && scale_name_value!='Slow_Trigger'){
 		alertstring=alertstring+"\n-choose Behavior Classification-";
 		document.form.behave_class.style.background = "Yellow";
 		valid=false;
@@ -77,6 +81,7 @@ function validate_form()
 	}else{
 		document.form.custom_trigger.style.background = "Lightgrey";
 	}//end custom_trigger
+
 
 	if(document.form.trigger.selectedIndex==""){
 		alertstring=alertstring+"\n-choose Trigger-";
@@ -125,23 +130,106 @@ function validate_form()
 
 function reload(form){
 	var val=form.scale_name.options[form.scale_name.options.selectedIndex].value;
-	self.location='ABAIT_resident_map_v2.php?scale_name='+val;
+	self.location='ABAIT_resident_map_v2.php?scale_name='+val;	
 }
 
 function show( selTag ) {
+
 	obj1 = document.getElementById("pre_PRN_observation_tag");
 	obj = document.getElementById("pre_PRN_observation");
 	customTrig = document.getElementById("custom_trigger");
+	customSlowTrig = document.getElementById("custom_slow_trigger");
+
+	var scale_name = document.getElementById("scale_name");
+	var scale_name_value = scale_name.options[scale_name.selectedIndex].value;
+	var all_hide_elements = document.getElementsByClassName("hide");
+	var all_show_elements = document.getElementsByClassName("show");
+
 
 	if ( selTag.value== 'other' ){
 		customTrig.style.display = "block";
-	} else if ( selTag.selectedIndex == 1 ) {
+	}else if ( selTag.value== 'new' ){
+		customSlowTrig.style.display = "block";
+	}else if (selTag.id=="PRN_div" && selTag.selectedIndex == 1 ) {
 		obj1.style.display = "block";
 		obj.style.display = "block";
 		obj1.style.align="center";
-	} else {
+	
+	}else if (scale_name_value == "Slow_Trigger") {
+		document.getElementById("hide_step3_if_slow").style.display = "none";
+		document.getElementById("hide_step4_if_slow").style.display = "none";
+		for(var i=0; i < all_hide_elements.length; i++) {
+			all_hide_elements[i].style.display = "none";
+		 }
+		for(var i=0; i < all_show_elements.length; i++) {
+			all_show_elements[i].style.display = "block";
+		 }
+		// document.getElementsByClassName("hide").style.display = "none";
+
+	}else {
 		obj1.style.display = "none";
 		obj.style.display = "none";
+	}
+	if(selTag.id=='staff_present_1' && selTag.value > 1){
+		document.getElementById("staff_present_checkbox_div_1").style.display = "block";
+		document.getElementById("staff_present_2").style.display = "block";
+		document.getElementById("alternative_staff1").style.display = "none";
+		document.getElementById("temp_staff_present_1").style.display = "none";
+	}else if(selTag.id=='staff_present_1' && selTag.value==0){
+		document.getElementById("staff_present_checkbox_div_1").style.display = "none";
+		document.getElementById("alternative_staff1").style.display = "none";
+		document.getElementById("staff_present_checkbox_div_1").style.display = "block";
+	}else if(selTag.id=='staff_present_1' && selTag.value==-1){
+		document.getElementById("alternative_staff1").style.display = "block";
+		document.getElementById("staff_present_checkbox_div_1").style.display = "block";
+		document.getElementById("staff_present_2").style.display = "block";
+		document.getElementById("temp_staff_present_1").style.display = "none";
+	}else if(selTag.id=='staff_present_1' && selTag.value==-2){
+		document.getElementById("staff_present_checkbox_div_1").style.display = "block";
+		document.getElementById("staff_present_2").style.display = "block";
+		document.getElementById("alternative_staff1").style.display = "none";
+		document.getElementById("temp_staff_present_1").style.display = "block";
+	}
+
+	if(selTag.id=='staff_present_2' && selTag.value > 1){
+		document.getElementById("staff_present_checkbox_div_2").style.display = "block";
+		document.getElementById("staff_present_3").style.display = "block";
+		document.getElementById("alternative_staff2").style.display = "none";
+		document.getElementById("temp_staff_present_2").style.display = "none";
+	}else if(selTag.id=='staff_present_2' && selTag.value==0){
+		document.getElementById("staff_present_checkbox_div_2").style.display = "none";
+		document.getElementById("alternative_staff2").style.display = "none";
+	}else if(selTag.id=='staff_present_2' && selTag.value==-1){
+		document.getElementById("alternative_staff2").style.display = "block";
+		document.getElementById("staff_present_checkbox_div_2").style.display = "block";
+		document.getElementById("staff_present_3").style.display = "block";
+		document.getElementById("temp_staff_present_2").style.display = "none";
+	}else if(selTag.id=='staff_present_2' && selTag.value==-2){
+		document.getElementById("staff_present_checkbox_div_2").style.display = "block";
+		document.getElementById("staff_present_3").style.display = "block";
+		document.getElementById("alternative_staff2").style.display = "none";
+		document.getElementById("temp_staff_present_2").style.display = "block";
+	}
+
+	if(selTag.id=='staff_present_3' && selTag.value > 1){
+		document.getElementById("staff_present_checkbox_div_3").style.display = "block";
+		// document.getElementById("staff_present_4").style.display = "block";
+		document.getElementById("alternative_staff3").style.display = "none";
+		document.getElementById("temp_staff_present_3").style.display = "none";
+	}else if(selTag.id=='staff_present_3' && selTag.value==0){
+		document.getElementById("staff_present_checkbox_div_3").style.display = "none";
+		document.getElementById("alternative_staff2").style.display = "none";
+
+	}else if(selTag.id=='staff_present_3' && selTag.value==-1){
+		document.getElementById("staff_present_checkbox_div_3").style.display = "none";
+		document.getElementById("alternative_staff3").style.display = "block";
+		document.getElementById("staff_present_checkbox_div_3").style.display = "block";
+		document.getElementById("temp_staff_present_3").style.display = "none";
+	}else if(selTag.id=='staff_present_3' && selTag.value==-2){
+		document.getElementById("staff_present_checkbox_div_3").style.display = "block";
+		// document.getElementById("staff_present_2").style.display = "block";
+		document.getElementById("alternative_staff3").style.display = "none";
+		document.getElementById("temp_staff_present_3").style.display = "block";
 	}
 }
 
@@ -156,6 +244,24 @@ function checkDate(){
     }
 }
 
+function check(selTag) {
+	if(document.getElementById("presentincident1").checked == true || document.getElementById("presentintervention1").checked == true){
+		document.getElementById("onstaff1").checked = true;
+	}else{
+		document.getElementById("onstaff1").checked = false;
+	}
+	if(document.getElementById("presentincident2").checked == true || document.getElementById("presentintervention2").checked == true){
+		document.getElementById("onstaff2").checked = true;
+	}else{
+		document.getElementById("onstaff2").checked = false;
+	}
+	if(document.getElementById("presentincident3").checked == true || document.getElementById("presentintervention3").checked == true){
+		document.getElementById("onstaff3").checked = true;
+	}else{
+		document.getElementById("onstaff3").checked = false;
+	}
+}
+
 </script>
 
 
@@ -163,7 +269,6 @@ function checkDate(){
 
 	.center {
 		width: 70%;
-		margin: auto;
 	}
 	.btn.btn-lg {
 	    background-color: #03DAC5;
@@ -195,16 +300,33 @@ function checkDate(){
 	.custom-select:hover {
 		background: #1FC4B4;
 	}
+
+	label {
+		padding-left: 10px;
+	}
 	#datetimepicker2{
 		width: auto !important
 	}
 
 </style>
 </head>
-<body class="container">
+<body id='body' class="container" onload="show(this)">
 
 	<?
 	$names = build_page_pg();
+
+    if($_SESSION['country_location']=='UK'){
+        $behavior_spelling = 'Behaviour';
+        $vocalization_spelling = 'Vocalisation';
+        $characterization_spelling = 'Characterisation';
+        $date_format = 'dd-mm-yyyy';
+    }else{
+        $behavior_spelling = 'Behavior';
+        $vocalization_spelling = 'Vocalization';
+        $characterization_spelling = 'Characterization';
+        $date_format = 'mm-dd-yyyy';
+    }
+
 	if(isset($_REQUEST['scale_name'])){
 		$scale_name=str_replace('_',' ',$_REQUEST['scale_name']); // Use this line or below line if register_global is off
 	}else{
@@ -252,11 +374,38 @@ function checkDate(){
 		$session3=mysqli_query($conn,$sql3);
 	}
 
-		$_SESSION['first']=$_SESSION['row1']['first'];
-		$_SESSION['last']=$_SESSION['row1']['last'];
+if($_SESSION['population_type']=='behavioral'){
+	// For getting caregivers
+	$sql_carer = "SELECT * from personaldata WHERE Target_Population='$Population_strip' ORDER BY last";
+	$session_carer = mysqli_query($conn,$sql_carer);
+	$carer_data=$session_carer->fetch_all(MYSQLI_ASSOC);
 
+	//get episode contact
+	$sql_contact = "SELECT * from episode_contact WHERE Target_Population='$Population_strip' AND contact_category='during'";
+	$session_contact = mysqli_query($conn,$sql_contact);
+	$contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);	
 
+	//Get house Carer Names
+	$Population_strip=mysqli_real_escape_string($conn,$Target_Population);
+	$sql4="SELECT * FROM personaldata WHERE House='$_SESSION[house]'";
+	$session4=mysqli_query($conn,$sql4);
 
+	// Get all Carer Names
+	$Population_strip=mysqli_real_escape_string($conn,$Target_Population);
+	$sql6="SELECT * FROM personaldata WHERE Target_Population='$Population_strip' ORDER BY last";
+	$session6=mysqli_query($conn,$sql6);
+
+	//Get slow triggers
+	$sql5="SELECT * FROM scale_table WHERE  scale_name='Slow Trigger'";
+	$session5=mysqli_query($conn,$sql5);
+	if($session5){
+		$row5 = mysqli_fetch_array($session5);
+		$slow_triggers = explode(',',$row5['triggers']);
+	}
+} 
+
+	$_SESSION['first']=$_SESSION['row1']['first'];
+	$_SESSION['last']=$_SESSION['row1']['last'];
 		
 		?>
 
@@ -265,50 +414,45 @@ function checkDate(){
 			action = "ABAIT_resident_map_log_v2.php"
 			method = "post">
 
-<?
-if($_SESSION['country_location']=='UK'){
-	$behavior_spelling = 'Behaviour';
-	$vocalization_spelling = 'Vocalisation';
-	$characterization_spelling = 'Characterisation';
-	$date_format = 'dd-mm-yyyy';
-}else{
-	$behavior_spelling = 'Behavior';
-	$vocalization_spelling = 'Vocalization';
-	$characterization_spelling = 'Characterization';
-	$date_format = 'mm-dd-yyyy';
-}
-?>			
 
-	<table class="center">
-		<tr>
-			<td align="center">
+
+
+<div class="container">
+  	<div class="row justify-content-md-center">
+    	<div class="col col-lg-auto" align="center">
+
+
 				<h3 class="m-4">
 					<?
-					print "$behavior_spelling Episode $characterization_spelling Form for $_SESSION[first] $_SESSION[last]";
+						print"$behavior_spelling Episode $characterization_spelling Form for $_SESSION[first] $_SESSION[last]";
 					?>
 				</h3>
-			</td>
-		</tr>
-		<tr>
-			<td align="center">
-				<? print "<h4 class='m-4' style='color:grey'>$behavior_spelling and Intervention Information</h4>"; ?>
-			</td>
-		</tr>	
-		<tr>
-			<td align="center">
+		</div>
+	</div>
+  	<div class="row justify-content-md-center">
+    	<div class="col col-lg-auto" align="center">
+			<? 
+				print "<h4 class='m-4' style='color:grey'>$behavior_spelling and Intervention Information</h4>"; 
+			?>
+		</div>
+	</div>	
+<!--   	<div class="row justify-content-md-center">
+    	<div class="col col-lg-auto" align="center">
 				<h3 style='color: grey'>STEP 1</h3> 
-			</td>
-		</tr>
-		<tr>
-			<td align="center">
-				<? print "<h4>General category of $behavior_spelling</h4>"; ?>
-			</td>
-		</tr>
-		<tr>
-			<td align="center">		
+		</div>
+	</div> -->
+	<div class="row justify-content-md-center">
+		<div class="col col-lg-auto" align="center">
+			<?
+				print "<h4>General category of $behavior_spelling</h4>";
+			?>
+		</div>
+	</div>
+  	<div class="row justify-content-md-center">
+    	<div class="col col-lg-6" align="center">	
 			<?
 			$scale_name=str_replace('_',' ',$scale_name);
-				// print "<div class = 'tooltip'>";
+			
 						
 					print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='scale_name' id='scale_name' onchange=\"reload(this.form)\"><option value=''>Select a $behavior_spelling Classification</option>";
 						while($row2 = mysqli_fetch_array($session2)) { 
@@ -323,19 +467,28 @@ if($_SESSION['country_location']=='UK'){
 							}
 						}
 					print "</select>";
-				// print "</div>";
-			print"</td>";
+				
+			print"</div>";
 					if($session3){
 						$row3 = mysqli_fetch_array($session3);
 						$triggers = explode(',',$row3['triggers']);
-						} 
-		print "</tr>";
-		print "<tr>";
-			print "<td colspan='2' align='center'>";
-				print "<h3 style='color: grey'>STEP 2</h3> <h4> What caused the $behavior_spelling?</label></h4>";
-				// print "<div class = 'tooltip' id = 'trigger'>";
-					
-					print "<span class='tooltiptext'>Choose whichever best identifies what you believe caused your resident to act out.</span>";
+						}
+		print "</div>";
+		// print"<div class='row justify-content-md-center'>";
+		// 	print "<div class='col col-lg-auto' align='center'>";
+		// 		print "<h3 style='color: grey'>STEP 2</h3>";
+		// 	print "</div>";
+		// print "</div>";
+
+		print"<div class='row justify-content-md-center'>";
+			print "<div class='col col-lg-auto' align='center'>";		
+				print"<h4> What caused the $behavior_spelling?</label></h4>";
+			print "</div>";
+		print "</div>";
+
+		print"<div class='row justify-content-md-center'>";
+			print "<div class='col col-lg-6' align='center'>";
+
 					print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='trigger' id='trigger' onchange='show(this)'><option value=''>Select Cause (trigger)</option>";
 						print "<option value='other'>None of the below</option>";
 						foreach($triggers as $trigger){
@@ -344,32 +497,78 @@ if($_SESSION['country_location']=='UK'){
 						}
 						
 					print "</select>";
-					print "<input type = 'text' name ='custom_trigger' id='custom_trigger' class='textBox' style='display: none; background-color: GreenYellow' placeholder='Enter cause here' value=''  autofocus='autofocus' onfocus=\"if(this.value==this.defaultValue) this.value='';\"/>";
+					print "<input type = 'text' name ='custom_trigger' id='custom_trigger' class='textBox' style='display: none; background-color: GreenYellow' placeholder='Enter cause' value=''  autofocus='autofocus' onfocus=\"if(this.value==this.defaultValue) this.value='';\"/>";
 
-				
-				// print "</div>";
-			print "</td>";
+			
 				if($row3){	
 					reset($row3);
 				}
-		print "</tr>";
-		print"<tr>";
-			print"<td colspan='2'  align='center' >";
-				print"<h3 style='color: grey'>STEP 3</h3> <h4> $behavior_spelling Description</h4>";
+			print "</div>";
+			// print "<div class='col col-lg-3'>";
+			
+			// 		print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='slow_trigger' id='slow_trigger' onchange='show(this)'><option value=''>Slow Trigger (optional) </option>";
+			// 			print "<option value='new'>None of the below</option>";
+			// 			foreach($slow_triggers as $st){
+			// 				$st_strip=str_replace(' ','_',$st);
+			// 				print "<option value=$st_strip>$st</option>";
+			// 			}
+						
+			// 		print "</select>";
+			// 		print "<input type = 'text' name ='custom_slow_trigger' id='custom_slow_trigger' class='textBox' style='display: none; background-color: GreenYellow' placeholder='Enter new slow trigger here' value=''  autofocus='autofocus' onfocus=\"if(this.value==this.defaultValue) this.value='';\"/>";
+			
+			// 	if($row3){	
+			// 		reset($row3);
+			// 	}
+			// print "</div>";
+		print "</div>";
+		
+
+
+
+	print"<div id='hide_step3_if_slow'>";
+		// print"<div class='row justify-content-md-center'>";
+		// 	print "<div class='col col-lg-auto' align='center'>";
+		// 		print"<h3 style='color: grey'>STEP 3</h3>";
+		// 	print "</div>";
+		// print "</div>";
+
+		// Behavior class description
+		print"<div class='row justify-content-md-center'>";
+			print "<div class='col col-lg-auto' align='center'>";
+				print" <h4> $behavior_spelling Description</h4>";
+			print "</div>";
+		print "</div>";
+
+		print"<div class='row justify-content-md-center'>";
+			print "<div class='col col-lg-6' align='center'>";
 					echo "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='behave_class' id='behave_class'><option value=''>Choose a $behavior_spelling Descriptor</option>";
 						reset($row3);
-						for ($i=1;$i<6;$i++){
+						for ($i=1;$i<7;$i++){
 							$behave_class_number='behave_class_'.$i;
 							if($row3[$behave_class_number]){
 								echo  "<option value='$i'>$row3[$behave_class_number]</option>";
 							}
 						}
 					echo "</select>";
-			print"</td>";
-		print "</tr>";
-		print "<tr>";
-			print "<td colspan='2' width= '50%' align='center'>";
-				print"<h3 style='color: grey'>STEP 4</h3> <h4> Identify $behavior_spelling Intensity</h4>";
+			print"</div>";
+		print "</div>";
+	print "</div>";
+
+	print"<div id='hide_step4_if_slow' style='display:block'>";
+		// print "<div class='row justify-content-md-center'>";
+		// 	print"<div class='col col-lg-auto' align='center'>";
+		// 		print"<h3 style='color: grey'>STEP 4</h3>";
+		// 	print "</div>";
+		// print "</div>";
+
+		print "<div class='row justify-content-md-center'>";
+			print"<div class='col col-lg-auto' align='center'>";
+				print"<h4> Identify $behavior_spelling Intensity</h4>";
+			print "</div>";
+		print "</div>";
+
+		print "<div class='row justify-content-md-center'>";
+			print"<div class='col col-lg-6' align='center'>";
 					echo "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='intensity' id='intensity'><option value=''>Select a $behavior_spelling Intensity</option>";
 					
 						for ($i=1;$i<6;$i++){
@@ -380,122 +579,549 @@ if($_SESSION['country_location']=='UK'){
 						}
 					echo "</select>";
 					
-			print"</td>";
+			print"</div>";
 				if($row3){	
 					reset($row3);
 				}
-		print "</tr>";
+		print "</div>";
+	print "</div>";
 	?>
-		<tr>
-			<td colspan='1' align='center'>
+<!-- 		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
 				<div id = "trigger">
-					<? print "<h3 style='color: grey'>STEP 5</h3><h4>Any other unique comments about $behavior_spelling?</h4>"; ?>
-					<textarea class="form-control form-control-ta" placeholder="Required..."  id ="specific_behavior_description" name = "specific_behavior_description"/></textarea>
+					<h3 style='color: grey'><span class='hide'>STEP 5</span> <span class='show' style='display: none'>STEP 3</span></h3>
 				</div>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='1' align='center'>
+			</div>
+		</div> -->
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
+				<?
+					print "<h4>Any other <span class='hide'>unique</span> comments about the $behavior_spelling?</h4>";
+				?>
+			</div>
+		</div>
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-8' align='center'>
+					<textarea class="form-control form-control-ta" placeholder="Required..."  id ="specific_behavior_description" name = "specific_behavior_description"/></textarea>
+			</div>
+		</div>
+<!-- 		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
 				<div id = "intervention">
-					<h3 style='color: grey'>STEP 6</h3><h4>How did you manage the episode?</h4>
+					<h3 style='color: grey'><span class='hide'>STEP 6</span> <span class='show' style='display: none'>STEP 4</span></h3>
+				</div>
+			</div>
+		</div> -->
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>					
+				<h4>How did you manage the episode?</h4>
+			</div>
+		</div>
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-8' align='center'>
 					<textarea class="form-control form-control-ta" placeholder="Required..."  id ="intervention" name = "intervention"/></textarea>
 				</div>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='1'align='center' valign='bottom'>
+			</div>
+
+<!-- 		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
 				<div id = "intervention_avoid">
-					<? print "<h3 style='color: grey'>STEP 7</h3><h4>Did anything make the $behavior_spelling more severe?</h4><br>"; ?>
+					<h3 style='color: grey'><span class='hide'>STEP 7</span> <span class='show' style='display: none'>STEP 5</span></h3>
+				</div>
+			</div>
+		</div> -->
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
+				<?
+					print "<h4>Did anything make the $behavior_spelling more severe?</h4><br>";
+				?>
+			</div>
+		</div>
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-8' align='center'>
 					<!-- <em style="font-size:10pt; line-height:0pt; color:red">Optional</em><br> -->
 					<textarea class="form-control form-control-ta" placeholder="Optional..." id ="interv_a" name = "intervention_avoid"/></textarea>
 				</div>
-			</td>
-		</tr>
-		<tr>
-			<td align='center'>
+			</div>
+
+<?
+if($_SESSION['population_type']=='behavioral'){
+		// print "<div class='row justify-content-md-center'>";
+		// 	print "<div class='col col-lg-auto' align='center'>";
+		// 		print "<div id = 'onstaff'>";
+		// 			print "<h3 style='color: grey'><span class='hide'>STEP 8</span> <span class='show' style='display: none'>STEP 6</span></h3>";
+		// 		print "</div>";
+		// 	print "</div>";
+		// print "</div>";
+		print "<div class='row justify-content-md-center'>";
+			print "<div class='col col-lg-auto' align='center'>";
+					print "<h4><label> Other Staff Present?</label></h4>";
+			print "</div>";
+		print "</div>";
+		print "<div class='row justify-content-md-center'>";
+			print "<div class='col col-lg-auto' align='center'>";
+					
+
+	// for select dropdown for staff 1 present  id='staff_present_1' id='staff_present_checkbox_div_1'
+	 	$i=0;
+		print"<div class='row justify-content-md-center'>";
+			print"<div class='col col-lg-auto pr-0' align='center'>";
+				print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_1' id='staff_present_1' onchange='show(this)'>";
+					print "<option value=''>Select Staff Member</option>";
+					foreach ($carer_data as $row) {
+						if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+						}
+					}
+					print "<option value='-2'>Temporary Staff</option>";
+					print "<option value='-1'>Agency Staff</option>";
+				print"</select>";
+
+			print"</div>";
+
+			print"<div class='col col-lg-auto pr-0' align='center'>";
+				print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='temp_staff_present_1' id='temp_staff_present_1' style='display: none;' onchange='show(this)'>";
+					print "<option value=''>Select Staff Member</option>";
+					foreach ($carer_data as $row) {
+						if( $_SESSION['personaldatakey']!=$row['personaldatakey']){
+							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+						}
+					}
+				print"</select>";
+			print"</div>";
+
+			print"<div class='col col-lg-auto ml-0 mb-2'  align='center' id='alternative_staff1' style='display: none;'>";
+				print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_1_name' name='alternative_staff_1_name'/></textarea>";
+			print"</div>";
+
+			print"<div class='col col-lg-auto ml-0 mb-2'  align='center' id='staff_present_checkbox_div_1' style='display: none;'>";		
+				print "<table class='table-sm table-hover table-bordered ' align='center'>";
+					print"<tr><th style='text-align: center'>Interaction</th></tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox'
+							name = 'onstaff1'
+							id = 'onstaff1'
+							value = '1'/>";
+							print"<label for='onstaff1'>On Staff</label>";
+						print "</td>";
+					print "</tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox' onchange='check(this)'
+							name = 'presentincident1'
+							id = 'presentincident1'
+							value = '1'/>";
+							print"<label for='presentincident1'>Present during incident</label>";
+						print "</td>";
+					print "</tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox' onchange='check(this)'
+							name = 'presentintervention1'
+							id = 'presentintervention1'
+							value = '1'/>";
+							print"<label for='presentintervention1'>Present during intervention</label>";
+						print "</td>";
+					print "</tr>";
+				print "</table>";
+			print"</div>";
+
+		print"</div>";
+
+
+	// for select dropdown for staff 2 present  id='staff_present_2' id='staff_present_checkbox_div_2'
+	 	$i=0;
+		print"<div class='row justify-content-md-center'>";
+			print"<div class='col col-lg-auto pr-0' align='center'>";
+				print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='staff_present_2' id='staff_present_2' style='display: none;' onchange='show(this)'>";
+					print "<option value=''>Select Staff Member</option>";
+					foreach ($carer_data as $row) {
+						if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+						}
+					}
+					print "<option value='-2'>Temporary Staff</option>";
+					print "<option value='-1'>Agency Staff</option>";
+				print"</select>";
+			print"</div>";
+
+
+			print"<div class='col col-lg-auto pr-0' align='center'>";
+				print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='temp_staff_present_2' id='temp_staff_present_2' style='display: none;' onchange='show(this)'>";
+					print "<option value=''>Select Staff Member</option>";
+					foreach ($carer_data as $row) {
+						if( $_SESSION['personaldatakey']!=$row['personaldatakey']){
+							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+						}
+					}
+				print"</select>";
+			print"</div>";
+
+			print"<div class='col col-lg-auto ml-0 mb-2'  align='center' id='alternative_staff2' style='display: none;'>";
+				print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_2_name' name='alternative_staff_2_name'/></textarea>";
+			print"</div>";
+
+			print"<div class='col col-lg-auto ml-0 mb-2'  align='center' id='staff_present_checkbox_div_2' style='display: none;'>";		
+				print "<table class='table-sm table-hover table-bordered' align='center'>";
+					print"<tr><th style='text-align: center'>Interaction</th></tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox'
+							name = 'onstaff2'
+							id = 'onstaff2'
+							value = '1'/>";
+							print"<label for='onstaff2'>On Staff</label>";
+						print "</td>";
+					print "</tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox' onchange='check(this)'
+							name = 'presentincident2'
+							id = 'presentincident2'
+							value = '1'/>";
+							print"<label for='presentincident2'>Present during incident</label>";
+						print "</td>";
+					print "</tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox' onchange='check(this)'
+							name = 'presentintervention2'
+							id = 'presentintervention2'
+							value = '1'/>";
+							print"<label for='presentintervention2'>Present during intervention</label>";
+						print "</td>";
+					print "</tr>";
+				print "</table>";
+			print"</div>";
+
+		print"</div>";
+
+
+	// for select dropdown for staff 3 present  id='staff_present_3' id='staff_present_checkbox_div_3'
+	 	$i=0;
+		print"<div class='row justify-content-md-center'>";
+			print"<div class='col col-lg-auto pr-0  align='center''>";
+				print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_3' id='staff_present_3' style='display: none;' onchange='show(this)'>";
+					print "<option value=''>Select Staff Member</option>";
+					foreach ($carer_data as $row) {
+						if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+						}
+					}
+					print "<option value='-2'>Temporary Staff</option>";
+					print "<option value='-1'>Agency Staff</option>";
+				print"</select>";
+			print"</div>";
+
+
+			print"<div class='col col-lg-auto pr-0' align='center'>";
+				print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='temp_staff_present_3' id='temp_staff_present_3' style='display: none;' onchange='show(this)'>";
+					print "<option value=''>Select Staff Member</option>";
+
+					foreach ($carer_data as $row) {
+						if( $_SESSION['personaldatakey']!=$row['personaldatakey']){
+							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+						}
+					}
+				print"</select>";
+			print"</div>";
+
+			print"<div class='col col-lg-auto ml-0 mb-2'  align='center' id='alternative_staff3' style='display: none;'>";
+				print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_3_name' name='alternative_staff_3_name'/></textarea>";
+			print"</div>";
+
+			print"<div class='col col-lg-auto ml-0 mb-2'  align='center' id='staff_present_checkbox_div_3' style='display: none;'>";		
+				print "<table class='table-sm table-hover table-bordered' align='center'>";
+					print"<tr><th style='text-align: center'>Interaction</th></tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox'
+							name = 'onstaff3'
+							id = 'onstaff3'
+							value = '1'/>";
+							print"<label for='onstaff3'>On Staff</label>";
+						print "</td>";
+					print "</tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox' onchange='check(this)'
+							name = 'presentincident3'
+							id = 'presentincident3'
+							value = '1'/>";
+							print"<label for='presentincident3'>Present during incident</label>";
+						print "</td>";
+					print "</tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox' 
+							onchange='check(this)'
+							name = 'presentintervention3'
+							id = 'presentintervention3'
+							value = '1'/>";
+							print"<label for='presentintervention3'>Present during intervention</label>";
+						print "</td>";
+					print "</tr>";
+				print "</table>";
+			print"</div>";
+
+		print"</div>";
+
+	// for select dropdown for staff 1 present  id='staff_present_4' id='staff_present_checkbox_div_4'
+	 	$i=0;
+		print"<div class='row justify-content-md-center'>";
+			print"<div class='col col-lg-auto pr-0' align='center'>";
+				print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_4' id='staff_present_4' style='display: none;' onchange='show(this)'>";
+					print "<option value=''>Select Staff Member</option>";
+					foreach ($carer_data as $row) {
+						if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+							print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
+						}
+					}
+					print "<option value='-1'>Temporary Staff</option>";
+				print"</select>";
+
+			print"</div>";
+			print"<div class='col col-lg-auto ml-0 mb-2'  align='center' id='staff_present_checkbox_div_4' style='display: none;'>";		
+				print "<table class='table-sm table-hover table-bordered' align='center'>";
+					print"<tr><th style='text-align: center'>Interaction</th></tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox'
+							name = 'onstaff4'
+							id = 'onstaff4'
+							value = '1'/>";
+							print"<label for='onstaff4'>On Staff</label>";
+						print "</td>";
+					print "</tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox'
+							onchange='check(this)'
+							name = 'presentincident4'
+							id = 'presentincident4'
+							value = '1'/>";
+							print"<label for='presentincident4'>Present during incident</label>";
+						print "</td>";
+					print "</tr>";
+					print "<tr>";
+						print "<td>";
+							print"<input type = 'checkbox'
+							onchange='check(this)'
+							name = 'presentintervention4'
+							id = 'presentintervention4'
+							value = '1'/>";
+							print"<label for='presentintervention4'>Present during intervention</label>";
+						print "</td>";
+					print "</tr>";
+				print "</table>";
+			print"</div>";
+			print"<div class='col col-lg-auto ml-0 mb-2'  align='center' id='alternative_staff4' style='display: none;'>";
+				print"<textarea class='form-control form-control-ta' autofocus='autofocus' placeholder='Enter first and last name'  id='alternative_staff_4_name'/></textarea>";
+			print"</div>";
+		print"</div>";
+
+						// print "<table class='table' align='center' width='75%'border='1' bgcolor='white'>";
+						// 	print"<tr><th>Carer</th><th>On Staff</th><th>Present during incident</th><th>Present during intervention</th></tr>";
+						// 		while($row4 = mysqli_fetch_assoc($session4)){
+								
+						// 				print"<tr>";
+						// 					print"<td>$row4[first] $row4[last]</td>";
+						// 					print"<td style='text-align: center; vertical-align: middle;'>";
+
+						// 								print"<input type = 'checkbox'
+						// 								name = 'onstaff[]'
+						// 								id='$row4[personaldatakey]'
+						// 								value = '$row4[personaldatakey]'/>";
+
+						// 					print"</td>";
+						// 					print"<td style='text-align: center; vertical-align: middle;'>";
+						// 								print"<input type = 'checkbox'
+						// 								name = 'presentincident[]'
+						// 								id='$row4[personaldatakey]'
+						// 								value = '$row4[personaldatakey]'/>";
+						// 					print"</td>";
+						// 					print"<td style='text-align: center; vertical-align: middle;'>";
+						// 								print"<input type = 'checkbox'
+						// 								name = 'presentintervention[]'
+						// 								id='$row4[personaldatakey]'
+						// 								value = '$row4[personaldatakey]'/>";
+						// 					print"</td>";
+						// 				print"</tr>";
+						// 		}
+						// print"</table>";
+
+
+			print "</div>";
+		print "</div>";
+}
+?>
+
+<!-- 		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
 				<div id = "PRN">
-					<h3 style='color: grey'>STEP 8</h3><h4><label> PRN Given?</label></h4>
-					<?
-					print"<select data-width='auto' class='selBox custom-select-background custom-select-lg mb-3'  name='PRN' onchange='show(this)' >";
+					<h3 style='color: grey'><span class='hide'>STEP 9</span> <span class='show' style='display: none'>STEP 7</span></h3>
+				</div>
+			</div>
+		</div> -->
+
+<?
+if($_SESSION['population_type']=='behavioral'){
+	$intervention_type = "Emergency Intervention Required?";
+}else{
+	$intervention_type = "Was Medication Required?";
+}
+
+		print "<div class='row justify-content-md-center'>";
+			print "<div class='col col-lg-auto' align='center'>";
+					print "<h4><label>$intervention_type</label></h4>";
+			print "</div>";
+		print "</div>";
+
+		print "<div class='row justify-content-md-center'>";
+			print "<div class='col col-lg-auto' align='center'>";
+				
+					print"<select data-width='auto' id='PRN_div'class='selBox custom-select-background custom-select-lg mb-3'  name='PRN' onchange='show(this)' >";
 						print "<optGroup>";
 							print"<option value='0' selected>NO</option>";
 							print"<option value='1'>YES</option>";
 						print "</optGroup>";
-					print"</select>";
+					print "</select>";
 
-					?>	
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td align='center', colspan='6'>
-				<? print "<div id='pre_PRN_observation_tag' style='display: none; color: red;'>Enter specific description of $behavior_spelling which required PRN in yellow text-box.</div> "; ?>
-			</td>
-		</tr>
-		<tr>
-			<td align='center', colspan='6'>
-				<div>
-					<textarea class="form-control form-control-ta" name='pre_PRN_observation' id='pre_PRN_observation'; style='display: none; background-color: yellow;  value=''/></textarea>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td align="center">
+	
+			print "</div>";
+		print "</div>";
+
+if($_SESSION['population_type']=='behavioral'){
+	$intervention_cause = "Select specific description of ".$behavior_spelling." which required Emergency Service.";
+}else{
+	$intervention_cause = "Enter specific description of the ".$behavior_spelling." which required medication.";
+}
+
+		print "<div class='row justify-content-md-center'>";
+
+			print "<div class='col col-lg-auto' align='center'>";
+				print "<div id='pre_PRN_observation_tag' style='display: none; color: red;'>$intervention_cause</div>";
+			print "</div>";
+		print "</div>";
+if($_SESSION['population_type']=='behavioral'){
+					print "<div class='row justify-content-md-center'>";
+						print "<div class='col col-lg-8' align='center'>";
+							print "<table align='center' class='table-sm table-hover table-bordered'>";
+								print "<tr>";
+									print "<th style='text-align: center'> Intervention </th>";
+								
+								foreach ($contact_data as $row) {
+									print "</tr>";
+										print "<td>";
+											print"<input type = 'checkbox'
+												name = 'emergency_intervention[]'
+												id = '$row[contact_type]'
+												value = '$row[id]'/>";
+												print"<label for='$row[contact_type]''>$row[contact_type]</label>";
+										print"</td>";
+									print"</tr>";
+								}
+						
+
+							print "</table>";
+						print "</div>";
+					print "</div>";
+				print "</div>";
+}else{
+		print "<div class='row justify-content-md-center'>";
+			print "<div class='col col-lg-8' align='center'>";
+				print "<div id='pre_PRN_observation' style='display: none'>";
+					print "<textarea class='form-control form-control-ta' name='pre_PRN_observation'  background-color: yellow;  value=''/></textarea>";
+				print "</div>";
+			print "</div>";
+		print "</div>";
+}
+	print "</div>";
+
+
+?>
+
+
+
+
+
+
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
 				<h3  style='color:grey'>Date and Time Information</h3>
-			</td>
-		</tr>
-<!-- 		<tr>
-			<td  width='50%'align='center'>
-				<h3 style='color: grey'>STEP 9</h3> <h4><label> When Did Episode Take Place?</label></h4>
-				<input onchange="checkDate()" class="form-control custom-select-lg custom-select-background" id="datetimepicker5" name="datetimepicker" type="text" placeholder='Touch to enter' data-width='auto'/>
+			</div>
+		</div>
+<!-- 		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
+				<h3 style='color: grey'><span class='hide'>STEP 10</span> <span class='show' style='display: none'>STEP 8</span></h3>
+			</div>
+		</div> -->
 
-			</td>
-		</tr> -->
-		<tr>
-			<td  align='center'>
-				<h3 style='color: grey'>STEP 9</h3> <h4><label> When Did Episode Take Place?</label></h4>
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
+				 <h4><label> When Did Episode Take Place?</label></h4>
+			</div>
+		</div>
 
-
-					<?
-					####  Parsing time formats for html5 datetime-local form element
-					$now = date("Y-m-d H:i");
-					$now = str_replace(" ", "T",$now);
-					$now = str_replace(":pm", "", $now);
-
-					$min_time = date("Y-m-d H:i",strtotime('-5 days'));
-					$min_time = str_replace(" ", "T",$min_time);
-					$min_time = str_replace(":pm", "", $min_time);
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
 
 
-					?>
+<!-- 				<input onchange="checkDate()" class="form-control custom-select-lg custom-select-background" id="datetimepicker5" name="datetimepicker" type="text" placeholder='Touch to enter' data-width='auto'/> -->
 
-					<input  type="datetime-local"
-							onchange="checkDate()"
-							class="form-control custom-select-lg custom-select-background col-xs-4" 
-							width="auto" 
-							id="datetimepicker2"
-							name="datetimepicker" value="<? echo $now ?>"
-							min="<? echo $min_time ?>" 
-							max="<? echo $now ?>">
-			</td>
-		</tr>
+                            <?
+                            ####  Parsing time formats for html5 datetime-local form element
+                            $now = date("Y-m-d H:i");
+                            $now = str_replace(" ", "T",$now);
+                            $now = str_replace(":pm", "", $now);
 
+                            $min_time = date("Y-m-d H:i",strtotime('-7 days'));
+                            $min_time = str_replace(" ", "T",$min_time);
+                            $min_time = str_replace(":pm", "", $min_time);
+                            ?>
 
-		<tr>
-			<td width='50%'align='center'>
-				<h3 style='color: grey'>STEP 10</h3><h4><label> How Long Did Episode Last?</label></h4>
+                            <input type="datetime-local"
+                                    onchange="checkDate()"
+                                    class="form-control custom-select-lg custom-select-background col-xs-4" 
+                                    width="auto" 
+                                    id="datetimepicker2"
+                                    name="datetimepicker" value="<? echo $now ?>"
+                                    min="<? echo $min_time ?>" 
+                                    max="<? echo $now ?>">
+			
+
+			</div>
+		</div>
+<!-- 		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
+				<h3 style='color: grey'><span class='hide'>STEP 11</span> <span class='show' style='display: none'>STEP 9</span></h3>
+			</div>
+		</div> -->
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
+
+				<h4><label> How Long Did Episode Last?</label></h4>
+			</div>
+		</div>
+		<div class="row justify-content-md-center">
+			<div class='col col-lg-auto' align='center'>
 				<select class='custom-select-background custom-select-lg mb-3' data-width='auto' name = "duration" id="duration" onchange='validate_form()'>
 				<option value = "">Choose Minutes</option>
 				<?
-				for($t = 5;$t <= 90;$t +=5){
-					print "<option value = $t>$t</option>";
-				}
+				// for($t = 1;$t <= 5;$t +=1){
+				// 	print "<option value = $t>$t</option>";
+				// }
+				print "<option value = 5>less than 5</option>";
+				print "<option value = 10>6-10</option>";
+				print "<option value = 30>11-30</option>";
+				print "<option value = 60>30-60</option>";
+				print "<option value = 120>1-2 hrs</option>";
 				?>
-					<option value = "105">Greater than 90 minutes</option>
 				</select>
-			</td>
-		</tr>
-	</table>
+			</div>
+		</div>
+</container>
 	<div id = "submit">
 		<input 	type = "submit"
 				name = "submit"

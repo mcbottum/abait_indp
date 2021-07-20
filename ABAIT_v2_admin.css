@@ -136,6 +136,12 @@ table.noScroll tbody td{
 background-color: lightgrey;
 }
 
+    input[type=radio] {
+    border: 0px;
+    width: 30px;
+    height:30px;
+}
+
 #submit{
   text-align:center;
 }

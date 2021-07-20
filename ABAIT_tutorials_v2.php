@@ -58,6 +58,21 @@ print $_SESSION['SITE']
 
 	<?			
 		$names = build_page_pg();
+
+        if($_SESSION['country_location']=='UK'){
+            $behavior_spelling = 'Behaviour';
+            $vocalization_spelling = 'Vocalisation';
+            $characterization_spelling = 'Characterization';
+            $date_format = 'dd-mm-yyyy';
+            $catalog_spelling  = 'Catalogue';
+        }else{
+            $behavior_spelling = 'Behavior';
+            $vocalization_spelling = 'Vocalization';
+            $characterization_spelling = 'Characterisation';
+            $date_format = 'mm-dd-yyyy';
+            $catalog_spelling  = 'Catalog';
+        }
+
 	?>
 
 	<h2 class="m-3" align='center'>ABAIT Tutorials and Education Resources</h2>
@@ -75,7 +90,9 @@ print $_SESSION['SITE']
 				<tr><td align='center'> -->
 	<div class="row justify-content-md-center">
 		<div class='col col-lg-3 mt-4'>
-					<a class="btn  btn-lg btn-block p-5" href='ABAIT_triggers_and_interventions_v2.php'>Catalog of Triggers and Interventions</a>
+<?
+					print "<a class='btn  btn-lg btn-block p-5' href='ABAIT_triggers_and_interventions_v2.php'>$catalog_spelling of Triggers and Interventions</a>";
+?>
 			</div>
 		</div>
 <!-- 				</td></tr>

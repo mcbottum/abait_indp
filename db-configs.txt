@@ -1,0 +1,19 @@
+cog.abaitscale.com
+     $db = 'agitation_cog';
+     $host = 'mysqlcog.abaitscale.com';
+     $db_user = 'abaitcog';
+     $db_pwd = 'abaitcog13!';
+cs.abaitscale.com
+    $db = 'agitation_cs';
+    $_SESSION['db'] = $db;
+    $host = 'mysqlcs.abaitscale.com';
+    $db_user = 'abaitcs';
+    $db_pwd = 'abaitcs13!';
+    $_SESSION['reset_password'] = False;
+demo.abaitscale.com
+    $db = 'agitation_demo';
+    $_SESSION['db'] = $db;
+    $host = 'mysqlindp.abaitscale.com';
+    $db_user = 'abaitdemo';
+    $db_pwd = 'abaitdemo1!';
+    $_SESSION['reset_password'] = True;

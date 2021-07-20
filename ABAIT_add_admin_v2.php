@@ -156,7 +156,7 @@ if(isset($_POST["ak"])){
 		<form
 				name="form"
 				onsubmit="return validate_form()"
-				action = "ABAIT_administrator_log.php"
+				action = "ABAIT_add_admin_log_v2.php"
 				method = "post">			
 			
 	
@@ -164,7 +164,6 @@ if(isset($_POST["ak"])){
 <?
 
 	print"<h3 class='m-3 p-2 footer_div' align='center'>$action  Administrator</h3>";
-
 
 
 		print"<h4 align='center'><label id='formlabel'> Administrator Data Form (*required)</label></h4>";
@@ -273,11 +272,11 @@ if(isset($_POST["ak"])){
 								if($_SESSION['privilege']=='globaladmin'){
 									$Target_Population="";
 									while($row=mysqli_fetch_assoc($session)){
-										if($row[Target_Population]!=$Target_Population && $row[Target_Population]!=$data[Target_Population]&&$row[Target_Population]!=""){
-											$Target_Population=str_replace(' ','_',$row[Target_Population]);
+										if($row['Target_Population']!=$Target_Population && $row['Target_Population']!=$data['Target_Population']&&$row['Target_Population']!=""){
+											$Target_Population=str_replace(' ','_',$row['Target_Population']);
 											$Population_strip=mysqli_real_escape_string($conn,$Target_Population);
 											print"<option value=$Population_strip>$row[Target_Population]</option>";
-											$Target_Population=$row[Target_Population];
+											$Target_Population=$row['Target_Population'];
 										}
 									}
 								}elseif($_SESSION['privilege']=='admin'){

@@ -116,6 +116,18 @@ set_css()
 <body class="container">
 	<?
 		$names = build_page_pg();
+
+	if($_SESSION['country_location']=='UK'){
+	    $behavior_spelling = 'Behaviour';
+	    $vocalization_spelling = 'Vocalisation';
+	    $characterization_spelling = 'Characterisation';
+	    $date_format = 'dd-mm-yyyy';
+	}else{
+	    $behavior_spelling = 'Behavior';
+	    $vocalization_spelling = 'Vocalization';
+	    $characterization_spelling = 'Characterization';
+	    $date_format = 'mm-dd-yyyy';
+	}
 	?>
 	<form 	name = 'form'
 			id = 'form'
@@ -238,7 +250,7 @@ set_css()
 		$scale_name=$_SESSION['scale_name'];
 	}
 	print" <table align='center'>";
-		print"<tr><td><h3 class='m-4'>Behavior Episode Selector</h3></td></tr>";
+		print"<tr><td><h3 class='m-4'>$behavior_spelling Episode Selector</h3></td></tr>";
 		print"<tr><td>";
 			$provider_resident = $_SESSION['provider_resident'];
 			print"<b><em>$provider_resident</em></b>";
@@ -273,11 +285,11 @@ set_css()
 
 		print"</td></tr>";
 		print"<tr><td>";
-		print"<b><em>Behavior Category</em></b>";
+		print"<b><em>$behavior_spelling Category</em></b>";
 		print"</td></tr>";		
 		print"<tr><td>";
 			// print"<input type='hidden' name='residentkey' value=$residentkey>";		
-			print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='scale_name' onchange=\"reload1(this.form)\"><optGroup><option value=''>Select a Behavior Classification</option></optGroup>";
+			print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='scale_name' onchange=\"reload1(this.form)\"><optGroup><option value=''>Select a $behavior_spelling Classification</option></optGroup>";
 			
 				$session3=mysqli_query($conn,$_SESSION[sql3]);
 				unset($sn_array);
@@ -358,7 +370,7 @@ set_css()
 		<div  id = "submit">	
 			<input  	type = "submit"
 			name = "submit"
-			value = "Submit Behavior Plan Request" />
+			value = "Submit Plan Request" />
 		</div>
 
 	</form>
