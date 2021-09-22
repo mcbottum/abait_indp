@@ -88,7 +88,7 @@ $all_episode = 1;
 $episode_time_of_day = 1;
 $scale_totals = 1;
 
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+$conn = make_msqli_connection();
 
 if(isset($_REQUEST['id'])){
     $personaldatakey=$_REQUEST['id'];
@@ -166,7 +166,11 @@ print"<div><h4 align='center'>Episode List</h4></div>\n";
                         print"<th>Behavior Classification</th>";
                         print"<th>Trigger</th>\n";
                         print"<th>Episode Duration</th>";
-                        print"<th>Police Int</th>";
+                        if($_SESSION['population_type']==='behavioral'){
+                            print"<th>Police Int</th>";
+                        }else{
+                            print"<th>Medication</th>";
+                        }
                     print"</tr>";
 
                 while($behavior_map_data_row=mysqli_fetch_assoc($behavior_map_data_session)){
@@ -446,7 +450,11 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
                                 print"<th>End Date</th>\n";
                                 print"<th>Total Episodes</th>\n";
                                 print"<th>Total Duration of Episodes</th>\n";
-                                print"<th>Total Police Int</th>\n";
+                                if($_SESSION['population_type']==='behavioral'){
+                                    print"<th>Police Int</th>";
+                                }else{
+                                    print"<th>Medication</th>";
+                                }
                             print"</tr>\n";
 
                             print"<tr align='center'>\n";

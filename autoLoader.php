@@ -21,7 +21,7 @@ function autoLoad($data){
 	echo "HI";
 	if(array_key_exists("pss_updates", $data)){
 
-		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']);
+		$conn=make_msqli_connection();
 
 		foreach ($data['pss_updates'] as $key) {
 

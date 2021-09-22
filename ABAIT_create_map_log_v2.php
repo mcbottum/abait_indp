@@ -53,7 +53,7 @@ if($_SESSION['cgfirst']!=""){
 		$residentkey=$_SESSION['residentkey'];
 		$creation_date=date('Y,m,d');
 		$behavior=$_SESSION['behavior'];
-		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+		$conn = make_msqli_connection();
 		if($_SESSION['Target_Population']=='all'){
 			$Population=mysqli_real_escape_string($conn,$_SESSION['Population']);
 			$Population=$_SESSION['Population'];

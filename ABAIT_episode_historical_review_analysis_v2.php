@@ -234,7 +234,7 @@ if($filename=="Submit Resident for Global Analysis"){
 
 		$title='Global Analysis';
 }
-		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+		$conn=make_msqli_connection();
 
 		$scale_array=$_SESSION['scale_array'];
 		foreach($scale_array as $value){
@@ -457,7 +457,17 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 			}else{
 				print"<h3 class='center_header'>Episode per Time of Day for <em>${'behave_'.$j}</em> Triggers - Start Date:  <em> $date_start</em> End Date:   <em> $date_end</em></h3>\n";
 			}
+
+
+
+
 			print "<table width='100%'>";//table for more info copy this line
+				print "<tr align='right'>";
+					print "<td>";
+						print"<input type='submit' value='Tap for more Info' onClick=\"alert('This table groups $behavior_spelling episodes by the time of day during which they occurred.');return false\">";
+					print "</td>";
+				print "</tr>";
+
 					print "<tr><td>";//table in table data for more info
 						// print "<table width='100%' class='table hover local' border='1' bgcolor='white'>";
 						print "<table class='table table-bordered'>";
@@ -667,6 +677,9 @@ print "<table width='100%'>";//table for more info copy this line
 
 if($trigger_breakdown){ ////////////////////////////////////////trigger breakdown//////////////////////////////////////
     print"<h3 align=center>Trigger and Intervention Analysis</h3>\n";
+
+						print"<input type='submit' style='float:right' value='Tap for more Info' onClick=\"alert('This is the Trigger and Intervention Breakdown. Information listed is the total number of each type of episode, total duration of those episodes, and the most effective intervention based on cumulative reduction in episode intensity.  Click on the pie icon to display a pie chart of all episode type durations.');return false\">";
+
     $r=0;
     $trigger_array_index=0;
     foreach($scale_array as $behavior){
@@ -677,7 +690,18 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
         $behavior_maps_sql="SELECT * FROM behavior_maps WHERE behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
         //$sql2="SELECT * FROM behavior_maps WHERE behavior='$behavior' AND residentkey='$residentkey'";
         $behavior_maps_session=mysqli_query($conn,$behavior_maps_sql);
+
+
+
             print "<table align='center' width='100%'>";
+            	// print "<tr align='right'>";
+            	// 	print "<td>";
+
+						// print"<input type='submit' value='Tap for more Info' onClick=\"alert('This is the Trigger and Intervention Breakdown. Information listed is the total number of each type of episode, total duration of those episodes, and the most effective intervention based on cumulative reduction in episode intensity.  Click on the pie icon to display a pie chart of all episode type durations.');return false\">";
+
+				// 	print "</td>";
+				// print "</tr>";
+
             print "<tr><td>";
             // print "<table  class='table scroll local' border='1' bgcolor='white'>";
             print "<table class='table table-bordered'>";

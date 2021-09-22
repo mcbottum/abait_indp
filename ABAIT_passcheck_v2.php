@@ -3,6 +3,7 @@
  session_start();
 
 
+/// *** CONFIGURATION SETTINGS *** ///
 
 ///// FOR POST REMOTE LOGIN
 if(isset($_REQUEST['abait'])){
@@ -22,17 +23,17 @@ if(isset($_REQUEST['client'])){
 }else{
 	$k=Null;
 }
-//TESTING
-//$remote_login_guid = '1234567890';
 
-// *** CONFIGURATION SETTINGS *** ///
-//for db connection
+
+// ****** for db connection
 //$_SESSION['population_type']='behavioral'; 
-//$_SESSION['population_type']='cognitive';
-$_SESSION['population_type']='local';
-// for spellings
-//$_SESSION['country_location'] = 'UK';
-$_SESSION['country_location'] = 'USA';
+$_SESSION['population_type']='cognitive';
+//$_SESSION['population_type']='local';
+
+
+// ****** for spellings
+$_SESSION['country_location'] = 'UK';
+//$_SESSION['country_location'] = 'USA';
 
 // $_SESSION['HOME']='index.php';
 $_SESSION['HOME']='ABAIT_Home.php';
@@ -40,37 +41,89 @@ $_SESSION['favicon'] = 'favicon3.ico';
 
 $_SESSION['provider_resident'] = 'Care Recipient';
 
-//Sending care notes:
-$_SESSION['send_care_note'] = True;
+// ****** Sending care notes:
+$_SESSION['send_care_note'] = False;
 $_SESSION['care_note_url'] = 'https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=8de7a68c-f962-4fb1-a98a-1d08e3263dd9&Apikey=a09a69a2-dbe0-4a47-bf9c-9d5cc92e8434';
 
 
-//DB connection
-if ($_SESSION['population_type']==='cognitive'){ // ***  for remote dementia (indp, cs, ):  ***//
-	$db = 'agitation_demo';
-	$_SESSION['db'] = $db;
-	$host = 'mysqlindp.abaitscale.com';
-	$db_user = 'abaitdemo';
-	$db_pwd = 'abaitdemo1!';
-	$_SESSION['reset_password'] = True;
-}elseif ($_SESSION['population_type']==='behavioral') { // *** for remote behavioral (cog, hs, ):   ***//
-	$db = 'agitation_cs';
-	$_SESSION['db'] = $db;
-	$host = 'mysqlcs.abaitscale.com';
-	$db_user = 'abaitcs';
-	$db_pwd = 'abaitcs13!';
-	$_SESSION['reset_password'] = False;
-}else{
-	//for local
-	$db = 'abait_indp';
-	$_SESSION['db'] = $db;
-	$host = 'mysql';
-	$db_user = 'root';
-	$db_pwd = 'abaitroot';
+// ******* Hosting Service ******* //
+$_SESSION['hosting_service'] = 'azure_UK';
+//$_SESSION['hosting_service'] = 'azure_US';
+//$_SESSION['hosting_service'] = 'dreamhost_US';
+//$_SESSION['hosting_service'] = 'local';
 
-	$db_user = 'root';  
-	$db_pwd = 'abaitroot';	
+
+// ****** read in config settings from config.json ******* //
+$string = file_get_contents("config.json");
+if ($string === false) {
+    $nextfile="ABAIT_adminhome_v2.php";
 }
+$db_configs = json_decode($string, true);
+$db = $db_configs['db_connections'][$_SESSION['hosting_service']]['db'];
+$_SESSION['db'] = $db;
+$host = $db_configs['db_connections'][$_SESSION['hosting_service']]['host'];
+$db_user = $db_configs['db_connections'][$_SESSION['hosting_service']]['db_user'];
+$db_pwd = $db_configs['db_connections'][$_SESSION['hosting_service']]['db_pwd'];
+$_SESSION['reset_password'] = $db_configs['db_connections'][$_SESSION['hosting_service']]['reset_password'];
+$_SESSION['use_ssl'] = $db_configs['db_connections'][$_SESSION['hosting_service']]['use_ssl'];
+
+// ******* DB connection
+// if ($_SESSION['population_type']==='cognitive'){ // ***  for remote dementia (indp, cs, ):  ***//
+
+// 	if ($_SESSION['hosting_service']==='local'){
+// 		$db = 'abait_cog';
+// 		$_SESSION['db'] = $db;
+// 		$host = '';
+// 		$db_user = 'root';
+// 		$db_pwd = 'abaitroot!';
+// 		$_SESSION['reset_password'] = True;
+// 		$_SESSION['use_ssl'] = False;
+// 	}elseif($_SESSION['hosting_service']==='azure_UK'){
+// 		$db = 'abait-c';
+// 		$_SESSION['db'] = $db;
+// 		$host = 'abait-cog.mysql.database.azure.com';
+// 		$db_user = 'abaitadmin@abait-cog';
+// 		$db_pwd = 'Abehave8*';
+// 		$_SESSION['reset_password'] = False;
+// 		$_SESSION['use_ssl'] = True;
+// 	}elseif($_SESSION['hosting_service']==='dreamhost_US'){
+//         $db = 'agitation_cog';
+//         $_SESSION['db'] = $db;
+//      	$host = 'mysqlcog.abaitscale.com';
+//      	$db_user = 'abaitcog';
+//      	$db_pwd = 'abaitcog13!';
+//      	$_SESSION['reset_password'] = False;
+// 	}
+
+// }elseif ($_SESSION['population_type']==='behavioral') { // *** for remote behavioral (cog, hs, ):   ***//
+
+// 	if ($_SESSION['hosting_service']==='local'){
+// 		$db = 'abait_cog';
+// 		$_SESSION['db'] = $db;
+// 		$host = '';
+// 		$db_user = 'root';
+// 		$db_pwd = 'abaitroot!';
+// 		$_SESSION['reset_password'] = True;
+// 		$_SESSION['use_ssl'] = False;
+// 	}elseif($_SESSION['hosting_service']==='dreamhost_US'){
+// 		$db = 'agitation_cs';
+// 		$_SESSION['db'] = $db;
+// 		$host = 'mysqlcs.abaitscale.com';
+// 		$db_user = 'abaitcs';
+// 		$db_pwd = 'abaitcs13!';
+// 		$_SESSION['reset_password'] = False;
+// 		$_SESSION['use_ssl'] = False;
+// 	}
+	
+// }else{
+// 	//for local
+// 	$db = 'abait_cog';
+// 	$_SESSION['db'] = $db;
+// 	$host = 'mysql';
+// 	$db_user = 'root';
+// 	$db_pwd = 'abaitroot';
+// 	$_SESSION['use_ssl'] = False;
+// }
 
 $_SESSION['passwordcheck']='fail';
 
@@ -92,10 +145,21 @@ $filename =$_REQUEST["submit"];
 	}
 	if($password!=""){
 		#$con:=mysqli_connect($host,$db_user,$db_pwd);
-		$conn=mysqli_connect($host,$db_user,$db_pwd,$db);
-		if (mysqli_connect_errno()) {
-			printf("Connect failed: %s\n", mysqli_connect_error());
-			exit();
+
+		if($host === 'abait-cog.mysql.database.azure.com'){
+			$conn = mysqli_init();
+			mysqli_ssl_set($conn,NULL,NULL, "/var/www/html/BaltimoreCyberTrustRoot.crt.pem", NULL, NULL);
+			mysqli_real_connect($conn, $host, $db_user, $db_pwd, $db, 3306, MYSQLI_CLIENT_SSL);
+			if (mysqli_connect_errno($conn)) {
+				die('Failed to connect to MySQL: '.mysqli_connect_error());
+			}
+		}else{
+
+			$conn=mysqli_connect($host,$db_user,$db_pwd,$db);
+			if (mysqli_connect_errno()) {
+				printf("Connect failed: %s\n", mysqli_connect_error());
+				exit();
+			}
 		}
 		$password=mysqli_real_escape_string($conn, $password);
 		//$sql1="SELECT * FROM personaldata WHERE password='$password'";	

@@ -58,7 +58,8 @@ if(isset($_REQUEST['Population'])){
 }
 if($_SESSION['Target_Population']=='all'&&!$Population){
 	$sql1="SELECT * FROM behavior_maps";
-	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+
+	$conn=make_msqli_connection();
 
 	$session1=mysqli_query($conn,$sql1);
 	?>
@@ -94,7 +95,9 @@ if($_SESSION['Target_Population']=='all'&&!$Population){
 				method = "post">
 
 	<?
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+	
+$conn=make_msqli_connection();
+
 if($_SESSION['Target_Population']!='all'){
 	$Population=mysqli_real_escape_string($conn,$_SESSION[Target_Population]);
 	$sql="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population' order by first";

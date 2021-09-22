@@ -51,7 +51,7 @@ if($filename=="Submit Resident Choice"){
 		$title='Table of all Trigger and Intervention Maps for';
 		$title2='Interventions or Responses to Avoid';	
 		$title3='Slow Trigger Episodes';
-		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+		$conn = make_msqli_connection();
 
 		print "<table width='100%'><tr><td>";
 		if($residentkey=='all_residents'){

@@ -121,7 +121,7 @@ if(isset($_GET['bk_ds'])){
 }
 
 
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+$conn = make_msqli_connection();
 
 $scale_array=$_SESSION['scale_array'];
 foreach($scale_array as $value){
@@ -178,7 +178,11 @@ foreach($scale_array as $value){
                         print"<th>Total Episodes</th>\n";
                         print"<th>Total Duration (min)</th>\n";
                         print"<th>Total Intensity Units</th>\n";
-                        print"<th>Emergency Int</th>\n";
+                        if($_SESSION['population_type']=='cognitive'){
+                            print"<th>Medicated</th>\n";
+                        }else{
+                            print"<th>Emergency Int</th>\n";
+                        }
                         print"<th>Most Recent Scale Entry</th>\n";
                     print"</tr>\n";
 

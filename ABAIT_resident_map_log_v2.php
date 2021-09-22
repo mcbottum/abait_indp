@@ -64,7 +64,7 @@ set_css()
 		
 			
 	
-		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
+		$conn=make_msqli_connection();
 
 		$raw_date=$_REQUEST['datetimepicker'];
 		## new datepicker
@@ -265,7 +265,13 @@ set_css()
 		$resident_last = $row['last'];
 		$resident_PersonID = $row['person_id'];
 
-		$ActionText = "A(n) ".$behavior." episode occured at ".$time. " on ".$date.", lasting ".$duration." minutes. The ".lcfirst($behavior_spelling)." was described as; ".$behavior_description.", caused by ".$trigger.".";
+		if(check_for_vowel($behavior)){
+			$identifier = "An";
+		}else{
+			$identifier = "A";
+		}
+
+		$ActionText = $identifier." ".$behavior." episode occured at ".$time. " on ".$date.", lasting ".$duration." minutes. The ".lcfirst($behavior_spelling)." was described as; ".$behavior_description.", caused by ".$trigger.".";
 
 
 		$PRN=$_REQUEST['PRN'];
@@ -377,7 +383,7 @@ set_css()
 		$RecordUUID = make_guid();
 
 		if($PRN){
-			$ActionIconID = '4002';
+			$ActionIconID = '5003';
 		}else{
 			$ActionIconID = '5003';
 		}
@@ -421,7 +427,7 @@ set_css()
 
 		//$data=json_encode($data_array,JSON_FORCE_OBJECT);
 		$data=json_encode($data_array);
-		echo $data;
+		// echo $data;
 
 		$url = $_SESSION['care_note_url'];
 
@@ -459,7 +465,11 @@ set_css()
 		////Get the response
 		// $response = curl_exec($ch);
 		// print_r($response);
-		// curl_close($ch);		
+		// curl_close($ch);	
+
+		mysqli_query($conn, "INSERT INTO care_notes VALUES(null, '$RecordUUID','$PersonID','$ActionText','$time_stamp','$ActionIconID')");
+		mysqli_close($conn);
+
 	}				
 						
 						

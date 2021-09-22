@@ -441,17 +441,17 @@ input {
     }
 
     $_SESSION['trigger']=$trigger;
-    $conn1=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
+    $conn1=make_msqli_connection();
     $sql1="SELECT * FROM behavior_maps WHERE mapkey='$trigger'";
     $sql2="SELECT SUM(intervention_score_1), SUM(intervention_score_2), SUM(intervention_score_3), SUM(intervention_score_4), SUM(intervention_score_5), SUM(intervention_score_6) FROM behavior_map_data WHERE mapkey='$trigger'";
     $sql3="SELECT * FROM scale_table WHERE scale_name LIKE '$_SESSION[scale_name]%'";
-    $conn1=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
+    
     $scale=mysqli_query($conn1,$sql1);
     $score_sum=mysqli_query($conn1,$sql2);
     $intensity=mysqli_query($conn1,$sql3);
 
     $Target_Population=$_SESSION['Target_Population'];
-    $Population_strip=mysqli_real_escape_string($conn,$Target_Population);
+    $Population_strip=mysqli_real_escape_string($conn1,$Target_Population);
 
 
     if($_SESSION['population_type']=='behavioral'){
@@ -567,6 +567,8 @@ input {
 
 <?
     $row=mysqli_fetch_assoc($scale);
+    // for passing ID of behavior map
+    print"<input type='hidden' name='scale_mapkey' value=$row[mapkey]>";
     $row2=mysqli_fetch_assoc($score_sum);
     $row=array($row['intervention_1'], $row['intervention_2'], $row['intervention_3'], $row['intervention_4'], $row['intervention_5'],$row['intervention_6']);
     $intervention_rank=array(1,2,3,4,5,6);

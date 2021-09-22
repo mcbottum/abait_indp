@@ -1,0 +1,20 @@
+{
+	"db_connections": {
+		"local": {
+			"db": "abait_cog",
+			"host": "",
+			"db_user": "root",
+			"db_pwd": "abaitroot!",
+			"reset_password": "True",
+			"use_ssl": "False"
+		},
+		"azure_UK": {
+			"db": "abait-c",
+			"host": "abait-cog.mysql.database.azure.com",
+			"db_user": "abaitadmin@abait-cog",
+			"db_pwd": "Abehave8*",
+			"reset_password": "False",
+			"use_ssl": "True"
+		}
+	}
+}

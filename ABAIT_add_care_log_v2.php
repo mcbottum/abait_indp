@@ -36,7 +36,7 @@ print $_SESSION['SITE']
 		$newpassword2=$_REQUEST['password2'];
 		$action=$_REQUEST['action'];
 		if($newpassword1==$newpassword2){
-			$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']);
+			$conn = make_msqli_connection();
 			$newpassword1=mysqli_real_escape_string($conn,$newpassword1);
 			$newpassword2=mysqli_real_escape_string($conn,$newpassword2);
 			$sql1=("SELECT * FROM personaldata WHERE password='$newpassword1'");	

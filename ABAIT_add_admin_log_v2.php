@@ -37,7 +37,7 @@ print $_SESSION['SITE']
 		$newpassword2=$_REQUEST['password2'];
 		$action=$_REQUEST['action'];
 		if($newpassword1==$newpassword2){
-			$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']);
+			$conn = make_msqli_connection();
 			$newpassword1=mysqli_real_escape_string($conn,$newpassword1);
 			$newpassword2=mysqli_real_escape_string($conn,$newpassword2);
 			$sql1=("SELECT * FROM personaldata WHERE password='$newpassword1'");	
@@ -77,7 +77,7 @@ print $_SESSION['SITE']
 					$date=date("Y,m,d");
 					$privilegekey=$_SESSION['personaldatakey'];
 					$house='all';
-					$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+					$conn = make_msqli_connection();
 					if($action=='Enroll'){
 						mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$password',null,'$accesslevel','$first','$last',null,null,null,null,null,null,null,'$mail','$notify','$privilegekey','$Target_Population','$house', null)");
 

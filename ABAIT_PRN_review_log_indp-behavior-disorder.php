@@ -35,7 +35,7 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Emergency Intervention Repor
 		<form 	action = "ABAIT_adminhome_v2.php"
 				method = "post">
 <?
-		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+		$conn=make_msqli_connection();
 
 		$Population=$_REQUEST['population'];
 		$request_residentkey=$_REQUEST['residentkey'];

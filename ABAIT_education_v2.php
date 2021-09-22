@@ -57,13 +57,14 @@ if (isset($_REQUEST['Trigger_Class'])){
 	$Trigger_Class = '';
 }
 
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+$conn=make_msqli_connection();
+
+
 if($_SESSION['Target_Population']!='all'){
 	$Population=$_SESSION['Target_Population'];
-}//end target population if
-else{
+}else{
 	$_SESSION['Population']='Dementia/Alzheimers Disease';
-	$Population='Dementia/Alzheimers Disease';
+	$Population='Dementia';
 }//end else
 
 $Population_strip=mysqli_real_escape_string($conn,$Population);
@@ -116,12 +117,12 @@ print "<h2 class='m-3 p-2 footer_div' align='center'>". $names[0]."'s Interactiv
 						//SELECT STUFF HERE
 						$session=mysqli_query($conn,$sql);
 
-
 						print "<li class='align-left'>";
 						print "<select class='selectpicker m-3' data-width='auto' name='Trigger_Class' onchange=\"reload(this.form)\"><option value=''>Select a Trigger Class</option>"."<BR>";
 						$trigger_holder=[];
+
 						while($row=mysqli_fetch_assoc($session)){
-							if(!in_array($row[Trigger_Class], $trigger_holder)){
+							if(!in_array($row['Trigger_Class'], $trigger_holder)){
 
 								if($row[Trigger_Class]==$Trigger_Class){
 									$clean=str_replace('_', ' ', $Trigger_Class);

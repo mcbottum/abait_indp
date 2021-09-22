@@ -135,7 +135,8 @@ set_css()
 			action = "ABAIT_scale_v2.php"
 			method = "post">
 	<?
-	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']);
+	$conn=make_msqli_connection();
+
 	if (mysqli_connect_errno()) {
 		printf("Connect failed: %s\n", mysqli_connect_error());
 		exit();
@@ -220,6 +221,7 @@ set_css()
 	if($trig){
 		$_SESSION['trig']=$trig;
 	}
+
 	if(!$residentkey){
 		
 		if($_SESSION['privilege']=='globaladmin'){
@@ -232,7 +234,8 @@ set_css()
 			}else{
 				$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' AND house='$house' order by first";
 			}
-		}//end get residents elseif	
+		}//end get residents elseif
+
 	}
 	elseif($residentkey&&!$scale_name){
 		$_SESSION['sql2']="SELECT * FROM behavior_maps WHERE residentkey='$residentkey'";
@@ -256,6 +259,7 @@ set_css()
 			print"<b><em>$provider_resident</em></b>";
 		print"</td></tr>";
 		print"<tr><td>";
+
 			$session1=mysqli_query($conn,$_SESSION['sql']);
 			$resident_count = mysqli_num_rows($session1);
 			if($row_name){

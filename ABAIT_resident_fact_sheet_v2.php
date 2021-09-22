@@ -42,10 +42,10 @@ print $_SESSION['SITE']
 	}
 	if($_SESSION['Target_Population']=='all'&&!$Population){
 		$sql1="SELECT * FROM behavior_maps";
-		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+		$conn = make_msqli_connection();
 		$session1=mysqli_query($conn,$sql1);
 		?>
-		<form action="resident_fact_sheet.php" method="post">
+		<form action="ABAIT_resident_fact_sheet_v2.php" method="post">
 		<?
 		print"<h3><label>Select ABAIT Scale Target Population</label></h3>";
 		?>
@@ -78,7 +78,7 @@ print $_SESSION['SITE']
 						method = "post">
 	<?
 		$scale_array[]=null;
-		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
+		$conn = make_msqli_connection();
 
 	if($_SESSION['Target_Population']!='all'){
 		$Population=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);

@@ -84,7 +84,8 @@ if($filename=='Submit New Scales'){
     $Target_Population=$_SESSION['Target_Population_new'];
     $scale_number=$_SESSION['scale_number'];
 
-    $conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+    $conn=make_msqli_connection();
+    
     $Target_Population=mysqli_real_escape_string($conn,$Target_Population);
 
     //figure out what to request:

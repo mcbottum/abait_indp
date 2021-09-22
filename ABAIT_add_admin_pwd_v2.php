@@ -139,11 +139,7 @@ window.onload = function() {
     $names = build_page_pg();
 
 
-// echo "HERE";
-// echo $_SESSION['user'],$_SESSION['hostname'],$_SESSION['mysqlpassword'],$_SESSION['db'];
-// echo "WTF";
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
-$session=mysqli_query($conn,$sql);
+$conn = make_msqli_connection();
 
 $sql1=mysqli_query($conn,"SELECT * FROM personaldata WHERE first='$names[0]' AND last='$names[1]'");
 $data=mysqli_fetch_assoc($sql1);

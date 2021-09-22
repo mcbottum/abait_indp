@@ -69,8 +69,9 @@ ABAIT Triggers and Interventions
 
 print "<h2 class='m-3 p-2 footer_div' align='center'>Trigger and Intervention $catalog_spelling</label></h2>";
 
-//Need to have some type of exeption here TODO
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+
+$conn = make_msqli_connection();
+
 if (isset($_REQUEST['Population'])) {
 	$Population=str_replace('_',' ',$_REQUEST['Population']);
 	$Population_strip=mysqli_real_escape_string($conn,$Population);
@@ -85,7 +86,7 @@ if($_SESSION['Target_Population']=='all'&&!$Population){
 			$session1=mysqli_query($conn,$sql1);
 
 			?>
-		<form action="ABAIT_triggers_and_interventions.php" method="post">
+		<form action="ABAIT_triggers_and_interventions_v2.php" method="post">
 			<?
 			print"<h3><label>Select ABAIT Scale Target Population</label></h3>";
 			?>

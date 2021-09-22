@@ -51,7 +51,9 @@ $names = build_page_pg();
 	}elseif($table == 'behavior_map_data'){
 		$sql="UPDATE behavior_map_data SET post_PRN_observation='$post_PRN_observation' WHERE behaviormapdatakey='$mapkey'";
 	}
-	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());	
+	
+	$conn=make_msqli_connection();
+
 	$retval = mysqli_query($conn,$sql);
 	if($post_PRN_observation){
 		// print "<h4 align='center'>  The observation: <em> $post_PRN_observation</em> has been logged</h4>";

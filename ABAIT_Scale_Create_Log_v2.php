@@ -86,7 +86,9 @@ print"<form 	name = 'form1'
 
 $filename =$_REQUEST["submit"];
 if($filename=='Submit New Scale Information'){
-	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+
+	$conn=make_msqli_connection();
+	
 	// Get All pre-existing scales for possible selection
 	$sql = "SELECT * FROM scale_table";
 	$session = mysqli_query($conn,$sql);

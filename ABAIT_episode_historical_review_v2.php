@@ -90,7 +90,8 @@ set_css()
 print"<h2 class='m-3 p-2 footer_div' align='center'>Resident Espisode Historical Review</h2>";
 
 
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+$conn=make_msqli_connection();
+
 if(isset($_GET['tp'])){
 	$Population=str_replace('_',' ',$_GET['tp']);
 }
@@ -141,7 +142,9 @@ else{
 		method = "post">
 <? //print $Population;
 	$scale_array[]=null;
-	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+	
+	$conn=make_msqli_connection();
+
 if($_SESSION['Target_Population']!='all'){
 	$Population_strip=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
 	$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
@@ -406,15 +409,18 @@ if ($_SESSION['population_type']==='behavioral'){
 
 <script type="text/javascript" language="JavaScript">
 	function checkothers(){
+		var vocalization_spelling = <?php echo json_encode($vocalization_spelling); ?>;
+		var vocalization_spelling = vocalization_spelling+'s';
+		
 		if(document.getElementById('check_all').checked){
 			document.getElementById('Anxiety').checked = true;
 			document.getElementById('Care').checked = true;
-			document.getElementById('Vocalizations').checked = true;
+			document.getElementById(vocalization_spelling).checked = true;
 			document.getElementById('Aggression').checked = true;
 		}else{
 			document.getElementById('Anxiety').checked = false;
 			document.getElementById('Care').checked = false;
-			document.getElementById('Vocalizations').checked = false;
+			document.getElementById(vocalization_spelling).checked = false;
 			document.getElementById('Aggression').checked = false;
 		}
 	}

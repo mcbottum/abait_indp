@@ -1,4 +1,19 @@
 <?
+function make_msqli_connection(){
+	if($_SESSION['use_ssl'] == True){
+		$conn = mysqli_init();
+		mysqli_ssl_set($conn,NULL,NULL, "/var/www/html/BaltimoreCyberTrustRoot.crt.pem", NULL, NULL);
+		mysqli_real_connect($conn, $_SESSION['hostname'], $_SESSION['user'], $_SESSION['mysqlpassword'], $_SESSION['db'], 3306, MYSQLI_CLIENT_SSL);
+		if (mysqli_connect_errno($conn)) {
+			die('Failed to connect to MySQL: '.mysqli_connect_error());
+		}
+
+	}else{
+		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+	}
+	return $conn;
+}
+
 function make_guid()
 {
     if (function_exists('com_create_guid') === true)
@@ -10,6 +25,15 @@ function make_guid()
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 }
 
+function check_for_vowel($check){
+	//Checks if first character of a string is a vowel
+	$vowels = array('a','e','i','o','u','A','E','I','O','U');
+	if(in_array($check[0],$vowels)){
+		return True;
+	}else{
+		return False;
+	}
+}
 
 function ABAIT_bar_graph($values,$graphTitle,$yLabel,$xlabel,$graphNumber){
 	$img_width=700;
@@ -380,7 +404,8 @@ function build_page_pg($display='none'){
 	}
 	$home = $_SESSION['home_page'];
 
-	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+	$conn = make_msqli_connection();
+
     $date=date('Y-m-d');
     $date_start=date('Y-m-d',(strtotime('- 2 days')));
     if($_SESSION['privilege']=='caregiver'){

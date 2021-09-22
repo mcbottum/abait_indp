@@ -256,7 +256,7 @@ if(isset($end)){
 
 //print $_SESSION['Target_Population'];
 
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+$conn = make_msqli_connection();
 $Population_strip=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
 $Population_temp=$_SESSION['Target_Population'];
 //$_SESSION['Target_Population']=$Population_strip;

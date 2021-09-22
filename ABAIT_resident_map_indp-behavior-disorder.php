@@ -321,7 +321,7 @@ function check(selTag) {
 	}else{
 		$scale_name=null;
 	}
-	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
+	$conn=make_msqli_connection();
 	if(isset($_GET["k"])){
 		$residentkey=$_GET["k"];
 		$sql1="SELECT * FROM residentpersonaldata WHERE residentkey='$residentkey'";

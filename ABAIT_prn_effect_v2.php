@@ -37,7 +37,7 @@ $names = build_page_pg();
 		$title2='Residents Experiencing Emergency Intervention Within the Last 48 Hours';
 		#$residentkey=$_REQUEST['resident_choice'];
 
-		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+		$conn=make_msqli_connection();
 		if($_SESSION['Target_Population']!='all'){
 			$Population_strip=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
 			$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip'";

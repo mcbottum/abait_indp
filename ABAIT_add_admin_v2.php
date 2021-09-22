@@ -139,7 +139,7 @@ window.onload = function() {
 	$names = build_page_pg();
 
 $sql="SELECT * FROM scale_table";
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+$conn = make_msqli_connection();
 $session=mysqli_query($conn,$sql);
 
 if(isset($_POST["ak"])){

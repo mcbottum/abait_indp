@@ -74,7 +74,7 @@ if($_SESSION['passwordcheck']!='pass'){
 		$_SESSION['mapkey']=$mapkey;
 
 		$sql1="SELECT * FROM behavior_maps WHERE mapkey='$mapkey'";
-		$conn1=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+		$conn1=make_msqli_connection();
 		$session1=mysqli_query($conn1,$sql1);
 		$row1=mysqli_fetch_assoc($session1);
 

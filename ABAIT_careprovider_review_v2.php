@@ -93,7 +93,7 @@ thead, tbody {
 $names = build_page_pg();
 print"<h2 class='m-3 p-2 footer_div' align='center'>Carer Review</h2>";
 
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+$conn = make_msqli_connection();
 
 if(isset($_REQUEST['Population'])){
     $Population=str_replace('_',' ',$_REQUEST['Population']);
@@ -105,11 +105,11 @@ if($_SESSION['Target_Population']=='all'&&!$Population){
     $sql1="SELECT * FROM behavior_maps";
 
 
-    mysqli_select_db($_SESSION['database']);
+    // mysqli_select_db($_SESSION['database']);
     $session1=mysqli_query($conn,$sql1);
     //$session3=mysqli_query($sql3,$conn);
     ?>
-        <form action="ABAIT_careprovider_review.php" method="post">
+        <form action="ABAIT_careprovider_review_v2.php" method="post">
     <?
         print"<h3><label>Select ABAIT Scale Target Population</label></h3>";
 
@@ -144,7 +144,7 @@ else{
         method = "post">
 <? //print $Population;
     $scale_array[]=null;
-    $conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+    $conn = make_msqli_connection();
 
 if($_SESSION['Target_Population']!='all'){
     $Population_strip=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);

@@ -30,7 +30,7 @@ $names = build_page_pg();
 <h3 align='center'><label>Scale Data Log</label></h3>
 		
 <?
-	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
+	$conn=make_msqli_connection();
 
 	if(isset($_REQUEST['date'])){
 		$date_bool=$_REQUEST['date'];
@@ -60,6 +60,14 @@ $names = build_page_pg();
 		$behavior_description='';
 	}
 
+
+	$pd_personaldatakey = $_SESSION['personaldatakey'];
+
+	$pd_sql = "SELECT * from personaldata WHERE personaldatakey='$pd_personaldatakey'";
+	$pd_session=mysqli_query($conn,$pd_sql);
+	$row=mysqli_fetch_assoc($pd_session);
+	$carer=$row['first']." ".$row['last'];	
+
 	$intensity_before=$_REQUEST['intensityB'];
 	$trig=1;
 	$mapkey=$_SESSION['trigger'];
@@ -73,7 +81,7 @@ $names = build_page_pg();
 
 	$resident_first = $row['first'];
 	$resident_last = $row['last'];
-	$resident_PersonID = $row['guid'];
+	$resident_PersonID = $row['person_id'];
 
 		
 	for($i=1;$i<7;$i++){
@@ -224,18 +232,15 @@ if ($_SESSION['population_type']==='behavioral'){
 	$residentkey=$_SESSION['residentkey'];
 	$personaldatakey=$_SESSION['personaldatakey'];
 
-	$pd_sql = "SELECT * from personaldata WHERE personaldatakey='$personaldatakey'";
-	$pd_session=mysqli_query($conn,$pd_sql);
-	$row=mysqli_fetch_assoc($pd_session);
-	$carer=$row['first']." ".$row['last'];
-
 
 
 	//// GATHERING INFO ABOUT PRN OR EMERGENCY SERVICES AND SENDING EMAIL
 
 	if($PRN){
 		$pre_PRN_observation=$_REQUEST['PRN'];
-		$pre_PRN_observation = implode(',',$_POST['emergency_intervention']);
+		if($_SESSION['population_type']==='behavioral'){
+			$pre_PRN_observation = implode(',',$_POST['emergency_intervention']);
+		}
 		$service = $_POST['emergency_intervention'];
 	}else{
 		$pre_PRN_observation = Null;
@@ -243,6 +248,7 @@ if ($_SESSION['population_type']==='behavioral'){
 	}
 
 
+	$contact_string="";
 	if($PRN){
 		$sender='admin@abehave.com';
 		$recipient='michael@abehave.com';
@@ -262,7 +268,7 @@ if ($_SESSION['population_type']==='behavioral'){
 		}
 		$recipients = implode(',',$recipients);
 
-		$contact_string="";
+		
 		foreach ($contact_data as $row) {
 			foreach ($service as $key) {	
 				if($key==$row[id]){
@@ -326,23 +332,51 @@ if ($_SESSION['population_type']==='behavioral'){
 		$intervention_score_6=$intensityA[3]-$intensityA[5];
 	}
 
+
+
+
 ###### to send  Curl to MCS for care notes
 	if($_SESSION['send_care_note']){
 		$RecordUUID = make_guid();
 
-		$ActionText = "Behavior Type: ".$behavior.". ".$behavior_description;
+		// Get top intervention
+		$mapkey_r = $_REQUEST['scale_mapkey'];
+			$scale_sql = "SELECT * from behavior_maps where mapkey ='$mapkey_r'";
+			$scale_session=mysqli_query($conn,$scale_sql);
+			$scale_row=mysqli_fetch_assoc($scale_session);
+
+		$intervention_score_array = compact('intervention_score_0', 'intervention_score_1', 'intervention_score_2', 'intervention_score_3','intervention_score_4','intervention_score_5','intervention_score_6');
+		arsort($intervention_score_array);
+
+		$intervention_score_name = key($intervention_score_array);
+		$intervention_name = str_replace('score_', '',$intervention_score_name);
+
+		$top_intervention = $scale_row[$intervention_name];
+
+		$trig = $scale_row['trig'];
+
+		$ActionText = $carer. " managed a episode involving ".$resident.". The episode occured at ".$time. " on ".$date.",  lasting ".$duration." minutes. The cause of the episode was identified as ".$trig.". The ".$behavior." map was used to identify and implement the intervention: ".$top_intervention.".";
+
+		if($contact_string){
+			$ActionText .= "Additional services  required to manage the episode: ".$contact_string;
+		}
+		if($PRN){
+			$ActionIconID = '5003';
+		}else{
+			$ActionIconID = '5003';
+		}
 
 		$data_array = array(
 		    'RecordUUID' => $RecordUUID,
 		    'PersonID' => $resident_PersonID,
-		    'FirstNames' => $resident_first,
-		    'LastName' => $resident_last,
+		    'FirstNames' => '',
+		    'LastName' => '',
 		    'ExternalPersonID' => '',
 		    'DateOfBirth' => '',
 		    'NHSNumber' => '',
 		    'UTCDateTime' => $time_stamp,
 		    'TimeZone' => 'Europe/London',
-		    'ActionIconID' => '2007',
+		    'ActionIconID' => $ActionIconID,
 		    'ShortText' => '',
 		    'ActionText' => $ActionText,
 		    'IsHandover' => 'false',
@@ -352,9 +386,11 @@ if ($_SESSION['population_type']==='behavioral'){
 		    'Sliders' => array('' => ''),
 		);
 
+
+
 		//$data=json_encode($data_array,JSON_FORCE_OBJECT);
 		$data=json_encode($data_array);
-		// echo $data;
+		
 
 		$url = $_SESSION['care_note_url'];
 
@@ -365,11 +401,11 @@ if ($_SESSION['population_type']==='behavioral'){
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
 
 
-		# Form data string
-		////$postString = http_build_query($data, '', '&');
+		//# Form data string
+		//$postString = http_build_query($data, '', '&');
 
-		////curl_setopt($ch, CURLOPT_POST, 1);
-		////curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);
+		//curl_setopt($ch, CURLOPT_POST, 1);
+		//curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_VERBOSE, true);
 
@@ -392,25 +428,37 @@ if ($_SESSION['population_type']==='behavioral'){
 		# Get the response
 		//$response = curl_exec($ch);
 		//print_r($response);
-		curl_close($ch);		
-	}
+		curl_close($ch);
 
+		mysqli_query($conn, "INSERT INTO care_notes VALUES(null, '$RecordUUID','$PersonID','$ActionText','$time_stamp','$ActionIconID')");
+		mysqli_close($conn);
+
+	}
 
 
 	$post_PRN_observation = null;
 	
-	//mysqli_select_db($_SESSION['database'],$conn);	
+	//mysqli_select_db($_SESSION['database'],$conn);
+
+	// echo "   ";
+
+	// echo "INSERT INTO behavior_map_data VALUES(null,'$mapkey','$_SESSION[residentkey]','$behavior','$date','$time','$intervention_score_1','$intervention_score_2','$intervention_score_3','$intervention_score_4','$intervention_score_5','$intervention_score_6','$duration','$PRN','$behavior_description',null,null,null,'$intensity_before','$pre_PRN_observation',null,'$_SESSION[personaldatakey]')";	
 
 if ($_SESSION['population_type']==='cognitive'){
-	mysqli_query($conn, "INSERT INTO behavior_map_data VALUES(null,'$mapkey','$_SESSION[residentkey]','$behavior','$date','$time','$intervention_score_1','$intervention_score_2','$intervention_score_3','$intervention_score_4','$intervention_score_5','$intervention_score_6','$duration','$PRN','$behavior_description',null,null,null,'$intensity_before',null,null,'$_SESSION[personaldatakey]')");
+	mysqli_query($conn, "INSERT INTO behavior_map_data VALUES(null,'$mapkey','$_SESSION[residentkey]','$behavior','$date','$time','$intervention_score_1','$intervention_score_2','$intervention_score_3','$intervention_score_4','$intervention_score_5','$intervention_score_6','$duration','$PRN','$behavior_description',null,null,null,'$intensity_before','$pre_PRN_observation',null,'$_SESSION[personaldatakey]')");
 	$first=$_SESSION['first'];
 	$last=$_SESSION['last'];
 }elseif ($_SESSION['population_type']==='behavioral') {
 	mysqli_query($conn, "INSERT INTO behavior_map_data VALUES(null,'$mapkey','$_SESSION[residentkey]','$behavior','$date','$time','$intervention_score_1','$intervention_score_2','$intervention_score_3','$intervention_score_4','$intervention_score_5','$intervention_score_6','$duration','$PRN','$behavior_description','$onstaff','$presentincident','$presentintervention','$intensity_before','$pre_PRN_observation',null,'$_SESSION[personaldatakey]')");
+}else{
+	mysqli_query($conn, "INSERT INTO behavior_map_data VALUES(null,'$mapkey','$_SESSION[residentkey]','$behavior','$date','$time','$intervention_score_1','$intervention_score_2','$intervention_score_3','$intervention_score_4','$intervention_score_5','$intervention_score_6','$duration','$PRN','$behavior_description',null,null,null,'$intensity_before','$pre_PRN_observation',null,'$_SESSION[personaldatakey]')");
+	$first=$_SESSION['first'];
+	$last=$_SESSION['last'];
 }
 
 if($date&&$time){
 	print "<h4 align='center'> Scale Data for $first $last has been Logged</h4>\n";
+	print  "<h5 align='center'>$ActionText</h5>\n";
 }else{
 	print "<h4>Some information was missing from the Scale form, please return to the previous page.</h4>\n";
 }

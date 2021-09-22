@@ -24,7 +24,8 @@ print $_SESSION['SITE']
 function reload2(Population,number_of_scales, payload){
     self.location='ABAIT_create_map_v2.php?Population='+Population+'&'+payload;
 }
-function backButton(target_population) {
+
+function reload3(target_population) {
 	self.location='ABAIT_choose_resident_for_map_review_v2.php?tp='+target_population;
 }
 </script>
@@ -75,7 +76,7 @@ $names = build_page_pg();
         $catalog_spelling  = 'Catalog';
     }
 
-$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+$conn = make_msqli_connection();
 if (isset($_REQUEST['Population'])) {
 	$Population=str_replace('_',' ',$_REQUEST['Population']);
 	$Population_strip=mysqli_real_escape_string($conn,$Population);
@@ -120,7 +121,7 @@ if($_SESSION['Target_Population']=='all'&&!$Population){
 			$session1=mysqli_query($conn,$sql1);
 
 			?>
-		<form action="ABAIT_trigger_intervention_catalog.php" method="post">
+		<form action="ABAIT_ti_catalog_v2.php" method="post">
 			<?
 			print"<h3><label>Select ABAIT Target Population</label></h3>";
 			?>
@@ -146,7 +147,7 @@ if($_SESSION['Target_Population']=='all'&&!$Population){
 				</form>
 		<?
 }else{
-	$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+	$conn = make_msqli_connection();
 
 if($_SESSION['Target_Population']!='all'){
 	$Population=$_SESSION['Target_Population'];
@@ -184,7 +185,7 @@ if(isset($package)&&$package){
 					name = ''
 					id = 'backButton'
 					value = 'Go To Plan Edit Page'
-					onClick=\"backButton('$Population')\"/></td></tr></table>";
+					onClick=\"reload3('$Population')\"/></td></tr></table>";
 
 }
 print "<table class='noScroll local hover' border='1' bgcolor='white'>";
@@ -245,9 +246,9 @@ print "<table class='noScroll local hover' border='1' bgcolor='white'>";
 								type = 'button'
 								class='mt-2'
 								name = ''
-								id = 'backButton'
+								id = 'backButton2'
 								value = 'Go To Plan Edit Page'
-								onClick=\"backButton('$Population')\"/>";
+								onClick=\"reload3('$Population')\"/>";
 				print "</td></tr>";
 				
 			}

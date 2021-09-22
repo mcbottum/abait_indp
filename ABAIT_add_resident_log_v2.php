@@ -60,7 +60,7 @@ print $_SESSION['SITE']
 
 		$privilegekey=$_SESSION['personaldatakey'];
 
-		$conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'],$_SESSION['db']);
+		$conn = make_msqli_connection();
 
 		if($first&&$last&&$gender&&$Target_Population&&$action=='Enroll'){
 			$Target_Population=mysqli_real_escape_string($conn,$Target_Population);
