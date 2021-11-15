@@ -98,6 +98,7 @@ print $_SESSION['SITE']
                             print "<a class='dropdown-item' href='ABAIT_updateMembers_v2.php'>Update Admins, Caregivers or Residents</a>";
                             print "<a class='dropdown-item' href='ABAIT_remove_members_v2.php'>Remove Admins, Caregivers or Residents</a>";
                             print "<a class='dropdown-item' href='ABAIT_add_admin_pwd_v2.php'>ADD Admin Password</a>";
+                            print "<a class='dropdown-item' href='ABAIT_bulk_enroll_v2.php'>Bulk Enroll Members</a>";
                         }else{
                             print "<span class='d-inline-block' tabindex='0' data-toggle='tooltip' title='Please contact PCS admin for member enrollment and updates.'>";
                                 print "<a class='disabled dropdown-item' href='ABAIT_add_resident_v2.php'>Enroll New Resident</a>";
@@ -108,6 +109,7 @@ print $_SESSION['SITE']
                                 print "<a class='disabled dropdown-item' href='ABAIT_remove_members_v2.php'>Remove Admins, Caregivers or Residents</a>";
                             print "</span>";
                             print "<a class='dropdown-item' href='ABAIT_add_admin_pwd_v2.php'>ADD Admin Password</a>";
+                            print "<a class='dropdown-item' href='ABAIT_bulk_enroll_v2.php'>Bulk Enroll Members</a>";
 
                         }
                         ?>
@@ -147,6 +149,7 @@ print $_SESSION['SITE']
                         <a class="dropdown-item" href="ABAIT_resident_for_prn_v2.php">Medication Intervention Review</a>
                         <a class="dropdown-item" href="ABAIT_resident_fact_sheet_v2.php">Resident Fact Sheet</a>
                         <a class="dropdown-item" href="ABAIT_careprovider_review_v2.php">Care Provider Analysis</a>
+                        <a class="dropdown-item" href='ABAIT_tutorials_v2.php'>Tutorials</a>
                     </div>
             </div>
         </div>

@@ -1,10 +1,10 @@
 {
 	"db_connections": {
 		"local": {
-			"db": "abait_cog",
-			"host": "",
+			"db": "agitation_cog",
+			"host": "localhost",
 			"db_user": "root",
-			"db_pwd": "abaitroot!",
+			"db_pwd": "abaitroot",
 			"reset_password": "True",
 			"use_ssl": "False"
 		},

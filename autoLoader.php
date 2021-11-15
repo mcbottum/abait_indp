@@ -18,7 +18,6 @@ charset=utf-8"/>
 
 function autoLoad($data){
 	echo $data;
-	echo "HI";
 	if(array_key_exists("pss_updates", $data)){
 
 		$conn=make_msqli_connection();

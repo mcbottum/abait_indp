@@ -160,20 +160,34 @@ print "<h2 class='m-3 p-2 footer_div' align='center'>". $names[0]."'s Interactiv
 					</ul>
 				</li>
 			</ul>
-		<? print "<li><h4>Addressing the $behavior_spelling </h4></li>"; ?>
-			<ol>
-                <li><a href="https://www.loom.com/share/cce71315910e481880969a2b54ff3d82" target="_blank">Phase1: Positive Interactions Bootcamp</a></li>
-                <li><a href="https://www.loom.com/share/78b7edc903fd4bbebec4334fa8a4749c" target="_blank">Phase2: Using the Caregiver Platform</a></li>
+		<? print "<li><h4>Addressing the $behavior_spelling </h4></li>"; 
+				print "<ol>";
+					if($_SESSION['privilege']=='globaladmin' || $_SESSION['privilege']=='admin'){
 
-<? if($_SESSION['privilege']=='globaladmin' || $_SESSION['privilege']=='admin'){
-	?>
-	             <li><a href="Phase3.pdf" target="_blank">Phase3: Administrative Set-up</a></li>
-<?
-	}
+						print "<li>";
+							print "<h6>Intro to Care Plan Training</h6>";
+							print "<video width='320' height='240' controls>";
+							print "<source src='ABAITAdminPlatform-IntroCarePlanTrainingPCS-PartA.mp4' type='video/mp4'>";
+						print "</li>";
+						print "<li>";
+							print "<h6>Platform Analysis Training</h6>";
+							print "<video width='320' height='240' controls>";
+							print "<source src='ABAITAdminPlatform-AnalysisEducation-PartB.mp4' type='video/mp4'>";
+						print "</li>";
+
+
+						if($_SESSION['client'] === 'PCS'){
+							print"<li><a href='ABAIT-Phase3AdminProductGuidePCS20211115.pdf' target='_blank'>Phase3: Administrative Set-up</a></li>";
+						}else{
+							print"<li><a href='Phase3.pdf' target='_blank'>Phase3: Administrative Set-up</a></li>";	
+						}	
+					}else{
+		                print "<li><a href='https://www.loom.com/share/cce71315910e481880969a2b54ff3d82' target='_blank'>Phase1: Positive Interactions Bootcamp</a></li>";
+		                print "<li><a href='https://www.loom.com/share/78b7edc903fd4bbebec4334fa8a4749c' target='_blank'>Phase2: Using the Caregiver Platform</a></li>";
+		            }
+				print "</ol>";
+
 ?>
-			</ol>
-
-
 	</ol>
 	</div>
 	</td>

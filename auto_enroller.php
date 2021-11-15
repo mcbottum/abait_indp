@@ -45,16 +45,41 @@
 // }]';
 
 
+// FOR TESTING DB LOAD USING LOCAL JSON FILE
+
+$live_updates = file_get_contents("update_test.json");
+$decoded_update = json_decode($live_updates, true);
+$houses = ["Pembroke"];
 
 
+// For DB LOAD OF REAL DATA
+	// $houses = ["Mount Pleasant","Old House","Westwood", "Howard","Oxford","Pembroke"];
 
-	$houses = ["Mount Pleasant","Old House","Westwood", "Howard","Oxford","Pembroke"];
+	// // RESIDENTS
+	// $live_updates = file_get_contents('https://pcspublicfiles.blob.core.windows.net/integration-poc/abait/IndependencePathways/AllResidents.json?sv=2020-08-04&st=2021-11-15T08%3A08%3A33Z&se=2022-05-31T07%3A08%3A00Z&sr=b&sp=r&sig=u1KlVWDgm%2FUVeDNqq8TNkMXaB%2B2ocn5w%2B%2F8%2B0BZKGDc%3D');
 
-    $live_updates = file_get_contents('https://pcspublicfiles.blob.core.windows.net/integration-poc/abait/IndependencePathways/AllStaff.json?sv=2019-10-10&se=2021-04-30T23%3A00%3A00Z&si=ABAIT&sr=b&sig=t%2FR2JTchJK2Sug7SV8pp7Lu%2FiS6xzQpLLx1QU7vmm20%3D');
+	// // STAFF
+	// $live_updates = file_get_contents('https://pcspublicfiles.blob.core.windows.net/integration-poc/abait/IndependencePathways/AllStaff.json?sv=2020-08-04&st=2021-11-15T08%3A09%3A14Z&se=2022-05-31T07%3A09%3A00Z&sr=b&sp=r&sig=TDzHWFcVbonGImgGWx7a21ZoXOLywz7aATCkSmI8zv8%3D')
 
-	$decoded_update = json_decode($live_updates, true);
+ 	//    $live_updates = file_get_contents('https://pcspublicfiles.blob.core.windows.net/integration-poc/abait/IndependencePathways/AllStaff.json?sv=2019-10-10&se=2021-04-30T23%3A00%3A00Z&si=ABAIT&sr=b&sig=t%2FR2JTchJK2Sug7SV8pp7Lu%2FiS6xzQpLLx1QU7vmm20%3D');
+
+	// $decoded_update = json_decode($live_updates, true);
 
 
+// FOR DB SETTINGS USING CONFIG FILE
+// ****** read in config settings from config.json ******* //
+$string = file_get_contents("config.json");
+if ($string === false) {
+    $nextfile="ABAIT_adminhome_v2.php";
+}
+$db_configs = json_decode($string, true);
+$db = $db_configs['db_connections'][$_SESSION['hosting_service']]['db'];
+$_SESSION['db'] = $db;
+$host = $db_configs['db_connections'][$_SESSION['hosting_service']]['host'];
+$db_user = $db_configs['db_connections'][$_SESSION['hosting_service']]['db_user'];
+$db_pwd = $db_configs['db_connections'][$_SESSION['hosting_service']]['db_pwd'];
+$_SESSION['reset_password'] = $db_configs['db_connections'][$_SESSION['hosting_service']]['reset_password'];
+$_SESSION['use_ssl'] = $db_configs['db_connections'][$_SESSION['hosting_service']]['use_ssl'];
 
 // FOR LOCAL TESTING
 	//$db = 'agitation_indp';
@@ -63,10 +88,10 @@
 	//$db_user = 'abait';
 
 // FOR DREAMHOST LIVE
-    $db = 'agitation_indp';
-    $db_pwd = 'h1$6T#5IWx';
-    $host = 'mysqlindp.abaitscale.com';
-    $db_user = 'abaitindp';
+    // $db = 'agitation_indp';
+    // $db_pwd = 'h1$6T#5IWx';
+    // $host = 'mysqlindp.abaitscale.com';
+    // $db_user = 'abaitindp';
 	
 	$conn=mysqli_connect($host,$db_user,$db_pwd, $db);
 
@@ -121,6 +146,7 @@
 					$last=$name[1];
 				}
 				$pwd = $value["connectionID"];
+				$community = "Staff";
 
 				$sql="SELECT * FROM personaldata WHERE password LIKE '$pwd' OR (first='$first' AND last='$last')";
 				// $full_pwd = $value["personID"];
@@ -159,7 +185,7 @@
 					// echo $privilegekey,"  ";
 					// echo $Target_Population,"   ";
 
-					mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$pwd','$accesslevel','$first','$last',null,null,null,null,null,null,null,null,null,'$privilegekey','$Target_Population','$house_match')");
+					mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$pwd',null,'$accesslevel','$first','$last',null,null,null,null,null,null,null,null,null,'$privilegekey','$Target_Population','$house_match',$community)");
 				}
 			}elseif(mysqli_num_rows($check) > 0){
 				$row1=mysqli_fetch_assoc($check);

@@ -25,7 +25,7 @@ if(isset($_REQUEST['client'])){
 }
 
 
-// ****** for db connection
+// ****** FOR DATABASE CONNECTIONS
 //$_SESSION['population_type']='behavioral'; 
 $_SESSION['population_type']='cognitive';
 //$_SESSION['population_type']='local';
@@ -34,6 +34,9 @@ $_SESSION['population_type']='cognitive';
 // ****** for spellings
 $_SESSION['country_location'] = 'UK';
 //$_SESSION['country_location'] = 'USA';
+
+// ***** for Instance owner - Education Module uses this
+$_SESSION['client'] = 'PCS';
 
 // $_SESSION['HOME']='index.php';
 $_SESSION['HOME']='ABAIT_Home.php';
@@ -45,15 +48,13 @@ $_SESSION['provider_resident'] = 'Care Recipient';
 $_SESSION['send_care_note'] = False;
 $_SESSION['care_note_url'] = 'https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=8de7a68c-f962-4fb1-a98a-1d08e3263dd9&Apikey=a09a69a2-dbe0-4a47-bf9c-9d5cc92e8434';
 
-
 // ******* Hosting Service ******* //
 $_SESSION['hosting_service'] = 'azure_UK';
 //$_SESSION['hosting_service'] = 'azure_US';
 //$_SESSION['hosting_service'] = 'dreamhost_US';
 //$_SESSION['hosting_service'] = 'local';
 
-
-// ****** read in config settings from config.json ******* //
+// ****** READ IN DB CONNECTIONS SETTINGS USING config.json ******* //
 $string = file_get_contents("config.json");
 if ($string === false) {
     $nextfile="ABAIT_adminhome_v2.php";
@@ -67,7 +68,7 @@ $db_pwd = $db_configs['db_connections'][$_SESSION['hosting_service']]['db_pwd'];
 $_SESSION['reset_password'] = $db_configs['db_connections'][$_SESSION['hosting_service']]['reset_password'];
 $_SESSION['use_ssl'] = $db_configs['db_connections'][$_SESSION['hosting_service']]['use_ssl'];
 
-// ******* DB connection
+// ******* HARD CODED DB CONNECTION SETTINGS
 // if ($_SESSION['population_type']==='cognitive'){ // ***  for remote dementia (indp, cs, ):  ***//
 
 // 	if ($_SESSION['hosting_service']==='local'){
