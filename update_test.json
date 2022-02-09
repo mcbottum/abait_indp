@@ -1,4 +1,4 @@
-{
+[{
 "communityID": "1aa2b85d-e42b-401a-a725-176091514777",
 "communityName": "Pembroke House ",
 "workerName": "Paul Williams ",
@@ -10,7 +10,7 @@
 },
 {
 "communityID": "1b14fbdf-8148-4647-a0ef-1d5b29faed52",
-"communityName": "Mount Pleasant",
+"communityName": "Mount Pleasant/Staff Training",
 "workerName": "Paul Williams ",
 "jobDescription": "Assistant Manager",
 "jobTitle": "Manager",
@@ -37,4 +37,4 @@
 "roleDescription": "Allowed to Enrol Devices for carers to use",
 "connectionID": "743da373-882b-4c10-ad74-64af265df02c",
 "personID": "2ee8c596-1e66-4afd-8514-ca205bb383c7"
-}
+}]

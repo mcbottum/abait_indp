@@ -77,7 +77,7 @@ if($_SESSION['country_location']=='UK'){
 
 	<table class='center'>
 		<tr><td class="p-3" align='center'>
-			<? print "<a  class='btn  btn-lg btn-block p-5' href='ABAIT_quick_scales_v2.php'>Record $behavior_spelling Episode</a>";?>
+			<? print "<a  class='btn  btn-lg btn-block p-5' href='ABAIT_scale_select_pcs_v2.php'>Record $behavior_spelling Episode</a>";?>
 		</td></tr>
 		<tr><td class="p-3" align='center'>
 			<a  class="btn  btn-lg btn-block p-5" href='ABAIT_prn_effect_v2.php'>Record Medication Effect</a>

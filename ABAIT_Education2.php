@@ -208,7 +208,7 @@ if($_SESSION['privilege']=='globaladmin'||$_SESSION['privilege']=='admin'){
 <area shape="rect"  coords="379,527,503,592" href="ABAIT_admin_report.php"/>
 <?}?>
 <area shape="rect"  coords="7,177,115,307" href="chooseresident_map.php"/>
-<area shape="rect"  coords="7,323,115,455" href="ABAIT_quick_scales.php"/> 
+<area shape="rect"  coords="7,323,115,455" href="ABAIT_scale_select_pcs_v2.php"/> 
 </map>
 </td></tr></table>	
 

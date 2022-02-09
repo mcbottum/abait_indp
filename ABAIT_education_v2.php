@@ -30,6 +30,11 @@ function reload(form){
 	self.location='ABAIT_education_v2.php?Trigger_Class='+val1;
 }	
 </script>
+<style type="text/css">
+	.space { 
+    margin:0; padding:0; height:25px; 
+}
+</style>
 <body class="container"
 <?
 	$names = build_page_pg();
@@ -65,7 +70,12 @@ if($_SESSION['Target_Population']!='all'){
 }else{
 	$_SESSION['Population']='Dementia/Alzheimers Disease';
 	$Population='Dementia';
-}//end else
+}
+if($_SESSION['privilege']=='globaladmin' || $_SESSION['privilege']=='admin'){
+	$addressing_behavior_heading = "- Admin Roles";
+}else{
+	$addressing_behavior_heading = "- Carer Roles";
+}
 
 $Population_strip=mysqli_real_escape_string($conn,$Population);
 $sql="SELECT * FROM triggers_and_interventions WHERE Target_Population='$Population_strip' ORDER BY Trigger_Class";
@@ -86,7 +96,7 @@ print "<h2 class='m-3 p-2 footer_div' align='center'>". $names[0]."'s Interactiv
 	<ol type="I">
 		<? print "<li><h4>When a $behavior_spelling Occurs</h4></li>"; ?>
 			<ul class="m-2">
-				<li class="m-2"><a href='ABAIT_quick_scales_v2.php'>STEP 1 - Record in 2 Week Resident Observation</a></li>
+				<li class="m-2"><a href='ABAIT_scale_select_pcs_v2.php'>STEP 1 - Record in 2 Week Resident Observation</a></li>
 					<ol>
 <?
 						print "<li>What ".strtolower($behavior_spelling)." occured?</li>"; 
@@ -117,8 +127,12 @@ print "<h2 class='m-3 p-2 footer_div' align='center'>". $names[0]."'s Interactiv
 						//SELECT STUFF HERE
 						$session=mysqli_query($conn,$sql);
 
+
+
+
+
 						print "<li class='align-left'>";
-						print "<select class='selectpicker m-3' data-width='auto' name='Trigger_Class' onchange=\"reload(this.form)\"><option value=''>Select a Trigger Class</option>"."<BR>";
+						print "<select class='form-select form-select-lg m-3' data-width='auto' name='Trigger_Class' onchange=\"reload(this.form)\"><option value=''>Select a Trigger Class</option>"."<BR>";
 						$trigger_holder=[];
 
 						while($row=mysqli_fetch_assoc($session)){
@@ -156,36 +170,74 @@ print "<h2 class='m-3 p-2 footer_div' align='center'>". $names[0]."'s Interactiv
 					}
 
 
-					?>
-					</ul>
-				</li>
-			</ul>
-		<? print "<li><h4>Addressing the $behavior_spelling </h4></li>"; 
-				print "<ol>";
+					
+					print "</ul>";
+				print "</li>";
+			print "</ul>";
+		 print "<li><h4>Addressing the $behavior_spelling $addressing_behavior_heading</h4></li>"; 
+				
 					if($_SESSION['privilege']=='globaladmin' || $_SESSION['privilege']=='admin'){
-
-						print "<li>";
-							print "<h6>Intro to Care Plan Training</h6>";
-							print "<video width='320' height='240' controls>";
-							print "<source src='ABAITAdminPlatform-IntroCarePlanTrainingPCS-PartA.mp4' type='video/mp4'>";
-						print "</li>";
-						print "<li>";
-							print "<h6>Platform Analysis Training</h6>";
-							print "<video width='320' height='240' controls>";
-							print "<source src='ABAITAdminPlatform-AnalysisEducation-PartB.mp4' type='video/mp4'>";
-						print "</li>";
+						print "<ol>";
+							print "<li>";
+								print "<h6>Phase 1:  Intro to Care Plan Creation Training</h6>";
+								print "<video width='320' height='240' controls>";
+								print "<source src='ABAITAdminPlatform-IntroCarePlanTrainingPCS-PartA.mp4' type='video/mp4'>";
 
 
-						if($_SESSION['client'] === 'PCS'){
-							print"<li><a href='ABAIT-Phase3AdminProductGuidePCS20211115.pdf' target='_blank'>Phase3: Administrative Set-up</a></li>";
-						}else{
-							print"<li><a href='Phase3.pdf' target='_blank'>Phase3: Administrative Set-up</a></li>";	
-						}	
+							print "</li>";
+							print "<li>";
+								print "<div class='space'></div>";
+								print "<h6>Phase 2:  Platform Analysis Training</h6>";
+								print "<video width='320' height='240' controls>";
+								print "<source src='ABAITAdminPlatform-AnalysisEducation-PartB.mp4' type='video/mp4'>";
+							print "</li>";
+
+
+							if($_SESSION['client'] === 'PCS'){
+								// print"<li><a href='ABAIT-Phase3AdminProductGuidePCS20211115.pdf' target='_blank'>Administrative Set-up</a></li>";
+								// print"<li><a href='ABAIT-Phase3AdminProductGuidePCS20211115.pdf' target='_blank'>Administrative Set-up</a></li>";
+								print "<div class='space'></div>";
+								print "<li><h6>Phase 3:  </h6><a href='ABAIT-Phase3AdminProductGuidePCS20211115.pdf' class='btn btn-info' role='button' target='_blank'>Administrative Set-up</a></li>";
+							}else{
+								print"<li><a href='Phase3.pdf' target='_blank'>Phase3: Administrative Set-up</a></li>";	
+							}	
+						print "</ol>";
+		print "<div class='space'></div>";
+		print "<li><h4>Addressing the $behavior_spelling - Carer Roles</h4></li>"; 
+						print "<ol>";
+
+							print "<li><h6>Phase1:   </h6><a href='https://www.loom.com/share/cce71315910e481880969a2b54ff3d82' target='_blank' class='btn btn-info' role='button' target='_blank'>Positive Interactions Bootcamp</a></li>";
+			                print "<li>";
+			                	print "<div class='space'></div>";
+				                if($_SESSION['client']==='PCS'){
+				                	print "<h6>Phase 2 Carer Platform Training</h6>";
+									print "<video width='320' height='240' controls>";
+									print "<source src='ABAITCarerPlatformTraining.mp4' type='video/mp4'>";
+								}else{
+									print"<a href='https://www.loom.com/share/78b7edc903fd4bbebec4334fa8a4749c' target='_blank'>Phase2: Using the Caregiver Platform</a>";
+								}
+			                
+			                print"</li>";
+
+						print "</ol>";
+			print "</li>";
+
 					}else{
-		                print "<li><a href='https://www.loom.com/share/cce71315910e481880969a2b54ff3d82' target='_blank'>Phase1: Positive Interactions Bootcamp</a></li>";
-		                print "<li><a href='https://www.loom.com/share/78b7edc903fd4bbebec4334fa8a4749c' target='_blank'>Phase2: Using the Caregiver Platform</a></li>";
+						print "<ol>";
+							print "<li><h6><a href='https://www.loom.com/share/cce71315910e481880969a2b54ff3d82' target='_blank'>Phase1: Positive Interactions Bootcamp</a></h6></li>";
+			                print "<li>";
+				                if($_SESSION['client']==='PCS'){
+				                	print "<h6>Phase 2 Carer Platform Training</h6>";
+									print "<video width='320' height='240' controls>";
+									print "<source src='ABAITCarerPlatformTraining.mp4' type='video/mp4'>";
+								}else{
+									print"<a href='https://www.loom.com/share/78b7edc903fd4bbebec4334fa8a4749c' target='_blank'>Phase2: Using the Caregiver Platform</a>";
+								}
+			                
+			                print"</li>";
+		        		print "</ol>";
 		            }
-				print "</ol>";
+				
 
 ?>
 	</ol>

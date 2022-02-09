@@ -298,11 +298,11 @@ $scale_array=array();
 											}
 											if($counter==0){
 												print "<label>";
-												// print"<input type = 'radio'
-												// class='space'
-												// id='makemap';
-												// name = 'makemap'
-												// value = '$row1[residentkey]_$scale_array[$i]'/>";
+												print"<input type = 'radio'
+												class='space'
+												id='makemap';
+												name = 'makemap'
+												value = '$row1[residentkey]_$scale_array[$i]'/>";
 												print "</label>";
 												print"<span style='color:black;'><br><em>No Recorded Episodes</em>\n";
 											}

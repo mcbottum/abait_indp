@@ -57,9 +57,9 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Repor
 				if($PRN_report){
 					mysqli_query($conn,"INSERT INTO PRN_report VALUES(null,'$privilegekey','$residentkey','$Population','$date','$PRN_report')");
 					echo mysqli_error($conn);
-					print "<h3 align='center'>PRN Review Report for ".$row[first]." ".$row[last]." has been logged.</h3>\n";
+					print "<h3 align='center'>PRN Review Report for ".$row['first']." ".$row['last']." has been logged.</h3>\n";
 				}else{
-					print"<h3 style='color:red'>Please return to PRN Report Page, PRN report was missing for ".$row[first]." ".$row[last].".<h3>";
+					print"<h3 style='color:red'>Please return to PRN Report Page, PRN report was missing for ".$row['first']." ".$row['last'].".<h3>";
 				}
 		}// END WHILE.
 ?>

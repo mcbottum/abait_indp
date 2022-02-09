@@ -1,8 +1,8 @@
 <?
 function make_msqli_connection(){
-	if($_SESSION['use_ssl'] == True){
+	if($_SESSION['use_ssl']){
 		$conn = mysqli_init();
-		mysqli_ssl_set($conn,NULL,NULL, "/var/www/html/BaltimoreCyberTrustRoot.crt.pem", NULL, NULL);
+		mysqli_ssl_set($conn,NULL,NULL, "/var/www/html/".$_SESSION['cert'], NULL, NULL);
 		mysqli_real_connect($conn, $_SESSION['hostname'], $_SESSION['user'], $_SESSION['mysqlpassword'], $_SESSION['db'], 3306, MYSQLI_CLIENT_SSL);
 		if (mysqli_connect_errno($conn)) {
 			die('Failed to connect to MySQL: '.mysqli_connect_error());

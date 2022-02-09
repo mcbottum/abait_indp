@@ -99,7 +99,7 @@ if($_SESSION['Target_Population']=='all'&&!$Population){
 $conn=make_msqli_connection();
 
 if($_SESSION['Target_Population']!='all'){
-	$Population=mysqli_real_escape_string($conn,$_SESSION[Target_Population]);
+	$Population=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
 	$sql="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population' order by first";
 }else{
 	$sql="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population' order by first";

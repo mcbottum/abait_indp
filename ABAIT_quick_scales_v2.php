@@ -166,6 +166,7 @@ set_css()
 
 	}
 
+	//this is if PCS user logged in already requesting a specific user
 	if(isset($_GET["k"])){
 		$residentkey=$_GET["k"];
 		$_SESSION['residentkey']=$residentkey;

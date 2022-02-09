@@ -282,6 +282,7 @@ if($makemap){
 	$scale=mysqli_fetch_assoc(mysqli_query($conn,"SELECT * FROM scale_table WHERE scale_name='$behavior'"));
 	$_SESSION['first']=$resident['first'];
 	$_SESSION['last']=$resident['last'];
+
 	if(isset($_GET['Population'])&&$_GET['Population']){
 		$Population=$_GET['Population'];
 	}else{
@@ -323,12 +324,16 @@ if(empty($creation_date)){
 }
 
 //array of all interventions mapped to behavior
+if($behavior=="Vocalisations" && $_SESSION['country_location']=='UK'){
+	$temp_behaveior_spell = "Vocalizations";
+}else{
+	$temp_behaveior_spell = $behavior;
+}
 $intervention_sum=array();
-$inters = mysqli_query($conn,"SELECT *  FROM interventions WHERE behavior_class='$behavior'");
+$inters = mysqli_query($conn,"SELECT *  FROM interventions WHERE behavior_class='$temp_behaveior_spell'");
 while ($inter=mysqli_fetch_assoc($inters)){
 	$intervention_sum[$inter['intervention']]=1;
 }
-
 
 print"<form name='create_map' action = 'ABAIT_create_map_log_v2.php' onsubmit='return validate_form()' method = 'post'>";
 
@@ -349,7 +354,7 @@ $r=0;
 					print "<tr><td  align='center' style='color:red'><h4>Red Data Indicates Unscaled $behavior Recorded <em>After</em> Most Recent Scale Creation ($creation_date)</h4></td></tr>\n";
 						print "<tr><td colspan='2'>";//table in table data for more info
 
-                    print"<table class='scroll hover local'  bgcolor='white' cellpadding='3'>";
+                    print"<table class='scroll hover local'  bgcolor='white' cellpadding='3' align='center'>";
                         print "<thead>";
                             print"<tr>";
                                 print"<th>";
@@ -422,10 +427,6 @@ $r=0;
 			print"<input type='hidden' name='scale_behavior' value='$behavior'>";
 			print"<input type='hidden' name='scale_resident' value='$first $last'>";
 
-				$_SESSION['r']=$r;
-
-			
-
 			print "<table  width='100%' cellpadding='10'>";
 				print "<tr align='center'>";
 
@@ -475,7 +476,10 @@ $r=0;
 		}// end for
 					print "<tr>\n";
 
-					if($data){ 
+					// if($data){
+						if($r==0){
+							$r=1;
+						}
 						if($end<$r&&(!isset($_REQUEST['add_one'])||!isset($_REQUEST['subtract_one']))){
 							$m=$r;
 							$end=$r;
@@ -483,84 +487,84 @@ $r=0;
 						if($end>5){
 							$end=5;
 						}
-							for($t=0;$t<$end;$t++){
-								// $end=$m;
-								$count=$t+1;
-								print "<td align='center 'width='50'>";
+						for($t=0;$t<$end;$t++){
+							// $end=$m;
+							$count=$t+1;
+							print "<td align='center 'width='50'>";
 
-									$trigger='trigger'.$t;
-									print "<div class='form-group '>";
+								$trigger='trigger'.$t;
+								print "<div class='form-group '>";
 
-										if(isset(${'trigger_val'.$t})){
-											$trigger_val = ${'trigger_val'.$t};
-											print"<input class='form-control text-input-color space10' type='text' name ='$trigger' id='$trigger'  class='textBox'  placeholder='Enter Trigger $count' value='$trigger_val'/>\n";
-										}else{
-											// Per Baddger prairie request, don't autofill these:
-											// if($t<count($raw_triggers)){
-											// 	print"<input type = 'text' name ='$trigger' id='$trigger' class='textBox' value='$raw_triggers[$t]'/>\n";
-											// }else{
-											// 	print"<input type = 'text' name ='$trigger' id='$trigger' class='textBox'/>\n";
-											// }
-											print"<input class='form-control text-input-color space10' type = 'text' name ='$trigger' id='$trigger' class='textBox' placeholder='Enter Trigger $count'/>\n";
-										}
+									if(isset(${'trigger_val'.$t})){
+										$trigger_val = ${'trigger_val'.$t};
+										print"<input class='form-control text-input-color space10' type='text' name ='$trigger' id='$trigger'  class='textBox'  placeholder='Enter Trigger $count' value='$trigger_val'/>\n";
+									}else{
+										// Per Baddger prairie request, don't autofill these:
+										// if($t<count($raw_triggers)){
+										// 	print"<input type = 'text' name ='$trigger' id='$trigger' class='textBox' value='$raw_triggers[$t]'/>\n";
+										// }else{
+										// 	print"<input type = 'text' name ='$trigger' id='$trigger' class='textBox'/>\n";
+										// }
+										print"<input class='form-control text-input-color space10' type = 'text' name ='$trigger' id='$trigger' class='textBox' placeholder='Enter Trigger $count'/>\n";
+									}
 
-										$selected_array = array();
-										
-											for($k=1;$k<7;$k++){
-												if(isset($_REQUEST['selectedArray'])){
-													$selected_array = $_REQUEST['selectedArray'];
-												}else{
-													$selectedArray = array();
-												}
-												$intervention='intervention_'.$k.$t;
-
-
-												
-													print "<select class='form-control select-box-color w-auto space5'  style='width: 150px' name='$intervention' id='$intervention' onchange='show(this)'>";
-														print "<option value='' selected>Intervention$k-$count</option>";
-												
-												// print"<select style='width: 150px' name='$intervention' id='$intervention' onchange='show(this)'><option value='' selected>Intervention$k-$count</option>";
-													?>
-														<option class='red' style='color:blue; font-weight:bold' value='1' style='color:red'>New Intervention</option>
-													<?
-													foreach($intervention_sum as $key => $values){
-														$key_=str_replace(' ','_',$key);
-
-											
-
-														if($key!='PRN'){
-															if(${'intervention_val'.$k.$t}==$key){
-																	print "<option selected value=$key_>$key</option>";
-																	array_push($selected_array,$key);
-																	
-															}elseif(${'intervention_val'.$k.$t}=='custom'){
-																$key=${'intervention_val_t'.$k.$t};
-																$key_=str_replace(' ','_',$key);
-																print "<option selected value=$key_>$key</option>";
-																
-															}elseif(isset($_REQUEST['intervention_'.$k.$t])&& !empty($_REQUEST['intervention_'.$k.$t])){
-																$key=$_REQUEST['intervention_'.$k.$t];
-																$key_=str_replace(' ','_',$key);
-																print "<option selected value=$key_>$key</option>";
-															}elseif(!in_array($key, $selected_array)){
-																	print"<option value=$key_>$key</option>";
-															}
-
-														}
-													}
-
-												print"</select>";
-											
-												
-												$intervention_t='intervention_t_'.$k.$t;
-												$intervention_=$intervention.'_';
-												print"<input class='form-control mb-3' type = 'text' name ='$intervention_t' id='$intervention_' class='textBox' style='display: none; background-color: GreenYellow' value='Enter New Intervention'  autofocus='autofocus' onfocus=\"if
-			(this.value==this.defaultValue) this.value='';\"/>";
+									$selected_array = array();
+									
+										for($k=1;$k<7;$k++){
+											if(isset($_REQUEST['selectedArray'])){
+												$selected_array = $_REQUEST['selectedArray'];
+											}else{
+												$selectedArray = array();
 											}
-										
-								$r = $r+1;
+											$intervention='intervention_'.$k.$t;
 
-							}
+
+											
+												print "<select class='form-control select-box-color w-auto space5'  style='width: 150px' name='$intervention' id='$intervention' onchange='show(this)'>";
+													print "<option value='' selected>Intervention$k-$count</option>";
+											
+											// print"<select style='width: 150px' name='$intervention' id='$intervention' onchange='show(this)'><option value='' selected>Intervention$k-$count</option>";
+												?>
+													<option class='red' style='color:blue; font-weight:bold' value='1' style='color:red'>New Intervention</option>
+												<?
+												foreach($intervention_sum as $key => $values){
+													$key_=str_replace(' ','_',$key);
+
+										
+
+													if($key!='PRN'){
+														if(${'intervention_val'.$k.$t}==$key){
+																print "<option selected value=$key_>$key</option>";
+																array_push($selected_array,$key);
+																
+														}elseif(${'intervention_val'.$k.$t}=='custom'){
+															$key=${'intervention_val_t'.$k.$t};
+															$key_=str_replace(' ','_',$key);
+															print "<option selected value=$key_>$key</option>";
+															
+														}elseif(isset($_REQUEST['intervention_'.$k.$t])&& !empty($_REQUEST['intervention_'.$k.$t])){
+															$key=$_REQUEST['intervention_'.$k.$t];
+															$key_=str_replace(' ','_',$key);
+															print "<option selected value=$key_>$key</option>";
+														}elseif(!in_array($key, $selected_array)){
+																print"<option value=$key_>$key</option>";
+														}
+
+													}
+												}
+
+											print"</select>";
+										
+											
+											$intervention_t='intervention_t_'.$k.$t;
+											$intervention_=$intervention.'_';
+											print"<input class='form-control mb-3' type = 'text' name ='$intervention_t' id='$intervention_' class='textBox' style='display: none; background-color: GreenYellow' value='Enter New Intervention'  autofocus='autofocus' onfocus=\"if
+		(this.value==this.defaultValue) this.value='';\"/>";
+										}
+									
+							$r = $r+1;
+
+						}
 								print "<p>\n";
 								if($r>2){
 
@@ -590,94 +594,97 @@ $r=0;
 							print "</td>";
 
 
-					}else{
-						for($t=0;$t<$end;$t++){
-							$count=$t+1;
-							print "<td align='center'width='50'>";
+					// }
+					// else{
+					// 	for($t=0;$t<$end;$t++){
+					// 		$count=$t+1;
+					// 		print "<td align='center'width='50'>";
 
-									$trigger='trigger'.$t;
-										if(isset(${'trigger_val'.$t})){
-											$trigger_val = ${'trigger_val'.$t};
-											print"<input type='text' name ='$trigger' id='$trigger'  class='textBox' placeholder='Enter Trigger  $count' value='$trigger_val'/>\n";
-										}else{
-											print"<input type = 'text' name ='$trigger' id='$trigger' class='textBox' placeholder='Enter Trigger $count'/>\n";
-										}
-										$selected_array = array();
-											for($k=1;$k<7;$k++){
-												if(isset($_REQUEST['selectedArray'])){
-													$selected_array = $_REQUEST['selectedArray'];
-												}else{
-													$selectedArray = array();
-												}
-												$intervention='intervention_'.$k.$t;
+					// 				$trigger='trigger'.$t;
+					// 					if(isset(${'trigger_val'.$t})){
+					// 						$trigger_val = ${'trigger_val'.$t};
+					// 						print"<input type='text' name ='$trigger' id='$trigger'  class='textBox' placeholder='Enter Trigger  $count' value='$trigger_val'/>\n";
+					// 					}else{
+					// 						print"<input type = 'text' name ='$trigger' id='$trigger' class='textBox' placeholder='Enter Trigger $count'/>\n";
+					// 					}
+					// 					$selected_array = array();
+					// 						for($k=1;$k<7;$k++){
+					// 							if(isset($_REQUEST['selectedArray'])){
+					// 								$selected_array = $_REQUEST['selectedArray'];
+					// 							}else{
+					// 								$selectedArray = array();
+					// 							}
+					// 							$intervention='intervention_'.$k.$t;
 												
-												print"<select style='width: 150px' name='$intervention' id='$intervention' onchange='show(this)'><option value='' selected>Intervention$k-$count</option>";
-													?><option class='red' style='color:blue; font-weight:bold' value='1' style='color:red'>New Intervention</option><?
-													foreach($intervention_sum as $key => $values){
-														$key_=str_replace(' ','_',$key);
+					// 							print"<select style='width: 150px' name='$intervention' id='$intervention' onchange='show(this)'><option value='' selected>Intervention$k-$count</option>";
+					// 								?>
+					<!-- <option class='red' style='color:blue; font-weight:bold' value='1' style='color:red'>New Intervention</option> -->
+					<?
+					// 								foreach($intervention_sum as $key => $values){
+					// 									$key_=str_replace(' ','_',$key);
 											
 
-														if($key!='PRN'){
-															if(${'intervention_val'.$k.$t}==$key){
-																	print "<option selected value=$key_>$key</option>";
-																	array_push($selected_array,$key);
-															}elseif(${'intervention_val'.$k.$t}=='custom'){
-																$key=${'intervention_val_t'.$k.$t};
-																$key_=str_replace(' ','_',$key);
-																print "<option selected value=$key_>$key</option>";
-															}elseif(isset($_REQUEST['intervention_'.$k.$t])&& !empty($_REQUEST['intervention_'.$k.$t])){
-																$key=$_REQUEST['intervention_'.$k.$t];
-																$key_=str_replace(' ','_',$key);
-																print "<option selected value=$key_>$key</option>";
-															}else{
-																	print"<option value=$key_>$key</option>";
-															}
+					// 									if($key!='PRN'){
+					// 										if(${'intervention_val'.$k.$t}==$key){
+					// 												print "<option selected value=$key_>$key</option>";
+					// 												array_push($selected_array,$key);
+					// 										}elseif(${'intervention_val'.$k.$t}=='custom'){
+					// 											$key=${'intervention_val_t'.$k.$t};
+					// 											$key_=str_replace(' ','_',$key);
+					// 											print "<option selected value=$key_>$key</option>";
+					// 										}elseif(isset($_REQUEST['intervention_'.$k.$t])&& !empty($_REQUEST['intervention_'.$k.$t])){
+					// 											$key=$_REQUEST['intervention_'.$k.$t];
+					// 											$key_=str_replace(' ','_',$key);
+					// 											print "<option selected value=$key_>$key</option>";
+					// 										}else{
+					// 												print"<option value=$key_>$key</option>";
+					// 										}
 
-														}
-													}
+					// 									}
+					// 								}
 
-												print"</select>";
+					// 							print"</select>";
 
-												$intervention_t='intervention_t_'.$k.$t;
-												$intervention_=$intervention.'_';
-												print"<input type = 'text' name ='$intervention_t' id='$intervention_' class='textBox' style='display: none; background-color: GreenYellow' value='Enter New Intervention'  autofocus='autofocus' onfocus=\"if(this.value==this.defaultValue) this.value='';\"/>";
-											}
-								$r = $r+1;
+					// 							$intervention_t='intervention_t_'.$k.$t;
+					// 							$intervention_=$intervention.'_';
+					// 							print"<input type = 'text' name ='$intervention_t' id='$intervention_' class='textBox' style='display: none; background-color: GreenYellow' value='Enter New Intervention'  autofocus='autofocus' onfocus=\"if(this.value==this.defaultValue) this.value='';\"/>";
+					// 						}
+					// 			$r = $r+1;
+					// 	}
+					// 		print "<p>\n";
+					// 		if($r>1){
+					// 			print "<input	type = 'checkbox'
+					// 					name = 'subtract_one'
+					// 					id = 'subtract_one'
+					// 					value = '$end'
+					// 					class = 'filled-in'
+					// 					onchange=\"reload(this.form, 'subtract_one', '$Population')\"/>\n";
+					// 			print "<label class='form-check-label custom-checkbox-label-remove' for='subtract_one'>";
+					// 			print "Remove!! </label>";								
 
-							}
-							print "<p>\n";
-							if($r>1){
-								print "<input	type = 'checkbox'
-										name = 'subtract_one'
-										id = 'subtract_one'
-										value = '$end'
-										class = 'filled-in'
-										onchange=\"reload(this.form, 'subtract_one', '$Population')\"/>\n";
-								print "<label class='form-check-label custom-checkbox-label-remove' for='subtract_one'>";
-								print "Remove!! </label>";								
-
-							}
-							if($r<5){
-								print "<input	type = 'checkbox'
-										name = 'add_one'
-										id = 'add_one'
-										value = '$end'
-										class = 'filled-in
-										onchange=\"reload(this.form,'add_one', '$Population')\"/>\n";
-								print "<label class='form-check-label custom-checkbox-label-add' for='add_one'>Add</label>";
-							}
-							print "</p>\n";
-						print"</div>\n";
-					print "</td>";	
-					}
-				// $_SESSION['r']=$r;
+					// 		}
+					// 		if($r<5){
+					// 			print "<input	type = 'checkbox'
+					// 					name = 'add_one'
+					// 					id = 'add_one'
+					// 					value = '$end'
+					// 					class = 'filled-in
+					// 					onchange=\"reload(this.form,'add_one', '$Population')\"/>\n";
+					// 			print "<label class='form-check-label custom-checkbox-label-add' for='add_one'>Add</label>";
+					// 		}
+					// 		print "</p>\n";
+					// 	print"</div>\n";
+					// print "</td>";	
+					// }
 
 					print "</tr>";
 				print "</table>\n";
-			
-			// }//end else for map log
+
 
 $_SESSION['Target_Population']=$Population_temp;
+
+print"<input type='hidden' name='scale_count' value='$count'>"; 
+
 ?>
 <br></br>
 <div id='submit'>

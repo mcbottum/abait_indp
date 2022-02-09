@@ -476,7 +476,8 @@ input {
 
         //Get house Carer Names
         $Population_strip=mysqli_real_escape_string($conn,$Target_Population);
-        $sql4="SELECT * FROM personaldata WHERE House='$_SESSION[house]'";
+        // NEED TO FIGURE OUT HOUSE SELECTOR
+        $sql4="SELECT * FROM personaldata";
         $session4=mysqli_query($conn,$sql4);
 
         // Get all Carer Names
@@ -785,7 +786,8 @@ if($_SESSION['population_type']=='behavioral'){
                 print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_1' id='staff_present_1' onchange='show3(this)'>";
                     print "<option value=''>Select Staff Member</option>";
                     foreach ($carer_data as $row) {
-                        if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                        //My need to add house filter here!!!!
+                        if($_SESSION['personaldatakey']!=$row['personaldatakey']){
                             print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
                         }
                     }
@@ -853,7 +855,8 @@ if($_SESSION['population_type']=='behavioral'){
                 print "<select class='custom-select custom-select-lg mb-3'  data-width='auto' name='staff_present_2' id='staff_present_2' style='display: none;' onchange='show3(this)'>";
                     print "<option value=''>Select Staff Member</option>";
                     foreach ($carer_data as $row) {
-                        if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                        // May need to add house selector here !!!!
+                        if($_SESSION['personaldatakey']!=$row['personaldatakey']){
                             print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
                         }
                     }
@@ -921,7 +924,8 @@ if($_SESSION['population_type']=='behavioral'){
                 print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_3' id='staff_present_3' style='display: none;' onchange='show3(this)'>";
                     print "<option value=''>Select Staff Member</option>";
                     foreach ($carer_data as $row) {
-                        if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                        //may need to add house selector here
+                        if($_SESSION['personaldatakey']!=$row['personaldatakey']){
                             print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
                         }
                     }
@@ -990,7 +994,8 @@ if($_SESSION['population_type']=='behavioral'){
                 print "<select class='custom-select custom-select-lg mb-3' data-width='auto' name='staff_present_4' id='staff_present_4' style='display: none;' onchange='show3(this)'>";
                     print "<option value=''>Select Staff Member</option>";
                     foreach ($carer_data as $row) {
-                        if($row[house]==$_SESSION['house'] && $_SESSION['personaldatakey']!=$row['personaldatakey']){
+                        /// May need to add house selector here
+                        if($_SESSION['personaldatakey']!=$row['personaldatakey']){
                             print "<option value='$row[personaldatakey]'>$row[first] $row[last]</option>";
                         }
                     }

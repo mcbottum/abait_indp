@@ -6,7 +6,10 @@
 			"db_user": "root",
 			"db_pwd": "abaitroot",
 			"reset_password": "True",
-			"use_ssl": "False"
+			"use_ssl": "False",
+			"certificate": "",
+			"population_type": "cognitive",
+			"target_population": "Dementia"
 		},
 		"azure_UK": {
 			"db": "abait-c",
@@ -14,7 +17,32 @@
 			"db_user": "abaitadmin@abait-cog",
 			"db_pwd": "Abehave8*",
 			"reset_password": "False",
-			"use_ssl": "True"
+			"use_ssl":1,
+			"certificate": "BaltimoreCyberTrustRoot.crt.pem",
+			"population_type": "cognitive",
+			"target_population": "Dementia"
+		},
+		"cog.abaitscale": {
+			"db": "agitation_cog",
+			"host": "mysqlcog.abaitscale.com",
+			"db_user": "abaitcog",
+			"db_pwd": "abaitcog13!",
+			"reset_password": "False",
+			"use_ssl": 0,
+			"certificate": "",
+			"population_type": "cognitive",
+			"target_population": "Dementia"
+		},
+		"cog-training.abaitscale": {
+			"db": "cog_training",
+			"host": "mysqlcog-training.abaitscale.com",
+			"db_user": "cog_training",
+			"db_pwd": "2DADq89dfK0Y",
+			"reset_password": "False",
+			"use_ssl": 0,
+			"certificate": "",
+			"population_type": "cognitive",
+			"target_population": "Dementia"
 		}
 	}
 }

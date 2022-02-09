@@ -47,60 +47,59 @@ if($_SESSION['cgfirst']!=""){
 		
 <?
 		//$anothermap=$_REQUEST['anothermap'];
-		$r=$_SESSION['r'];
+		// $r=$_SESSION['r'];
+
+		$r = $_REQUEST['scale_count'];
 
 		if($r>=0){
-		$residentkey=$_SESSION['residentkey'];
-		$creation_date=date('Y,m,d');
-		$behavior=$_SESSION['behavior'];
-		$conn = make_msqli_connection();
-		if($_SESSION['Target_Population']=='all'){
-			$Population=mysqli_real_escape_string($conn,$_SESSION['Population']);
-			$Population=$_SESSION['Population'];
-		}else{
-			$Population=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
-		}//end Target Population if else
-		// NOTE dateline corresponds to trigger, $i corresponds to intervention
-		if (isset($_POST['scales_created'])) {
-		    $scales_created = $_POST['scales_created'];
-		    foreach($scales_created as $mapkey){
-		    	mysqli_query($conn,"UPDATE resident_mapping SET scale_created=TRUE WHERE mapkey='$mapkey'");
-		    }
-		    // $colors is an array of selected values
-		}
-
-		if (isset($_POST['delete_obs'])) {
-		    $delete_obs = $_POST['delete_obs'];
-		    foreach($delete_obs as $mapkey){
-		    	mysqli_query($conn,"DELETE FROM resident_mapping WHERE mapkey='$mapkey'");
-		    }
-		    // $colors is an array of selected values
-		}
-
-		for ($dataline=0; $dataline<=$r;$dataline ++){
-			$trigger=NULL;	
-			$trigger=$_REQUEST['trigger'.$dataline];
-			if($trigger){
-				for($i=1;$i<7;$i++){
-					$new_intervention=$_REQUEST['intervention_t_'.$i.$dataline];
-					if($new_intervention!='Enter New Intervention'){
-						${'intervention_'.$i}=$new_intervention;
-					}else{
-						if($_REQUEST['intervention_'.$i.$dataline]){	
-							${'intervention_'.$i}=str_replace('_',' ',$_REQUEST['intervention_'.$i.$dataline]);
-						}else{
-							${'intervention_'.$i}="";
-						}
-					}
-				}		
-				mysqli_query($conn,"INSERT INTO behavior_maps VALUES(null,'$Population','$residentkey','$creation_date','$behavior','$trigger','$intervention_1','$intervention_2','$intervention_3','$intervention_4','$intervention_5','$intervention_6')");
+			$residentkey=$_SESSION['residentkey'];
+			$creation_date=date('Y,m,d');
+			$behavior=$_SESSION['behavior'];
+			$conn = make_msqli_connection();
+			if($_SESSION['Target_Population']=='all'){
+				$Population=mysqli_real_escape_string($conn,$_SESSION['Population']);
+				$Population=$_SESSION['Population'];
+			}else{
+				$Population=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
+			}//end Target Population if else
+			// NOTE dateline corresponds to trigger, $i corresponds to intervention
+			if (isset($_POST['scales_created'])) {
+			    $scales_created = $_POST['scales_created'];
+			    foreach($scales_created as $mapkey){
+			    	mysqli_query($conn,"UPDATE resident_mapping SET scale_created=TRUE WHERE mapkey='$mapkey'");
+			    }
+			    // $colors is an array of selected values
 			}
-		}// end for
+
+			if (isset($_POST['delete_obs'])) {
+			    $delete_obs = $_POST['delete_obs'];
+			    foreach($delete_obs as $mapkey){
+			    	mysqli_query($conn,"DELETE FROM resident_mapping WHERE mapkey='$mapkey'");
+			    }
+			    // $colors is an array of selected values
+			}
+
+			for ($dataline=0; $dataline<=$r;$dataline ++){
+				$trigger=NULL;	
+				$trigger=$_REQUEST['trigger'.$dataline];
+				if($trigger){
+					for($i=1;$i<7;$i++){
+						$new_intervention=$_REQUEST['intervention_t_'.$i.$dataline];
+						if($new_intervention!='Enter New Intervention'){
+							${'intervention_'.$i}=$new_intervention;
+						}else{
+							if($_REQUEST['intervention_'.$i.$dataline]){	
+								${'intervention_'.$i}=str_replace('_',' ',$_REQUEST['intervention_'.$i.$dataline]);
+							}else{
+								${'intervention_'.$i}="";
+							}
+						}
+					}		
+					mysqli_query($conn,"INSERT INTO behavior_maps VALUES(null,'$Population','$residentkey','$creation_date','$behavior','$trigger','$intervention_1','$intervention_2','$intervention_3','$intervention_4','$intervention_5','$intervention_6')");
+				}
+			}// end for
 
 		}//end if check for existing maps
-	//if($anothermap=='yes'){
-		//$nextfile='chooseresident_for_map_review.php';
-	//}else{$nextfile='adminhome.php';
 	
 	//}//end submit behavior map elseif
 if($intervention_1){

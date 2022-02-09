@@ -125,7 +125,7 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 						$total_duration=$total_duration+$row4['duration'];
 					}
 					while($row_rm4=mysqli_fetch_assoc($session_rm4)){
-						$sum_PRN_rm=$sum_PRN_rm+$row_rm4[PRN];
+						$sum_PRN_rm=$sum_PRN_rm+$row_rm4['PRN'];
 						$sum_episodes_rm=$sum_episodes_rm+1;
 						if($row_rm4['PRN']==1){
 							$PRN_duration_rm=$PRN_duration_rm+$row_rm4['duration'];
@@ -216,7 +216,7 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 									$session8=mysqli_query($conn,$sql_rm4);
 									$PRN_given = False;
 									while($row8=mysqli_fetch_assoc($session8)){
-										if($row8[PRN]=='1'){
+										if($row8['PRN']=='1'){
 											$PRN_given = True;
 											print"<tr>";
 												print"<td>$row8[date]</td>";
@@ -255,8 +255,9 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 								print"</table>";
 
 				print"<h3> Enter RN PRN Review Comments Here </h3>";
-					$report_name = 'PRNreport_'.$row1[residentkey];
-					print"<input type='text' name=$report_name style='background-color: yellow; font-size: 14px; width:99%;' size='130'>";
+					$report_name = 'PRNreport_'.$row1['residentkey'];
+					//print"<input type='text' name=$report_name style='background-color: yellow; font-size: 14px; width:99%;' size='130'>";
+					print "<textarea class='form-control form-control-ta' placeholder='Required...' name=$report_name></textarea>";
 		}//end row1 while for residents in Target_Population
 
 

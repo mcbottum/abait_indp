@@ -59,6 +59,18 @@ if($_SESSION['cgfirst']!=""){
     }
 
 
+if($_SESSION['country_location']=='UK'){
+    $behavior_spelling = 'Behaviour';
+    $vocalization_spelling = 'Vocalisation';
+    $characterization_spelling = 'Characterization';
+    $date_format = 'dd-mm-yyyy';
+}else{
+    $behavior_spelling = 'Behavior';
+    $vocalization_spelling = 'Vocalization';
+    $characterization_spelling = 'Characterisation';
+    $date_format = 'mm-dd-yyyy';
+}
+
 $date=date('Y-m-d');
 $date_stop = $date;
 
@@ -127,7 +139,7 @@ while($row=mysqli_fetch_assoc($session)){
 }
 $sql="SELECT * FROM residentpersonaldata WHERE residentkey IN ('".implode("', '", $residentkey_array)."')";
 
- print"<h3 class='m-3 p-2 footer_div' align='center'> $title </h3>";
+ print"<h4 class='m-3 p-2 footer_div' align='center'> $title </h4>";
 
 
 print "<table  width='99%'>";
@@ -163,7 +175,7 @@ print"<div><h4 align='center'>Episode List</h4></div>\n";
                         print"<th>Resident</th>";
                         print"<th>Date</th>";
                         print"<th>Time of Day</th>";
-                        print"<th>Behavior Classification</th>";
+                        print"<th>$behavior_spelling Classification</th>";
                         print"<th>Trigger</th>\n";
                         print"<th>Episode Duration</th>";
                         if($_SESSION['population_type']==='behavioral'){
@@ -205,7 +217,7 @@ print"<div><h4 align='center'>Episode List</h4></div>\n";
 
 if($trigger_breakdown){ ////////////////////////////////////////trigger breakdown//////////////////////////////////////
 
-    print"<div id='head'><h4 align='center'>Trigger and Intervetion Analysis</h4></div>\n";
+    print"<div id='head'><h4 align='center'>Trigger and Intervention Analysis</h4></div>\n";
     $r=0;
     foreach($scale_array as $behavior){
 

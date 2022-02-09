@@ -58,9 +58,15 @@ $names = build_page_pg();
 		}
 
 		//get episode contact
-		$sql_contact = "SELECT * from episode_contact WHERE Target_Population='$Population_strip'";
-		$session_contact = mysqli_query($conn,$sql_contact);
-		$contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);
+		if($_SESSION['population_type']=='behavioral'){
+			$post_observation_header = "Post Incident Actions (Check!)";
+			$sql_contact = "SELECT * from episode_contact WHERE Target_Population='$Population_strip'";
+			$session_contact = mysqli_query($conn,$sql_contact);
+			$contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);
+		}else{
+			$contact_data = false;
+			$post_observation_header  = "Post Medication Observation";
+		}
 
 		$session4=mysqli_query($conn,$sql4);
 		$session_rm4=mysqli_query($conn,$sql_rm4);
@@ -94,7 +100,7 @@ $names = build_page_pg();
 							print"<th>Episode Date</th>\n";
 							print"<th>Child</th>\n";
 							print"<th>Incident Description</th>\n";
-							print"<th>Post Incident Actions (Check!)</th>";
+							print"<th>$post_observation_header</th>";
 					print"</thead>";
 					print"</tr>\n";
 
@@ -126,25 +132,29 @@ $names = build_page_pg();
 														}
 													}
 													print"<td class='align-middle p-1'>";
-														print"<table class='table-sm table-hover table-bordered' align='center'>";
-															print"<tr>";
-																print"<td class='align-middle p-1'>$row8[behavior_description]</td>";
-															print"</tr>";
-																foreach (explode(',',$row8[pre_PRN_observation]) as $key) {
-																	foreach ($contact_data as $contact) {
-																		if($contact[id]==$key){
-																			print"<tr><td class='align-middle m-2'>$contact[contact_type]</td></tr>";
+														if($contact_data){
+															print"<table class='table-sm table-hover table-bordered' align='center'>";
+																print"<tr>";
+																	print"<td class='align-middle p-1'>$row8[behavior_description]</td>";
+																print"</tr>";
+																	foreach (explode(',',$row8['pre_PRN_observation']) as $key) {
+																		foreach ($contact_data as $contact) {
+																			if($contact[id]==$key){
+																				print"<tr><td class='align-middle m-2'>$contact[contact_type]</td></tr>";
+																			}
 																		}
 																	}
-																}
-														print"</table>";
+															print"</table>";
+														}else{
+															print row8['pre_PRN_observation'];
+														}
 													print"</td>";
 													print"<td class='align-middle p-1'>";
 
 														print"<table align='center' class='table-sm table-hover table-bordered'>";
 
 															foreach ($contact_data as $row) {
-																if($row[contact_category]=='post'){
+																if($row['contact_category']=='post'){
 																	print"<tr>";
 																		print"<td class='align-middle p-1'>";
 																			print"<input type = 'checkbox'
@@ -186,38 +196,45 @@ $names = build_page_pg();
 														}
 													}
 													print"<td class='align-middle p-1'>";
-														print"<table class='table-sm table-hover table-bordered' align='center'>";
-															print"<tr>";
-																print"<td class='align-middle p-1'>$row8[behavior_description]</td>";
-															print"</tr>";
-																foreach (explode(',',$row4[pre_PRN_observation]) as $key) {
-																	foreach ($contact_data as $contact) {
-																		if($contact[id]==$key){
-																			print"<tr><td class='align-middle m-2'>$contact[contact_type]</td></tr>";
+														if($contact_data){
+															print"<table class='table-sm table-hover table-bordered' align='center'>";
+																print"<tr>";
+																	print"<td class='align-middle p-1'>$row8[behavior_description]</td>";
+																print"</tr>";
+																	foreach (explode(',',$row4['pre_PRN_observation']) as $key) {
+																		foreach ($contact_data as $contact) {
+																			if($contact[id]==$key){
+																				print"<tr><td class='align-middle m-2'>$contact[contact_type]</td></tr>";
+																			}
 																		}
 																	}
-																}
-														print"</table>";
+															print"</table>";
+														}else{
+															print $row4['behavior_description'];
+														}
 													print"</td>";
 													print"<td class='align-middle p-1'>";
-
-														print"<table align='center' class='table-sm table-hover table-bordered'>";
-
-															foreach ($contact_data as $row) {
-																if($row[contact_category]=='post'){
-																	print"<tr>";
-																		print"<td class='align-middle p-1'>";
-																			print"<input type = 'checkbox'
-																				class='m-2'
-																				name = 'emergency_intervention[]'
-																				id = '$row[contact_type]'
-																				value = '$row[id]'/>";
-																				print"<label for='$row[contact_type]''>$row[contact_type]</label>";
-																		print"</td>";
-																	print"</tr>";
+														if($contact_data){
+															print"<table align='center' class='table-sm table-hover table-bordered'>";
+																foreach ($contact_data as $row) {
+																	if($row['contact_category']=='post'){
+																		print"<tr>";
+																			print"<td class='align-middle p-1'>";
+																				print"<input type = 'checkbox'
+																					class='m-2'
+																					name = 'emergency_intervention[]'
+																					id = '$row[contact_type]'
+																					value = '$row[id]'/>";
+																					print"<label for='$row[contact_type]''>$row[contact_type]</label>";
+																			print"</td>";
+																		print"</tr>";
+																	}
 																}
-															}
-														print"</table>";
+															print"</table>";
+														}else{
+															print "<textarea class='form-control form-control-ta' placeholder='Required...' name = 'emergency_intervention'></textarea>";
+																	
+														}
 													print"</td>";
 
 												print"</tr>";

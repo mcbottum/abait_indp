@@ -16,7 +16,11 @@ if($_SESSION['passwordcheck']!='pass'){
     charset=utf-8" />
 <title>
 <?
-print $_SESSION['SITE']
+print $_SESSION['SITE'];
+//Make sure sessions are clean
+unset($_SESSION['com']);
+unset($_SESSION['residentkey']);
+
 ?>
 
 </title>
@@ -90,26 +94,30 @@ print $_SESSION['SITE']
                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
 
                         <?
+                        print "<a class='dropdown-item' href='ABAIT_add_admin_pcs_v2.php'>Enroll Carers and Admins</a>";
+                        print "<a class='dropdown-item' href='ABAIT_add_resident_pcs_v2.php'>Enroll Residents</a>";
+
+
                         if($_SESSION['privilege']=='globaladmin'){
-                            print "<a class='dropdown-item' href='ABAIT_add_resident_v2.php'>Enroll New Resident</a>";
-                            print "<a class='dropdown-item' href='ABAIT_add_care_v2.php'>Enroll New Care Provider</a>";
-                            print "<a class='dropdown-item' href='ABAIT_add_admin_v2.php'>Enroll New Administrator</a>";
+                            // print "<a class='dropdown-item' href='ABAIT_add_resident_v2.php'>Enroll New Resident</a>";
+                            // print "<a class='dropdown-item' href='ABAIT_add_care_v2.php'>Enroll New Care Provider</a>";
+                            // print "<a class='dropdown-item' href='ABAIT_add_admin_v2.php'>Enroll New Administrator</a>";
                             print "<div class='dropdown-divider'></div>";
-                            print "<a class='dropdown-item' href='ABAIT_updateMembers_v2.php'>Update Admins, Caregivers or Residents</a>";
+                            // print "<a class='dropdown-item' href='ABAIT_updateMembers_v2.php'>Update Admins, Caregivers or Residents</a>";
                             print "<a class='dropdown-item' href='ABAIT_remove_members_v2.php'>Remove Admins, Caregivers or Residents</a>";
                             print "<a class='dropdown-item' href='ABAIT_add_admin_pwd_v2.php'>ADD Admin Password</a>";
-                            print "<a class='dropdown-item' href='ABAIT_bulk_enroll_v2.php'>Bulk Enroll Members</a>";
+                            // print "<a class='dropdown-item' href='ABAIT_bulk_enroll_v2.php'>Bulk Enroll Members</a>";
                         }else{
-                            print "<span class='d-inline-block' tabindex='0' data-toggle='tooltip' title='Please contact PCS admin for member enrollment and updates.'>";
-                                print "<a class='disabled dropdown-item' href='ABAIT_add_resident_v2.php'>Enroll New Resident</a>";
-                                print "<a class='disabled dropdown-item' href='ABAIT_add_care_v2.php'>Enroll New Care Provider</a>";
-                                print "<a class='disabled dropdown-item' href='ABAIT_add_admin_v2.php'>Enroll New Administrator</a>";
-                                print "<div class='dropdown-divider'></div>";
-                                print "<a class='disabled dropdown-item' href='ABAIT_updateMembers_v2.php'>Update Admins, Caregivers or Residents</a>";
-                                print "<a class='disabled dropdown-item' href='ABAIT_remove_members_v2.php'>Remove Admins, Caregivers or Residents</a>";
-                            print "</span>";
+                            // print "<span class='d-inline-block' tabindex='0' data-toggle='tooltip' title='Please contact PCS admin for member enrollment and updates.'>";
+                            //     print "<a class='disabled dropdown-item' href='ABAIT_add_resident_v2.php'>Enroll New Resident</a>";
+                            //     print "<a class='disabled dropdown-item' href='ABAIT_add_care_v2.php'>Enroll New Care Provider</a>";
+                            //     print "<a class='disabled dropdown-item' href='ABAIT_add_admin_v2.php'>Enroll New Administrator</a>";
+                            //     print "<div class='dropdown-divider'></div>";
+                            //     print "<a class='disabled dropdown-item' href='ABAIT_updateMembers_v2.php'>Update Admins, Caregivers or Residents</a>";
+                            //     print "<a class='disabled dropdown-item' href='ABAIT_remove_members_v2.php'>Remove Admins, Caregivers or Residents</a>";
+                            // print "</span>";
                             print "<a class='dropdown-item' href='ABAIT_add_admin_pwd_v2.php'>ADD Admin Password</a>";
-                            print "<a class='dropdown-item' href='ABAIT_bulk_enroll_v2.php'>Bulk Enroll Members</a>";
+                            // print "<a class='dropdown-item' href='ABAIT_bulk_enroll_v2.php'>Bulk Enroll Members</a>";
 
                         }
                         ?>
@@ -131,7 +139,7 @@ print $_SESSION['SITE']
 <?
                         print "<a class='dropdown-item' href='ABAIT_ti_catalog_v2.php'>$catalog_spelling of $behavior_spelling Triggers and Interventions</a>";
                         print "<a class='dropdown-item' href='ABAIT_choose_resident_for_map_review_v2.php'>Create and Review Residents' $behavior_spelling Plans</a>";
-                        print "<a class='dropdown-item' href='ABAIT_quick_scales_v2.php'>Record New $behavior_spelling</a>";
+                        print "<a class='dropdown-item' href='ABAIT_scale_select_pcs_v2.php'>Record New $behavior_spelling</a>";
 ?>
                         <a class="dropdown-item" href='ABAIT_prn_effect_v2.php'>Record Medication Effect</a>
                     </div>

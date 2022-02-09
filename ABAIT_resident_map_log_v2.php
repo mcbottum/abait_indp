@@ -62,8 +62,6 @@ set_css()
 		
 	print "<h3 class='m-4' align='center'>$behavior_spelling $characterization_spelling Session</h3>";
 		
-			
-	
 		$conn=make_msqli_connection();
 
 		$raw_date=$_REQUEST['datetimepicker'];
@@ -303,74 +301,79 @@ set_css()
 		if($PRN){
 			$sender='admin@abehave.com';
 			$recipient='michael@abehave.com';
+			if($_SESSION['population_type']=='behavioral'){
+				//get episode contact
+				$sql_contact = "SELECT * from episode_contact  WHERE contact_category='during'";
+				$session_contact = mysqli_query($conn,$sql_contact);
+				if($session_contact !== false){
+					$contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);
 
-			//get episode contact
-			$sql_contact = "SELECT * from episode_contact  WHERE contact_category='during'";
-			$session_contact = mysqli_query($conn,$sql_contact);
-			if($session_contact !== false){
-				$contact_data=$session_contact->fetch_all(MYSQLI_ASSOC);
+					//get notification recipients
+					$sql_notify = "SELECT * from personaldata  WHERE Target_Population='$_SESSION[Target_Population]' AND notify='1'";
+					$session_notify = mysqli_query($conn, $sql_notify);
+					$notify_data=$session_notify->fetch_all(MYSQLI_ASSOC);
+					$recipients = [];
+					foreach ($notify_data as  $value) {
+						array_push($recipients, $value['personaldatakey']);
+					}
+					$recipients = implode(',',$recipients);
 
-				//get notification recipients
-				$sql_notify = "SELECT * from personaldata  WHERE Target_Population='$_SESSION[Target_Population]' AND notify='1'";
-				$session_notify = mysqli_query($conn, $sql_notify);
-				$notify_data=$session_notify->fetch_all(MYSQLI_ASSOC);
-				$recipients = [];
-				foreach ($notify_data as  $value) {
-					array_push($recipients, $value['personaldatakey']);
-				}
-				$recipients = implode(',',$recipients);
-
-				$contact_string="";
-				foreach ($contact_data as $row) {
-					foreach ($service as $key) {	
-						if($key==$row[id]){
-							$contact_string .=$row[contact_type].", ";
+					$contact_string="";
+					foreach ($contact_data as $row) {
+						foreach ($service as $key) {	
+							if($key==$row[id]){
+								$contact_string .=$row[contact_type].", ";
+							}
 						}
 					}
-				}
 
+					$body = "<h3><p>".$carer. " managed an episode involving ".$resident."</p></h3>";
+					$body .= "<p><b>The episode occured at: </b>".$time. " on ".$date."</p><p><b>Duration: </b>".$duration." minutes.</p><p><b>Behavior Descriptions: </b>".$behavior." ,".$behavior_description."</p><p><b>Caused by: </b>".$trigger."</p><p><b>Additional services  required to manage the episode: </b>".$contact_string;
+
+					// echo $body;
+
+					if($contact_string){
+						$ActionText .= " Additional services  required to manage the episode: ".$contact_string;
+					}
+
+					mysqli_query($conn, "INSERT INTO notification_queue VALUES(null,'$body','$recipients',null)");
+
+
+					///// THE BELOW DONE IN ABAIT_mailer.php AND CRONJOB  ////////
+					// $conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
+					// $sql_check = "SELECT * from notification_queue WHERE date_sent IS null";
+					// $session_check = mysqli_query($conn, $sql_check);
+					// $notify_data=$session_check->fetch_all(MYSQLI_ASSOC);
+
+					// // Set default time zone
+					// date_default_timezone_set('London');
+
+					// // Then call the date functions
+					// $date = date('Y-m-d H:i:s');
+
+					// if($notify_data){
+
+					// 	foreach ($notify_data as $value) {
+
+					// 		$message_sent = False;
+					// 		$sql_recipients = "SELECT mail FROM personaldata WHERE personaldatakey IN($value[recipients])";
+					// 		$session_recipients = mysqli_query($conn, $sql_recipients);
+					// 		$recipient_data=$session_recipients->fetch_all(MYSQLI_ASSOC);
+					// 		foreach ($recipient_data as $value2['mail']) {
+					// 			$message_sent = sendMail($sender,$value2['mail'],$value['message_body']);
+					// 		}
+					// 		if($message_sent){
+					// 			mysqli_query($conn,"UPDATE notification_queue SET date_sent='$date' WHERE id='$value[id]'");
+					// 		}
+							
+					// 	}
+					// }
+				}
+			}elseif ($_SESSION['population_type']=='cognitive') {
 				$body = "<h3><p>".$carer. " managed an episode involving ".$resident."</p></h3>";
-				$body .= "<p><b>The episode occured at: </b>".$time. " on ".$date."</p><p><b>Duration: </b>".$duration." minutes.</p><p><b>Behavior Descriptions: </b>".$behavior." ,".$behavior_description."</p><p><b>Caused by: </b>".$trigger."</p><p><b>Additional services  required to manage the episode: </b>".$contact_string;
-
-				// echo $body;
-
-				if($contact_string){
-					$ActionText .= " Additional services  required to manage the episode: ".$contact_string;
-				}
-
-				mysqli_query($conn, "INSERT INTO notification_queue VALUES(null,'$body','$recipients',null)");
-
-
-				///// THE BELOW DONE IN ABAIT_mailer.php AND CRONJOB  ////////
-				// $conn=mysqli_connect($_SESSION['hostname'],$_SESSION['user'],$_SESSION['mysqlpassword'], $_SESSION['db']) or die(mysqli_error());
-				// $sql_check = "SELECT * from notification_queue WHERE date_sent IS null";
-				// $session_check = mysqli_query($conn, $sql_check);
-				// $notify_data=$session_check->fetch_all(MYSQLI_ASSOC);
-
-				// // Set default time zone
-				// date_default_timezone_set('London');
-
-				// // Then call the date functions
-				// $date = date('Y-m-d H:i:s');
-
-				// if($notify_data){
-
-				// 	foreach ($notify_data as $value) {
-
-				// 		$message_sent = False;
-				// 		$sql_recipients = "SELECT mail FROM personaldata WHERE personaldatakey IN($value[recipients])";
-				// 		$session_recipients = mysqli_query($conn, $sql_recipients);
-				// 		$recipient_data=$session_recipients->fetch_all(MYSQLI_ASSOC);
-				// 		foreach ($recipient_data as $value2['mail']) {
-				// 			$message_sent = sendMail($sender,$value2['mail'],$value['message_body']);
-				// 		}
-				// 		if($message_sent){
-				// 			mysqli_query($conn,"UPDATE notification_queue SET date_sent='$date' WHERE id='$value[id]'");
-				// 		}
-						
-				// 	}
-				// }
+				$body .= "<p><b>The episode occured at: </b>".$time. " on ".$date."</p><p><b>Duration: </b>".$duration." minutes.</p><p><b>Behavior Descriptions: </b>".$behavior." ,".$behavior_description."</p><p><b>Caused by: </b>".$trigger."</p>";
 			}
+			mysqli_query($conn, "INSERT INTO notification_queue VALUES(null,'$body','$recipients',null)");
 
 		}
 
@@ -470,8 +473,7 @@ set_css()
 		mysqli_query($conn, "INSERT INTO care_notes VALUES(null, '$RecordUUID','$PersonID','$ActionText','$time_stamp','$ActionIconID')");
 		mysqli_close($conn);
 
-	}				
-						
+	}								
 						
 						
 						$sql="SELECT Target_Population FROM residentpersonaldata WHERE residentkey='$residentkey'";
@@ -484,6 +486,7 @@ if($_SESSION['population_type']=='behavioral'){
 }else{
 
 						mysqli_query($conn, "INSERT INTO resident_mapping VALUES(null,'$residentkey','$Target_Population','$date','$time','$duration','$trigger',null,'$intervention','$intervention_avoid','$behavior','$intensity','$behave_class','$behavior_description',null,null,null,'$PRN','$pre_PRN_observation',null,'$_SESSION[personaldatakey]',0)");
+						// echo "INSERT INTO resident_mapping VALUES(null,'$residentkey','$Target_Population','$date','$time','$duration','$trigger',null,'$intervention','$intervention_avoid','$behavior','$intensity','$behave_class','$behavior_description',null,null,null,'$PRN','$pre_PRN_observation',null,'$_SESSION[personaldatakey]',0)";
 }
 
 						mysqli_close($conn);

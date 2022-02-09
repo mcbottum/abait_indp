@@ -39,7 +39,11 @@ $names = build_page_pg();
 
 
 	// $episode_choice=$_REQUEST['episode_choice'];
-	$post_PRN_observation=implode(',',$_REQUEST['emergency_intervention']);
+	if($_SESSION['population_type']=='behavioral'){
+		$post_PRN_observation=implode(',',$_REQUEST['emergency_intervention']);
+	}else{
+		$post_PRN_observation=$_REQUEST['emergency_intervention'];
+	}
 
 
 	// if($post_PRN_observation=="Enter specific description of response to police intervention in this yellow box."){
