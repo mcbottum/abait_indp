@@ -391,10 +391,12 @@ if ($_SESSION['population_type']==='behavioral'){
 		//$data=json_encode($data_array,JSON_FORCE_OBJECT);
 		$data=json_encode($data_array);
 		
+		$devapikey = $configs['db_connections'][$_SESSION['hosting_service']]['devapikey'];
+		$care_note_url = "https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=".$devapikey."&Apikey=a09a69a2-dbe0-4a47-bf9c-9d5cc92e8434";
 
-		$url = $_SESSION['care_note_url'];
+		//$url = $_SESSION['care_note_url'];
 
-		$ch = curl_init($url);
+		$ch = curl_init($care_note_url);
 		//$postString = http_build_query($data, '', '&');
 
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);

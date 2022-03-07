@@ -38,7 +38,7 @@ $_SESSION['favicon'] = 'favicon3.ico';
 $_SESSION['provider_resident'] = 'Care Recipient';
 
 // ****** Sending care notes:
-$_SESSION['send_care_note'] = False;
+$_SESSION['send_care_note'] = True;
 $_SESSION['care_note_url'] = 'https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=8de7a68c-f962-4fb1-a98a-1d08e3263dd9&Apikey=a09a69a2-dbe0-4a47-bf9c-9d5cc92e8434';
 
 // ******* Hosting Service ******* //

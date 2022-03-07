@@ -94,8 +94,8 @@ unset($_SESSION['residentkey']);
                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
 
                         <?
-                        print "<a class='dropdown-item' href='ABAIT_add_admin_pcs_v2.php'>Enroll Carers and Admins</a>";
-                        print "<a class='dropdown-item' href='ABAIT_add_resident_pcs_v2.php'>Enroll Residents</a>";
+                        //print "<a class='dropdown-item' href='ABAIT_add_admin_pcs_v2.php'>Enroll Carers and Admins</a>";
+                        print "<a class='dropdown-item' href='ABAIT_add_member_pcs_v2.php'>Enroll Members</a>";
 
 
                         if($_SESSION['privilege']=='globaladmin'){

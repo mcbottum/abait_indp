@@ -34,163 +34,174 @@ print $_SESSION['SITE']
 
 <?
 // Script to auto update backend database with json encoded list of enrollees 
+$return_message = null;
+$staff_insert_count = 0;
+$staff_update_count = 0;
+$resident_insert_count = 0;
+$resident_update_count = 0;
+$member_array = array();
+$member_array[] = 'staff';
+$member_array[] = 'resident';
 
-$insert_count = 0;
-$update_count = 0;
-
-	$devapikey=$_REQUEST['devapikey'];
 	$apikey=$_REQUEST['apikey'];
-	$member=$_REQUEST['member'];
-	$organization=$_REQUEST['organization'];
-	$organization_db_key=$_REQUEST['organization_db_key'];
-
 
 	$conn = make_msqli_connection();
-	$devapikey=mysqli_real_escape_string($conn,$devapikey);
+
 	$apikey=mysqli_real_escape_string($conn,$apikey);
-	$organization=mysqli_real_escape_string($conn,$organization);
-	$organization_db_key=mysqli_real_escape_string($conn,$organization_db_key);
+	//$organization=mysqli_real_escape_string($conn,$organization);
+	// Per instructions, apikey is the same as organizationd_db_key for a client
 
-	// To Get Communities in given Organization
-	// $community_request = "https://care.personcentredsoftware.com/mcm/api/v1/".$apikey."/organisationapi/communities";
-	// $community_request = "https://care.personcentredsoftware.com/mcm/api/v1/0c0ed636-c1de-44b4-9833-a8101b050987/organisationapi/communities";
+	// Get DevAPIKey from configs
+	$string = file_get_contents("config.json");
+	if ($string === false) {
+	    $return_message=$return_message." Could not read DevAPIKey from configs";
+	}
+	$configs = json_decode($string, true);
+	$devapikey = $configs['db_connections'][$_SESSION['hosting_service']]['devapikey'];
 
-	$community_request = "https://care.personcentredsoftware.com/mcm/api/v1/".$organization_db_key."/organisationapi/communities";
+	// Use this for testing, do not use for PCS!!
+	//$organization_db_key = $configs['db_connections'][$_SESSION['hosting_service']]['organization_db_key'];
 
+	// GET ORGANIZATION DB FOR MATCHING COMMUNITY IDS TO THEIR NAMES
+	// FOR TESTING
+	//$community_request = "https://care.personcentredsoftware.com/mcm/api/v1/".$organization_db_key."/organisationapi/communities";
+	// For PCS
+	$community_request = "https://care.personcentredsoftware.com/mcm/api/v1/".$apikey."/organisationapi/communities";
 
-	//$community_blob = curl_init("https://care.personcentredsoftware.com/mcm/api/v1/0c0ed636-c1de-44b4-9833-a8101b050987/organisationapi/communities");
 	$community_blob = curl_init($community_request);
 	curl_setopt($community_blob, CURLOPT_RETURNTRANSFER, true);
-
 	$html = curl_exec($community_blob);
-
 	$community_decoded = json_decode($html, true);
 	curl_close($community_blob);
 
-	// $community_blob = file_get_contents($community_request);
-	
-	// print_r($community_blob);
 		//TESTING
 		//$organization = "181d26cd-e8f4-4750-a7bb-04eef2773c4a";
 	
 	$communities = array();
-	// print_r($community_decoded);
-	foreach($community_decoded as $raw_community){
-		if($raw_community['OrganisationID']==$organization){
+	if (isset($community_decoded)&&$community_decoded){
+		foreach($community_decoded as $raw_community){
+			// Since client community db will only be for their organization, do not need this if in pcs
+			// if($raw_community['OrganisationID']==$organization){
+			// 	$communities[$raw_community['CommunityID']] = $raw_community['Name'];
+			// }
 			$communities[$raw_community['CommunityID']] = $raw_community['Name'];
 		}
-	}
-	$serialize_communities = serialize($communities);
-	// echo $serialize_communities;
-	// echo "\n";
-	// print_r(unserialize($serialize_communities));
-
-	if($member==='resident'){
-	// // RESIDENTS
-		$request = "https://care.personcentredsoftware.com/integration/api/GenericAPI/ServiceUsers?DevApikey=".$devapikey."&Apikey=".$apikey;
-		$live_updates = file_get_contents($request);
 	}else{
-		// // STAFF
-		$request = "https://care.personcentredsoftware.com/integration/api/GenericAPI/Workers?DevApikey=".$devapikey."&Apikey=".$apikey;
-		$live_updates = file_get_contents($request);
+		$return_message = $return_messge." Could not collect communities from DB";
 	}
+	// Community Check
+	//print_r($communities);
 
-	$decoded_update = json_decode($live_updates, true);
+	$serialize_communities = serialize($communities);
 
 	$Target_Population = $_SESSION['default_target_Population'];
 	$privilegekey = "228";
 	$gender="N";
 	$date=date("Y,m,d");
 
-	foreach($decoded_update as $value){
-		// iterate through json records
-
-		$community_match = false;
-		if(array_key_exists($value['communityID'], $communities)){
-			$community_match = true;
+	foreach ($member_array as $key => $member) {
+		if($member==='resident'){
+			// RESIDENTS
+			$request = "https://care.personcentredsoftware.com/integration/api/GenericAPI/ServiceUsers?DevApikey=".$devapikey."&Apikey=".$apikey;
+			$live_updates = file_get_contents($request);
+			
+		}else{
+			// STAFF
+			$request = "https://care.personcentredsoftware.com/integration/api/GenericAPI/Workers?DevApikey=".$devapikey."&Apikey=".$apikey;
+			$live_updates = file_get_contents($request);
 		}
 
-		if($community_match){
+		$decoded_update = json_decode($live_updates, true);
+		if($decoded_update){
+			// iterate through json records
+			foreach($decoded_update as $value){
 
-			if ($member==="resident"){
-				$sql="SELECT * FROM residentpersonaldata WHERE guid='$value[personID]' ORDER by first";
+				if(array_key_exists($value['communityID'], $communities)){
+					$community_match = true;
 
-			}else{
-				$first=$value['firstName'];
-				$last=$value['lastName'];
-				$pwd = $value['connectionID'];
-				
-				$sql="SELECT * FROM personaldata WHERE password LIKE '$pwd' OR (first='$first' AND last='$last')";
+					if ($member==="resident"){
+						$sql="SELECT * FROM residentpersonaldata WHERE guid='$value[personID]' ORDER by first";
 
-			}
+					}else{
+						$first=$value['firstName'];
+						$last=$value['lastName'];
+						$pwd = $value['connectionID'];
+						
+						$sql="SELECT * FROM personaldata WHERE password LIKE '$pwd' OR (first='$first' AND last='$last')";
 
-			$check=mysqli_query($conn,$sql);
+					}
 
-			$accesslevel="";
-			if(!$check || mysqli_num_rows($check) == 0){
+					$check=mysqli_query($conn,$sql);
 
-				if(stripos(strtolower($value['role']),"manager")!==false){
-					$accesslevel="admin";
-				}else if(stripos(strtolower($value['role']),"carer")!==false || stripos(strtolower($value['role']),"nurse")!==false){
-					$accesslevel='caregiver';
+					$accesslevel="";
+					if(!$check || mysqli_num_rows($check) == 0){
+
+						$house = $communities[$value['communityID']];
+						$guid = $value['personID'];
+						$community = serialize(array($value['communityID']=>$house));
+						
+						if($member==='resident'){
+							mysqli_query($conn, "INSERT INTO residentpersonaldata VALUES(null,'$value[firstName]','$value[lastName]',null,'$value[gender]','$privilegekey','$Target_Population','$house','$value[personID]','$community','$value[personID]')");
+							$resident_insert_count++;
+						}else{
+							if(stripos(strtolower($value['role']),"manager")!==false){
+								$accesslevel="admin";
+							}else if(stripos(strtolower($value['role']),"carer")!==false || stripos(strtolower($value['role']),"nurse")!==false){
+								$accesslevel='caregiver';
+							}
+							mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$pwd',null,'$accesslevel','$value[firstName]','$value[lastName]',null,null,null,null,null,null,null,null,null,'$privilegekey','$Target_Population','$house','$community')");
+							$staff_insert_count++;
+						}
+					}elseif(mysqli_num_rows($check) > 0){
+						
+						$row1=mysqli_fetch_assoc($check);
+						$row_id = $row1['personaldatakey'];
+
+						 if($row1['house']!='all'){
+
+						 	$community_check = unserialize($row1['community']);
+
+						 	if(!is_array($community_check)){
+						 		$community_insert = serialize($community_check);
+						 		$house_insert = $row1['house'].",".$communities[$value['communityID']];
+						 		if($member==='resident'){
+						 			mysqli_query($conn,"UPDATE residentpersonaldata SET house='$house_insert', community='$community_insert' WHERE person_id='$value[personID]'");
+						 			$resident_update_count++;
+						 		}else{
+						 			mysqli_query($conn,"UPDATE personaldata SET house='$house_insert', community='$community_insert' WHERE password LIKE '$pwd'");
+						 			$staff_update_count++;
+						 		}
+						 			
+
+						 	}elseif(!array_key_exists($value['communityID'], $community_check)) {
+						 		$house_insert = $row1['house'].",".$communities[$value['communityID']];
+						 		$community_check += array($value['communityID'],$communities[$value['communityID']]);
+						 		$community_insert = serialize($community_check);
+
+						 		if($member==='resident'){
+						 			mysqli_query($conn,"UPDATE residentpersonaldata SET house='$house_insert', community='$community_insert' WHERE person_id='$value[personID]'");
+						 			$resident_update_count++;
+						 		}else{
+						 			mysqli_query($conn,"UPDATE personaldata SET house='$house_insert', community='$community_insert' WHERE password LIKE '$pwd'");
+						 			$staff_update_count++;
+						 		}	
+						 	}
+						 }
+					}
 				}
-
-				$house = $communities[$value['communityID']];
-				$guid = $value['personID'];
-				$community = serialize(array($value['communityID']=>$house));
-				
-				if($member==='resident'){
-					mysqli_query($conn, "INSERT INTO residentpersonaldata VALUES(null,'$value[firstName]','$value[lastName]',null,'$value[gender]','$privilegekey','$Target_Population','$house','$value[personID]','$community','$value[personID]')");
-					$insert_count++;
-				}else{
-					mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$pwd',null,'$accesslevel','$value[firstName]','$value[lastName]',null,null,null,null,null,null,null,null,null,'$privilegekey','$Target_Population','$house','$community')");
-					$insert_count++;
-				}
-			}elseif(mysqli_num_rows($check) > 0){
-				
-				$row1=mysqli_fetch_assoc($check);
-				$row_id = $row1['personaldatakey'];
-
-				//mysqli_query($conn,"UPDATE personaldata SET password='$full_pwd' WHERE password LIKE '$pwd%'");
-
-				 if($row1['house']!='all'){
-
-				 	$community_check = unserialize($row1['community']);
-
-				 	//echo $communities[$value['communityID']];
-				 	if(!is_array($community_check)){
-				 		$community_insert = serialize($community_check);
-				 		$house_insert = $row1['house'].",".$communities[$value['communityID']];
-				 		if($member==='resident'){
-				 			mysqli_query($conn,"UPDATE residentpersonaldata SET house='$house_insert', community='$community_insert' WHERE person_id='$value[personID]'");
-				 		}else{
-				 			mysqli_query($conn,"UPDATE personaldata SET house='$house_insert', community='$community_insert' WHERE password LIKE '$pwd'");
-				 		}
-				 			$update_count++;
-
-				 	}elseif(!array_key_exists($value['communityID'], $community_check)) {
-				 		$house_insert = $row1['house'].",".$communities[$value['communityID']];
-				 		$community_check += array($value['communityID'],$communities[$value['communityID']]);
-				 		$community_insert = serialize($community_check);
-
-				 		if($member==='resident'){
-				 			mysqli_query($conn,"UPDATE residentpersonaldata SET house='$house_insert', community='$community_insert' WHERE person_id='$value[personID]'");
-				 		}else{
-				 			mysqli_query($conn,"UPDATE personaldata SET house='$house_insert', community='$community_insert' WHERE password LIKE '$pwd'");
-				 		}
-				 			$update_count++;
-				 	}
-				 }
-				/// Do this only once !!!!! 1/29/2021
-				// mysqli_query($conn,"UPDATE personaldata SET password='$connection_pwd' WHERE personaldatakey='$row_id'"); 
-				// echo "Reset";
-
 			}
+		}else{
+			$return_message = $return_message." Could not connect to User Database";
 		}
-		
 	}
-print "<h4 align='center'>$insert_count  $member  loaded.</h4>\n";
-print "<h4 align='center'>$update_count  $member   updated.</h4>\n";
+if($return_message){
+	print "<h4 align='center'>$return_message</h4>\n";
+}else{
+	print "<h4 align='center'>$resident_insert_count  Residents  loaded.</h4>\n";
+	print "<h4 align='center'>$resident_update_count  Residents   updated.</h4>\n";
+	print "<h4 align='center'>$staff_insert_count  Staff  loaded.</h4>\n";
+	print "<h4 align='center'>$staff_update_count  Staff   updated.</h4>\n";
+}
 
 
 ?>					

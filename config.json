@@ -9,7 +9,8 @@
 			"use_ssl": "False",
 			"certificate": "",
 			"population_type": "cognitive",
-			"target_population": "Dementia"
+			"target_population": "Dementia",
+			"devapikey": ""
 		},
 		"azure_UK": {
 			"db": "abait-c",
@@ -20,7 +21,8 @@
 			"use_ssl":1,
 			"certificate": "BaltimoreCyberTrustRoot.crt.pem",
 			"population_type": "cognitive",
-			"target_population": "Dementia"
+			"target_population": "Dementia",
+			"devapikey": "8de7a68c-f962-4fb1-a98a-1d08e3263dd9"
 		},
 		"cog.abaitscale": {
 			"db": "agitation_cog",
@@ -31,7 +33,8 @@
 			"use_ssl": 0,
 			"certificate": "",
 			"population_type": "cognitive",
-			"target_population": "Dementia"
+			"target_population": "Dementia",
+			"devapikey": ""
 		},
 		"cog-training.abaitscale": {
 			"db": "cog_training",
@@ -42,7 +45,8 @@
 			"use_ssl": 0,
 			"certificate": "",
 			"population_type": "cognitive",
-			"target_population": "Dementia"
+			"target_population": "Dementia",
+			"devapikey": ""
 		}
 	}
 }

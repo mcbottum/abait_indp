@@ -268,6 +268,7 @@ set_css()
             if($house=='all'){
                 $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
             }else{
+                echo $house;
                 $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' AND house='$house' order by first";
                 $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE FIND_IN_SET('$community', house)";
             }
