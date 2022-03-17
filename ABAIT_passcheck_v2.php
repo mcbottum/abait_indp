@@ -1,5 +1,4 @@
 <?ob_start();
- include("autoLoader.php");
  session_start();
 
 
@@ -38,8 +37,8 @@ $_SESSION['favicon'] = 'favicon3.ico';
 $_SESSION['provider_resident'] = 'Care Recipient';
 
 // ****** Sending care notes:
-$_SESSION['send_care_note'] = True;
-$_SESSION['care_note_url'] = 'https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=8de7a68c-f962-4fb1-a98a-1d08e3263dd9&Apikey=a09a69a2-dbe0-4a47-bf9c-9d5cc92e8434';
+//$_SESSION['send_care_note'] = True;
+//$_SESSION['care_note_url'] = 'https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=8de7a68c-f962-4fb1-a98a-1d08e3263dd9&Apikey=a09a69a2-dbe0-4a47-bf9c-9d5cc92e8434';
 
 // ******* Hosting Service ******* //
 $_SESSION['hosting_service'] = 'azure_UK';
@@ -182,14 +181,7 @@ $filename =$_REQUEST["submit"];
 		if($row1=mysqli_fetch_assoc($session1)){
 			$_SESSION['SITE']='ABAIT Home';
 
-				// if($_SERVER['REQUEST_METHOD'] === 'POST' && $row1['accesslevel']=='auto_update'&&$row1['password']==$password){
-			if($row1['accesslevel']=='auto_update'&& strpos($row1['password'], $password)){
-					echo $payload;
-					autoLoad($payload);
-
-				}
-
-				else if($row1['accesslevel']=='globaladmin'&& (strpos($row1['password'], $password)!== false) || (strpos($row1['password2'], $password)!== false)){
+				if($row1['accesslevel']=='globaladmin'&& (strpos($row1['password'], $password)!== false) || (strpos($row1['password2'], $password)!== false)){
 					$_SESSION['adminfirst']=$row1['first'];
 					$_SESSION['adminlast']=$row1['last'];
 					$_SESSION['cgfirst'] = '';
@@ -205,14 +197,14 @@ $filename =$_REQUEST["submit"];
 				}
 				elseif($row1['accesslevel']=='admin'&& (strpos($row1['password'], $password)!== false) || (strpos($row1['password2'], $password)!== false)){
 
-
                                         if($k){
-                                                $sql="SELECT * FROM residentpersonaldata WHERE residentkey='$k'";
+                                                $sql="SELECT * FROM residentpersonaldata WHERE person_id='$k'";
                                                 $session=mysqli_query($conn,$sql);
                                                 if($row=mysqli_fetch_assoc($session)){
-                                                        $nextfile="ABAIT_scale_select_pcs_v2.php?k=".$k;
+                                                	$k=$row['residentkey'];
+                                                    $nextfile="ABAIT_scale_select_pcs_v2.php?k=".$k;
                                                 }else{
-                                                        $nextfile="ABAIT_adminhome_v2.php";
+                                                    $nextfile="ABAIT_adminhome_v2.php";
                                                 }
                                         }else{
                                                 $nextfile="ABAIT_adminhome_v2.php";
@@ -245,9 +237,10 @@ $filename =$_REQUEST["submit"];
 				}					
 				elseif($row1['accesslevel']=='caregiver'&& strpos($row1['password'], $password)!== false){
 					if($k){
-						$sql="SELECT * FROM residentpersonaldata WHERE residentkey='$k'";	
+						$sql="SELECT * FROM residentpersonaldata WHERE person_id='$k'";	
 						$session=mysqli_query($conn,$sql);
 						if($row=mysqli_fetch_assoc($session)){
+							$k=$row['residentkey'];
 							$nextfile="ABAIT_scale_select_pcs_v2.php?k=".$k;
 						}else{
 							$nextfile="ABAIT_caregiverhome_v2.php";

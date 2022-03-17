@@ -1,4 +1,11 @@
 <?
+function get_db_configs(){
+	// ****** READ IN DB CONNECTIONS SETTINGS USING config.json ******* //
+	$string = file_get_contents("config.json");
+	$configs = json_decode($string, true);
+	return $configs['db_connections'][$_SESSION['hosting_service']];
+}
+
 function make_msqli_connection(){
 	if($_SESSION['use_ssl']){
 		$conn = mysqli_init();

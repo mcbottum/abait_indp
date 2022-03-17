@@ -1,14 +1,4 @@
 <?
-
-// foreach (getallheaders() as $name => $value) {
-//     echo "$name: $value\n";
-// }
-// redirect if remote sign in
-$a=getallheaders();
-if(array_key_exists("abait",$a)){
-	header('location: http://localhost:80/ABAIT_passcheck_v2.php');
-	die;
-}
 session_start();
 ?>
 <!doctype html>
@@ -75,37 +65,41 @@ window.onload = function() {
 
 <link 	rel = "stylesheet"
 		type = "text/css"
-		href = "ABAIT_Home.css">
+		href = "ABAIT_home_v2.css">
 </head>
 <body>
-
 <div id="body" class="shadow">
 <fieldset id='welcome' class="shadow">
 	<div id = "head">
-		<h1>  Welcome to the </h1>
 		<h1>Adaptive Behavior Assessment and Intervention Tool</h1> 
 	</div>
 </fieldset>
 		<form 	onsubmit='return formValidator()'
 				action = "ABAIT_passcheck_v2.php" 
-				method = "post">
+				method = "get">
 	<table class="center">
 		<tr>
-<!-- 			<td>
-				<div >
-					<img id="logo3"src= "ABAITdataflow.png" height=475px  alt="hi" />
-				</div>
-			</td> -->
-	
-
 			<td>
-
 				<div id = "homename">
 				<fieldset id='login' class="shadow">
-			
+
+
 					<table>
+
+<?
+                                            if($_SESSION['remote_login']){
+                                                print"<tr><td align='center'>";
+						     print "You have not yet been logged in to the ABAIT system.<br>";
+						     print "Please speak with your administrator.";
+                                                print"</tr></td>";
+						print"<tr><td align='center' margin-bottum='5px'>";
+                                             		print "<input type=button onClick=\"location.href='$_SESSION[returnurl]'\" value='Leave ABAIT'>";
+						print"</tr></td>";
+                                        }else{
+?>
+
+
 							<tr><th span=2>Login ID</th></tr>
-							
 							<tr><td align="center" margin-bottum="5px">
 								<input	type = "password" id = 'password' name = "password" autocomplete="off"/>
 
@@ -116,10 +110,25 @@ window.onload = function() {
 									name = "submit"
 									value = "Submit Login ID">
 							</td></tr>
+
+<?
+					}
+?>
+
 					</table>
 				</fieldset>
 				</div>
 				</td></tr>
+
+
+
+<tr><td align='center'>
+
+
+
+</td></tr>
+
+
 				<tr><td align='center'>
 				
 					<FORM>

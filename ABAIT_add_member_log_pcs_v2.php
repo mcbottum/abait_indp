@@ -84,7 +84,7 @@ $member_array[] = 'resident';
 			// if($raw_community['OrganisationID']==$organization){
 			// 	$communities[$raw_community['CommunityID']] = $raw_community['Name'];
 			// }
-			$communities[$raw_community['CommunityID']] = $raw_community['Name'];
+			$communities[$raw_community['LocationID']] = $raw_community['Name'];
 		}
 	}else{
 		$return_message = $return_messge." Could not collect communities from DB";
@@ -116,7 +116,7 @@ $member_array[] = 'resident';
 			// iterate through json records
 			foreach($decoded_update as $value){
 
-				if(array_key_exists($value['communityID'], $communities)){
+				if(array_key_exists($value['locationID'], $communities)){
 					$community_match = true;
 
 					if ($member==="resident"){
@@ -136,9 +136,9 @@ $member_array[] = 'resident';
 					$accesslevel="";
 					if(!$check || mysqli_num_rows($check) == 0){
 
-						$house = $communities[$value['communityID']];
+						$house = str_replace(" ","-",$communities[$value['locationID']]);
 						$guid = $value['personID'];
-						$community = serialize(array($value['communityID']=>$house));
+						$community = serialize(array($value['locationID']=>$house));
 						
 						if($member==='resident'){
 							mysqli_query($conn, "INSERT INTO residentpersonaldata VALUES(null,'$value[firstName]','$value[lastName]',null,'$value[gender]','$privilegekey','$Target_Population','$house','$value[personID]','$community','$value[personID]')");
@@ -149,7 +149,7 @@ $member_array[] = 'resident';
 							}else if(stripos(strtolower($value['role']),"carer")!==false || stripos(strtolower($value['role']),"nurse")!==false){
 								$accesslevel='caregiver';
 							}
-							mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$pwd',null,'$accesslevel','$value[firstName]','$value[lastName]',null,null,null,null,null,null,null,null,null,'$privilegekey','$Target_Population','$house','$community')");
+							mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$pwd',null,'$accesslevel','$value[firstName]','$value[lastName]',null,null,null,null,null,null,null,null,'$apikey','$privilegekey','$Target_Population','$house','$community')");
 							$staff_insert_count++;
 						}
 					}elseif(mysqli_num_rows($check) > 0){
@@ -163,7 +163,7 @@ $member_array[] = 'resident';
 
 						 	if(!is_array($community_check)){
 						 		$community_insert = serialize($community_check);
-						 		$house_insert = $row1['house'].",".$communities[$value['communityID']];
+						 		$house_insert = $row1['house'].",".$communities[$value['locationID']];
 						 		if($member==='resident'){
 						 			mysqli_query($conn,"UPDATE residentpersonaldata SET house='$house_insert', community='$community_insert' WHERE person_id='$value[personID]'");
 						 			$resident_update_count++;
@@ -173,9 +173,9 @@ $member_array[] = 'resident';
 						 		}
 						 			
 
-						 	}elseif(!array_key_exists($value['communityID'], $community_check)) {
-						 		$house_insert = $row1['house'].",".$communities[$value['communityID']];
-						 		$community_check += array($value['communityID'],$communities[$value['communityID']]);
+						 	}elseif(!array_key_exists($value['locationID'], $community_check)) {
+						 		$house_insert = $row1['house'].",".str_replace(" ","-",$communities[$value['locationID']]);
+						 		$community_check += array($value['locationID'],str_replace(" ","-",$communities[$value['locationID']]));
 						 		$community_insert = serialize($community_check);
 
 						 		if($member==='resident'){
@@ -185,6 +185,10 @@ $member_array[] = 'resident';
 						 			mysqli_query($conn,"UPDATE personaldata SET house='$house_insert', community='$community_insert' WHERE password LIKE '$pwd'");
 						 			$staff_update_count++;
 						 		}	
+						 	}elseif($member!=='resident'&&!$row1['notify']){
+						 		mysqli_query($conn,"UPDATE personaldata SET notify='$apikey' WHERE password LIKE '$pwd'");
+						 		$staff_update_count++;
+
 						 	}
 						 }
 					}

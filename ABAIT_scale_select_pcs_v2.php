@@ -157,6 +157,7 @@ set_css()
     if(count($houses)==1){
         $house=$_SESSION['house'];
         $house_select=false;
+        $community = $house;
     }elseif(count($houses)>1 && !isset($_GET["community"])) {
         $house_select=true;
         $house = false;
@@ -204,12 +205,14 @@ set_css()
         $row_name=null;
     }
 
-    if(isset($_GET["community"])){
+    if(isset($_GET["community"]) && !$community){
         $community = $_GET["community"];
         $_SESSION['com'] = $community;
         unset($_SESSION['residentkey']);
     }elseif (isset($_SESSION['com'])) {
         $community = $_SESSION['com'];
+    }else{
+        $_SESSION['com'] = $community;
     }
 
     if(isset($_GET["scale_name"])){
@@ -268,7 +271,6 @@ set_css()
             if($house=='all'){
                 $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
             }else{
-                echo $house;
                 $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' AND house='$house' order by first";
                 $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE FIND_IN_SET('$community', house)";
             }
@@ -333,8 +335,9 @@ set_css()
             print"<b><em>$provider_resident</em></b>";
         print"</td></tr>";
         print"<tr><td>";
-            $session1=mysqli_query($conn,$_SESSION['sql']);
-            $resident_count = mysqli_num_rows($session1);
+
+            //$session1=mysqli_query($conn,$_SESSION['sql']);
+            //$resident_count = mysqli_num_rows($session1);
 
             if($row_name){
                 $select_option=$row_name['first']." ".$row_name['last'];

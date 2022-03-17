@@ -121,7 +121,7 @@ if($_SESSION['Target_Population']=='all'&&!$Population){
 	?>
 <form 	name='form'
 		onsubmit='return validate_form()'
-		action="ABAIT_chooseresident_for_map_review_v2.php"
+		action="ABAIT_choose_resident_for_map_review_v2.php"
 		method="post">
 	<?
 	print"<h3><label>Select ABAIT Plan Target Population</label></h3>";

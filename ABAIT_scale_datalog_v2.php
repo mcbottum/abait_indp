@@ -66,7 +66,8 @@ $names = build_page_pg();
 	$pd_sql = "SELECT * from personaldata WHERE personaldatakey='$pd_personaldatakey'";
 	$pd_session=mysqli_query($conn,$pd_sql);
 	$row=mysqli_fetch_assoc($pd_session);
-	$carer=$row['first']." ".$row['last'];	
+	$carer=$row['first']." ".$row['last'];
+	$carer_apikey = $row['notify'];	
 
 	$intensity_before=$_REQUEST['intensityB'];
 	$trig=1;
@@ -334,9 +335,9 @@ if ($_SESSION['population_type']==='behavioral'){
 
 
 
-
+$configs = get_db_configs();
 ###### to send  Curl to MCS for care notes
-	if($_SESSION['send_care_note']){
+	if($configs['send_care_note']){
 		$RecordUUID = make_guid();
 
 		// Get top intervention
@@ -385,15 +386,11 @@ if ($_SESSION['population_type']==='behavioral'){
 		    'Measure2' => '',
 		    'Sliders' => array('' => ''),
 		);
-
-
-
 		//$data=json_encode($data_array,JSON_FORCE_OBJECT);
 		$data=json_encode($data_array);
 		
-		$devapikey = $configs['db_connections'][$_SESSION['hosting_service']]['devapikey'];
-		$care_note_url = "https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=".$devapikey."&Apikey=a09a69a2-dbe0-4a47-bf9c-9d5cc92e8434";
-
+		$devapikey = $configs['devapikey'];
+		$care_note_url = "https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=".$devapikey."&Apikey=".$carer_apikey;
 		//$url = $_SESSION['care_note_url'];
 
 		$ch = curl_init($care_note_url);
@@ -432,9 +429,7 @@ if ($_SESSION['population_type']==='behavioral'){
 		//print_r($response);
 		curl_close($ch);
 
-		mysqli_query($conn, "INSERT INTO care_notes VALUES(null, '$RecordUUID','$PersonID','$ActionText','$time_stamp','$ActionIconID')");
-		mysqli_close($conn);
-
+		mysqli_query($conn, "INSERT INTO care_notes VALUES(null, '$RecordUUID','$resident_PersonID','$ActionText','$time_stamp','$ActionIconID')");
 	}
 
 
