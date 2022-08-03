@@ -1,15 +1,22 @@
 <?
 function get_db_configs(){
 	// ****** READ IN DB CONNECTIONS SETTINGS USING config.json ******* //
-	$string = file_get_contents("config.json");
+	$string = file_get_contents("configfiles/config.json");
 	$configs = json_decode($string, true);
 	return $configs['db_connections'][$_SESSION['hosting_service']];
+}
+
+function get_url_subdir(){
+	// ****** READ IN DB CONNECTIONS SETTINGS USING config.json ******* //
+	$string = file_get_contents("configfiles/config.json");
+	$configs = json_decode($string, true);
+	return $configs['db_connections'][$_SESSION['hosting_service']]["url_subdir"];
 }
 
 function make_msqli_connection(){
 	if($_SESSION['use_ssl']){
 		$conn = mysqli_init();
-		mysqli_ssl_set($conn,NULL,NULL, "/var/www/html/".$_SESSION['cert'], NULL, NULL);
+		mysqli_ssl_set($conn,NULL,NULL, "configfiles/".$_SESSION['cert'], NULL, NULL);
 		mysqli_real_connect($conn, $_SESSION['hostname'], $_SESSION['user'], $_SESSION['mysqlpassword'], $_SESSION['db'], 3306, MYSQLI_CLIENT_SSL);
 		if (mysqli_connect_errno($conn)) {
 			die('Failed to connect to MySQL: '.mysqli_connect_error());
@@ -308,39 +315,41 @@ function toggleDataSeries(e){
 }
 
 function set_css(){
-		?>
-		<link rel="stylesheet" href="bootstrap-4.4.1-dist/css/fontawesome-free-5.13.0-web/css/all.css">
-		<link rel="stylesheet" type="text/css" href="bootstrap-4.4.1-dist/css/bootstrap.min.css">
-		<script defer src="bootstrap-4.4.1-dist/css/fontawesome-free-5.13.0-web/js/all.js"></script>
-		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-		<!-- <script type='text/javascript' src="bootstrap-4.4.1-dist/js/bootstrap.min.js"></script> -->
-		<link 	rel="stylesheet" 
-		type="text/css" 
-		href="datetimepicker-master/jquery.datetimepicker.css"/ >
-		<script type='text/javascript' src="datetimepicker-master/jquery.js"></script>
-		<script type='text/javascript' src="datetimepicker-master/jquery.datetimepicker.js"></script>
-		<script type='text/javascript' src="static/js/custom_js.js"></script>
+		$url_sub_dir = get_url_subdir();
+		if($url_sub_dir){
+			$url_sub_dir = $url_sub_dir."/";
+		}
 	
-	<?
+		echo "<link rel='stylesheet' href='".$url_sub_dir."bootstrap-4.4.1-dist/css/fontawesome-free-5.13.0-web/css/all.css'>";
+
+		echo "<link rel='stylesheet' type='text/css' href='".$url_sub_dir."bootstrap-4.4.1-dist/css/bootstrap.min.css'>";
+
+		echo "<script defer src='".$url_sub_dir."bootstrap-4.4.1-dist/css/fontawesome-free-5.13.0-web/js/all.js'></script>";
+
+		echo "<script src='https://code.jquery.com/jquery-3.4.1.slim.min.js' integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>";
+		echo "<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js' integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>";
+
+		echo "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js' integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>";
+
+		//<!-- <script type='text/javascript' src="bootstrap-4.4.1-dist/js/bootstrap.min.js"></script> -->
+		echo "<link 	rel='stylesheet' type='text/css' href='".$url_sub_dir."datetimepicker-master/jquery.datetimepicker.css'/ >";
+
+		echo "<script type='text/javascript' src='".$url_sub_dir."datetimepicker-master/jquery.js'></script>";
+
+		echo "<script type='text/javascript' src='".$url_sub_dir."datetimepicker-master/jquery.datetimepicker.js'></script>";
+
+		echo "<script type='text/javascript' src='".$url_sub_dir."static/js/custom_js.js'></script>";
+	
+
 	// set CSS file for either admin or caregiver role
 	if ($_SESSION['privilege'] == 'caregiver'){
-		?>
-
-		<link 	rel = "stylesheet"
-				type = "text/css"
-				href = "ABAIT_v2.css">
-
-
-		<?
+		
+		echo "<link rel = 'stylesheet' type = 'text/css' href =  '".$url_sub_dir."ABAIT_v2.css'>";
+	
 	}else if ($_SESSION['privilege'] == 'admin' || $_SESSION['privilege'] == 'globaladmin'){
-		?>
 
-		<link 	rel = "stylesheet"
-				type = "text/css"
-				href = "ABAIT_v2_admin.css">
-		<?
+		echo "<link rel = 'stylesheet' type = 'text/css' href =  '".$url_sub_dir."ABAIT_v2_admin.css'>";
+
 	}else{
 		?>
 <!-- 		// <link href="bootstrap-4.4.1-dist/css/fontawesome-free-5.13.0-web/css/all.css" rel="stylesheet">
@@ -356,22 +365,22 @@ function set_css(){
 
 		<?
 		?>
-		<link rel="stylesheet" href="bootstrap-4.4.1-dist/css/fontawesome-free-5.13.0-web/css/all.css">
-		<link rel="stylesheet" type="text/css" href="bootstrap-4.4.1-dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href=<?$url_sub_dir?>"bootstrap-4.4.1-dist/css/fontawesome-free-5.13.0-web/css/all.css">
+		<link rel="stylesheet" type="text/css" href=<?$url_sub_dir?>"bootstrap-4.4.1-dist/css/bootstrap.min.css">
 		<script defer src="bootstrap-4.4.1-dist/css/fontawesome-free-5.13.0-web/js/all.js"></script>
 		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-		<script type='text/javascript' src="bootstrap-4.4.1-dist/js/bootstrap.min.js"></script>
+		<script type='text/javascript' src=<?$url_sub_dir?>"bootstrap-4.4.1-dist/js/bootstrap.min.js"></script>
 		<link 	rel = "stylesheet"
 				type = "text/css"
-				href = "ABAIT_v2.css">
+				href = <?$url_sub_dir?>"ABAIT_v2.css">
 		<link 	rel="stylesheet" 
 		type="text/css" 
-		href="datetimepicker-master/jquery.datetimepicker.css"/ >
-		<script type='text/javascript' src="datetimepicker-master/jquery.js"></script>
-		<script type='text/javascript' src="datetimepicker-master/jquery.datetimepicker.js"></script>
-		<script type='text/javascript' src="static/js/custom_js.js"></script>
+		href=<?$url_sub_dir?>"datetimepicker-master/jquery.datetimepicker.css"/ >
+		<script type='text/javascript' src=<?$url_sub_dir?>"datetimepicker-master/jquery.js"></script>
+		<script type='text/javascript' src=<?$url_sub_dir?>"datetimepicker-master/jquery.datetimepicker.js"></script>
+		<script type='text/javascript' src=<?$url_sub_dir?>"static/js/custom_js.js"></script>
 
 		<?
 	}
@@ -439,7 +448,7 @@ function build_page_pg($display='none'){
 			<div class="page-header p-2">  </div>
 
 			<nav class="navbar navbar-expand-md navbar-dark">
-			<img src="abait_leaf.png" class="img-fluid" alt="Responsive image">
+			<img src=<?$url_sub_dir?>"abait_leaf.png" class="img-fluid" alt="Responsive image">
 			<a class="navbar-brand p-3 icon-ginko" href= <? print $home ?> >ABAIT Home</a>
 			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>

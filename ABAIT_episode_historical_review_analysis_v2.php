@@ -245,7 +245,10 @@ if($filename=="Submit Resident for Global Analysis"){
 		if($residentkey=='all_residents'){
 			print"<h2 class='m-3 p-2 footer_div' align='center'> $title for <em>All Residents</em></h2>";
 			$Population_strip=mysqli_real_escape_string($conn,$Population);
-			$sql="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip'";
+        	$houses = explode(",",$_SESSION['house']);
+        	$houses = join("', '", $houses);
+			$sql="SELECT * FROM residentpersonaldata WHERE house IN ('$houses') order by first";
+			//$sql="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip'";
 			$session=mysqli_query($conn,$sql);
 			while($row=mysqli_fetch_assoc($session)){
 				$residentkey_array[]=$row['residentkey'];

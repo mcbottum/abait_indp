@@ -65,6 +65,9 @@ if($_SESSION['country_location']=='UK'){
 	$characterization_spelling = 'Characterisation';
 	$date_format = 'mm-dd-yyyy';
 }
+	$string = file_get_contents("configfiles/config.json");
+	$configs = json_decode($string, true);
+	echo $configs['db_connections'][$_SESSION['hosting_service']]["url_subdir"];
 
 	?>
 	<h2 class="m-3" align='center'>

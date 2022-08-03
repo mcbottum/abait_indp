@@ -53,6 +53,17 @@ $names = build_page_pg();
 		$time = $time.':'.$seconds;
 	}
 	$time_stamp = str_replace("T", " ", $raw_date);
+
+
+
+// Check for daylight saving time in England !!!!!
+if(date('m-d',strtotime('2022-03-27' )) < date('m-d') && date('m-d',strtotime('2022-10-30' )) > date('m-d')){
+	$dt = new DateTime($raw_date);
+	$dt->sub(new DateInterval('PT1H'));
+	$time_stamp = $dt->format('Y-m-d H:i:s');
+}
+
+
 	$duration=$_REQUEST['duration'];
 
 	$behavior_description=$_REQUEST['behavior_description'];
@@ -369,7 +380,7 @@ $configs = get_db_configs();
 
 		$data_array = array(
 		    'RecordUUID' => $RecordUUID,
-		    'PersonID' => $resident_PersonID,
+		    'ConnectionID' => $resident_PersonID,
 		    'FirstNames' => '',
 		    'LastName' => '',
 		    'ExternalPersonID' => '',

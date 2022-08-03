@@ -11,7 +11,8 @@
 			"population_type": "cognitive",
 			"target_population": "Dementia",
 			"devapikey": "",
-			"send_care_note": "False"
+			"send_care_note": "False",
+			"url_subdir": ""
 		},
 		"azure_UK": {
 			"db": "abait-c",
@@ -24,7 +25,8 @@
 			"population_type": "cognitive",
 			"target_population": "Dementia",
 			"devapikey": "8de7a68c-f962-4fb1-a98a-1d08e3263dd9",
-			"send_care_note": "True"
+			"send_care_note": "True",
+			"url_subdir": ""
 		},
 		"cog.abaitscale": {
 			"db": "agitation_cog",
@@ -37,7 +39,8 @@
 			"population_type": "cognitive",
 			"target_population": "Dementia",
 			"devapikey": "",
-			"send_care_note": "False"
+			"send_care_note": "False",
+			"url_subdir": ""
 		},
 		"cog-training.abaitscale": {
 			"db": "cog_training",
@@ -50,7 +53,8 @@
 			"population_type": "cognitive",
 			"target_population": "Dementia",
 			"devapikey": "",
-			"send_care_note": "False"
+			"send_care_note": "False",
+			"url_subdir": ""
 		}
 	}
 }

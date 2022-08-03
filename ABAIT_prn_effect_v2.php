@@ -146,28 +146,30 @@ $names = build_page_pg();
 																	}
 															print"</table>";
 														}else{
-															print row8['pre_PRN_observation'];
+															print $row8['pre_PRN_observation'];
 														}
 													print"</td>";
 													print"<td class='align-middle p-1'>";
-
-														print"<table align='center' class='table-sm table-hover table-bordered'>";
-
-															foreach ($contact_data as $row) {
-																if($row['contact_category']=='post'){
-																	print"<tr>";
-																		print"<td class='align-middle p-1'>";
-																			print"<input type = 'checkbox'
-																				class='m-2'
-																				name = 'emergency_intervention[]'
-																				id = '$row[contact_type]'
-																				value = '$row[id]'/>";
-																				print"<label for='$row[contact_type]''>$row[contact_type]</label>";
-																		print"</td>";
-																	print"</tr>";
+														if($contact_data){
+															print"<table align='center' class='table-sm table-hover table-bordered'>";
+																foreach ($contact_data as $row) {
+																	if($row['contact_category']=='post'){
+																		print"<tr>";
+																			print"<td class='align-middle p-1'>";
+																				print"<input type = 'checkbox'
+																					class='m-2'
+																					name = 'emergency_intervention[]'
+																					id = '$row[contact_type]'
+																					value = '$row[id]'/>";
+																					print"<label for='$row[contact_type]''>$row[contact_type]</label>";
+																			print"</td>";
+																		print"</tr>";
+																	}
 																}
-															}
-														print"</table>";
+															print"</table>";
+														}else{
+															print "<textarea class='form-control form-control-ta' placeholder='Required...' name = 'emergency_intervention'></textarea>";	
+														}
 													print"</td>";
 
 												print"</tr>";

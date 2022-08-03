@@ -70,7 +70,10 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 		print "<input type='hidden' name='population' value='$Population'>";
 
 		if($request_residentkey=='all'){
-			$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population'";
+			$houses = explode(",",$_SESSION['house']);
+			$houses = join("', '", $houses);
+			$sql1="SELECT * FROM residentpersonaldata WHERE house IN ('$houses') order by first";
+			//$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population'";
 		}else{
 			$sql1="SELECT * FROM residentpersonaldata WHERE residentkey='$request_residentkey'";
 		}

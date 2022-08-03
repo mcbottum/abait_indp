@@ -108,7 +108,7 @@ if($_SESSION['Target_Population']=='all'&&!$Population){
 			$session1=mysqli_query($conn,$sql1);
 
 			?>
-		<form action="episode_historical_review.php" method="post">
+		<form action="ABAIT_episode_historical_review_v2.php" method="post">
 			<?
 			print"<h3><label>Select ABAIT Target Population</label></h3>";
 			?>
@@ -146,8 +146,11 @@ else{
 	$conn=make_msqli_connection();
 
 if($_SESSION['Target_Population']!='all'){
+
+	$houses = explode(",",$_SESSION['house']);
+	$houses = join("', '", $houses);
 	$Population_strip=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
-	$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
+	$sql1="SELECT * FROM residentpersonaldata WHERE house IN ('$houses') order by first";
 	$sql2="SELECT * FROM behavior_maps WHERE Target_Population='$Population_strip'";
 	$sql3="SELECT * FROM scale_table WHERE Target_Population='$Population_strip'";
 	$Population=$_SESSION['Target_Population'];
@@ -163,7 +166,6 @@ $pop=str_replace(' ','_',$Population);
 //print $pop;
 $_SESSION['pop']=$pop;
 print"<input type='hidden' value='$pop' name='Target_Population'>";
-//print $Population;
 
 $scale_array=array();
 	$session1=mysqli_query($conn,$sql1);

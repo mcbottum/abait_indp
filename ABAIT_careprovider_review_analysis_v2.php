@@ -133,7 +133,10 @@ foreach($scale_array as $value){
     if($personaldatakey=='all_careproviders'){
 
         $Population_strip=mysqli_real_escape_string($conn,$Population);
-        $sql="SELECT * FROM personaldata WHERE Target_Population='$Population_strip' order by first";
+        $houses = explode(",",$_SESSION['house']);
+        $houses = join("', '", $houses);
+        //$sql="SELECT * FROM personaldata WHERE Target_Population='$Population_strip' order by first";
+        $sql="SELECT * FROM personaldata WHERE house IN ('$houses') order by first";
         $providers=mysqli_query($conn,$sql);
         $title='Episode Summary for <em>All</em> Carers: ';
 

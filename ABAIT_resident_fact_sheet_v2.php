@@ -81,8 +81,11 @@ print $_SESSION['SITE']
 		$conn = make_msqli_connection();
 
 	if($_SESSION['Target_Population']!='all'){
+		$houses = explode(",",$_SESSION['house']);
+		$houses = join("', '", $houses);
 		$Population=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
-		$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population' order by first";
+		$sql1="SELECT * FROM residentpersonaldata WHERE house IN ('$houses') order by first";
+		//$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population' order by first";
 		$sql2="SELECT * FROM behavior_maps WHERE Target_Population='$Population'";
 		$sql3="SELECT * FROM scale_table WHERE Target_Population='$Population'";
 

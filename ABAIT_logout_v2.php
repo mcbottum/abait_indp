@@ -1,6 +1,10 @@
 <?ob_start()?>
 <?session_start();
-$nextfile=$_SESSION['HOME'];
+if($_SESSION['remote_login']){
+	$nextfile=$_SESSION['returnurl'];
+}else{
+	$nextfile=$_SESSION['HOME'];
+}
 header("Location:$nextfile");
 session_unset();
 session_destroy();

@@ -148,7 +148,9 @@ else{
 
 if($_SESSION['Target_Population']!='all'){
     $Population_strip=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
-    $sql1="SELECT * FROM personaldata WHERE Target_Population='$Population_strip' order by first";
+    $houses = explode(",",$_SESSION['house']);
+    $houses = join("', '", $houses);
+    $sql1="SELECT * FROM personaldata WHERE house IN ('$houses') order by first";
     $sql2="SELECT * FROM behavior_maps WHERE Target_Population='$Population_strip'";
     $sql3="SELECT * FROM scale_table WHERE Target_Population='$Population_strip'";
     $Population=$_SESSION['Target_Population'];

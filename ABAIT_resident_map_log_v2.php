@@ -70,13 +70,29 @@ set_css()
 		$date = $date_time[0];
 		$time = $date_time[1].":00";
 
+$dt = new DateTime($raw_date);
+
+
+
+
 		## old datepicker
 		// $date_time = explode(" ", $raw_date);
 		// $date = $date_time[0];
 		// $date = str_replace('/',',',$date);
 		// $time = $date_time[1];
 
+
+
+
 		$time_stamp = str_replace("T", " ", $raw_date).":00";
+
+// Check for daylight saving time in England !!!!!
+if(date('m-d',strtotime('2022-03-27' )) < date('m-d') && date('m-d',strtotime('2022-10-30' )) > date('m-d')){
+	$dt = new DateTime($raw_date);
+	$dt->sub(new DateInterval('PT1H'));
+	$time_stamp = $dt->format('Y-m-d H:i:s');
+}
+
 
 		$duration=$_REQUEST['duration'];
 
@@ -395,7 +411,7 @@ $configs = get_db_configs();
 
 		$data_array = array(
 		    'RecordUUID' => $RecordUUID,
-		    'PersonID' => $resident_PersonID,
+		    'ConnectionID' => $resident_PersonID,
 		    'FirstNames' => '',
 		    'LastName' => '',
 		    'ExternalPersonID' => '',
@@ -436,6 +452,7 @@ $configs = get_db_configs();
 
 		$devapikey = $configs['devapikey'];
 		$care_note_url = "https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=".$devapikey."&Apikey=".$carer_apikey;
+	
 
 		//$care_note_url = 'https://care.personcentredsoftware.com/integration/api/GenericAPI/insertcarenote?DevApikey=8de7a68c-f962-4fb1-a98a-1d08e3263dd9&Apikey=a09a69a2-dbe0-4a47-bf9c-9d5cc92e8434';
 

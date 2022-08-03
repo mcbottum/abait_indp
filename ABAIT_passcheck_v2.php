@@ -48,10 +48,12 @@ $_SESSION['hosting_service'] = 'azure_UK';
 //$_SESSION['hosting_service'] = 'cog.abaitscale';
 
 // ****** READ IN DB CONNECTIONS SETTINGS USING config.json ******* //
-$string = file_get_contents("config.json");
+$string = file_get_contents("configfiles/config.json");
 if ($string === false) {
-    $nextfile="ABAIT_adminhome_v2.php";
+    header("Location:ABAIT_Home.php");
+    exit("Not able to access configuration file");
 }
+
 $db_configs = json_decode($string, true);
 $db = $db_configs['db_connections'][$_SESSION['hosting_service']]['db'];
 $_SESSION['db'] = $db;
@@ -161,14 +163,16 @@ $filename =$_REQUEST["submit"];
 
 	if($_SESSION['use_ssl']){
 		$conn = mysqli_init();
-		mysqli_ssl_set($conn,NULL,NULL, "/var/www/html/".$_SESSION['cert'], NULL, NULL);
+		mysqli_ssl_set($conn,NULL,NULL, "configfiles/".$_SESSION['cert'], NULL, NULL);
 		mysqli_real_connect($conn, $host, $db_user, $db_pwd, $_SESSION['db'], 3306, MYSQLI_CLIENT_SSL);
 		if (mysqli_connect_errno($conn)) {
 			die('Failed to connect to MySQL: '.mysqli_connect_error());
 		}
 
-	}else{
+	}elseif(!$_SESSION['use_ssl']){
 		$conn=mysqli_connect($host,$db_user,$_SESSION['mysqlpassword'],$_SESSION['db']) or die(mysqli_error());
+	}else{
+		exit("Could not connect to database");
 	}
 
 

@@ -26,11 +26,12 @@ function validate_form()
     valid=true;
     var alertstring=new String("");
 
-    if(document.form.residentkey.selectedIndex==""){
-        alertstring=alertstring+"\nResident.";
-        document.form.residentkey.style.background = "Yellow";
-        valid=false;
-    }else if(document.form.scale_name.selectedIndex==""){
+    // if(document.form.residentkey.selectedIndex==""){
+    //     alertstring=alertstring+"\nResident.";
+    //     document.form.residentkey.style.background = "Yellow";
+    //     valid=false;
+    // }else 
+    if(document.form.scale_name.selectedIndex==""){
         alertstring=alertstring+"\nBehavior Scale.";
         document.form.scale_name.style.background = "Yellow";
         valid=false;
@@ -174,7 +175,10 @@ set_css()
             $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
         }else{
             //$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' AND house='$house' order by first";
-            $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE FIND_IN_SET('$house', house)";
+            $houses = explode(",",$_SESSION['house']);
+            $houses = join("', '", $houses);
+            $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE house IN ('$houses') order by first";
+            //$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE FIND_IN_SET('$house', house)";
         }
         $session1=mysqli_query($conn, $_SESSION['sql']);
 
@@ -259,14 +263,16 @@ set_css()
     if($trig){
         $_SESSION['trig']=$trig;
     }
-
-
     if($community && !$residentkey){
-        
+
         if($_SESSION['privilege']=='globaladmin'){
             $_SESSION['sql']="SELECT * FROM residentpersonaldata ORDER By first";
         }elseif($_SESSION['privilege']=='admin'){
-            $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
+            //$_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
+            $houses = explode(",",$_SESSION['house']);
+            $houses = join("', '", $houses);
+            $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE house IN ('$houses') order by first";
+
         }elseif($_SESSION['privilege']=='caregiver'){
             if($house=='all'){
                 $_SESSION['sql']="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' order by first";
@@ -328,14 +334,15 @@ set_css()
                 print "</select>";  
         print"</td></tr>";
 
-
-
     if($community){
         print"<tr><td>";
             print"<b><em>$provider_resident</em></b>";
         print"</td></tr>";
         print"<tr><td>";
 
+            if($_SESSION['privilege'] == "admin" || $_SESSION['privilege'] == "globaladmin"){
+                $session1=mysqli_query($conn,$_SESSION['sql']);
+            }
             //$session1=mysqli_query($conn,$_SESSION['sql']);
             //$resident_count = mysqli_num_rows($session1);
 

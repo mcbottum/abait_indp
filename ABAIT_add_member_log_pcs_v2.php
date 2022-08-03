@@ -52,7 +52,7 @@ $member_array[] = 'resident';
 	// Per instructions, apikey is the same as organizationd_db_key for a client
 
 	// Get DevAPIKey from configs
-	$string = file_get_contents("config.json");
+	$string = file_get_contents("configfiles/config.json");
 	if ($string === false) {
 	    $return_message=$return_message." Could not read DevAPIKey from configs";
 	}
@@ -120,12 +120,20 @@ $member_array[] = 'resident';
 					$community_match = true;
 
 					if ($member==="resident"){
-						$sql="SELECT * FROM residentpersonaldata WHERE guid='$value[personID]' ORDER by first";
+						$sql="SELECT * FROM residentpersonaldata WHERE guid='$value[connectionID]' ORDER by first";
 
 					}else{
 						$first=$value['firstName'];
 						$last=$value['lastName'];
 						$pwd = $value['connectionID'];
+
+						if(stripos(strtolower($value['role']),"manager")!==false || stripos(strtolower($value['role']),"activities")!==false || stripos(strtolower($value['role']),"owner")!==false){
+							$accesslevel="admin";
+						}else if(stripos(strtolower($value['role']),"carer")!==false || stripos(strtolower($value['role']),"nurse")!==false){
+							$accesslevel='caregiver';
+						}else{
+							$accesslevel="";
+						}
 						
 						$sql="SELECT * FROM personaldata WHERE password LIKE '$pwd' OR (first='$first' AND last='$last')";
 
@@ -133,22 +141,21 @@ $member_array[] = 'resident';
 
 					$check=mysqli_query($conn,$sql);
 
-					$accesslevel="";
 					if(!$check || mysqli_num_rows($check) == 0){
 
 						$house = str_replace(" ","-",$communities[$value['locationID']]);
-						$guid = $value['personID'];
+						
 						$community = serialize(array($value['locationID']=>$house));
 						
 						if($member==='resident'){
-							mysqli_query($conn, "INSERT INTO residentpersonaldata VALUES(null,'$value[firstName]','$value[lastName]',null,'$value[gender]','$privilegekey','$Target_Population','$house','$value[personID]','$community','$value[personID]')");
+							mysqli_query($conn, "INSERT INTO residentpersonaldata VALUES(null,'$value[firstName]','$value[lastName]',null,'$value[gender]','$privilegekey','$Target_Population','$house','$value[connectionID]','$community','$value[connectionID]')");
 							$resident_insert_count++;
 						}else{
-							if(stripos(strtolower($value['role']),"manager")!==false){
-								$accesslevel="admin";
-							}else if(stripos(strtolower($value['role']),"carer")!==false || stripos(strtolower($value['role']),"nurse")!==false){
-								$accesslevel='caregiver';
-							}
+							// if(stripos(strtolower($value['role']),"manager")!==false){
+							// 	$accesslevel="admin";
+							// }else if(stripos(strtolower($value['role']),"carer")!==false || stripos(strtolower($value['role']),"nurse")!==false){
+							// 	$accesslevel='caregiver';
+							// }
 							mysqli_query($conn,"INSERT INTO personaldata VALUES(null,'$date','$pwd',null,'$accesslevel','$value[firstName]','$value[lastName]',null,null,null,null,null,null,null,null,'$apikey','$privilegekey','$Target_Population','$house','$community')");
 							$staff_insert_count++;
 						}
@@ -165,7 +172,7 @@ $member_array[] = 'resident';
 						 		$community_insert = serialize($community_check);
 						 		$house_insert = $row1['house'].",".$communities[$value['locationID']];
 						 		if($member==='resident'){
-						 			mysqli_query($conn,"UPDATE residentpersonaldata SET house='$house_insert', community='$community_insert' WHERE person_id='$value[personID]'");
+						 			mysqli_query($conn,"UPDATE residentpersonaldata SET house='$house_insert', community='$community_insert' WHERE person_id='$value[connectionID]'");
 						 			$resident_update_count++;
 						 		}else{
 						 			mysqli_query($conn,"UPDATE personaldata SET house='$house_insert', community='$community_insert' WHERE password LIKE '$pwd'");
@@ -179,7 +186,7 @@ $member_array[] = 'resident';
 						 		$community_insert = serialize($community_check);
 
 						 		if($member==='resident'){
-						 			mysqli_query($conn,"UPDATE residentpersonaldata SET house='$house_insert', community='$community_insert' WHERE person_id='$value[personID]'");
+						 			mysqli_query($conn,"UPDATE residentpersonaldata SET house='$house_insert', community='$community_insert' WHERE person_id='$value[connectionID]'");
 						 			$resident_update_count++;
 						 		}else{
 						 			mysqli_query($conn,"UPDATE personaldata SET house='$house_insert', community='$community_insert' WHERE password LIKE '$pwd'");
@@ -187,6 +194,10 @@ $member_array[] = 'resident';
 						 		}	
 						 	}elseif($member!=='resident'&&!$row1['notify']){
 						 		mysqli_query($conn,"UPDATE personaldata SET notify='$apikey' WHERE password LIKE '$pwd'");
+						 		$staff_update_count++;
+
+						 	}elseif($member!=='resident'&&$row1['accesslevel']!==$accesslevel){
+						 		mysqli_query($conn,"UPDATE personaldata SET accesslevel='$accesslevel' WHERE password LIKE '$pwd'");
 						 		$staff_update_count++;
 
 						 	}
