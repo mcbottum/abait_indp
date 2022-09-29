@@ -74,9 +74,11 @@ if($_SESSION['passwordcheck']!='pass'){
 		$_SESSION['mapkey']=$mapkey;
 
 		$sql1="SELECT * FROM behavior_maps WHERE mapkey='$mapkey'";
+		
 		$conn1=make_msqli_connection();
 		$session1=mysqli_query($conn1,$sql1);
 		$row1=mysqli_fetch_assoc($session1);
+
 
 			print "<h3 align='center'>Enter Trigger/Intervention Updates for:  $row1[behavior]: $row1[trig]</h3>\n";	
 			print "<table class='center table noScroll local hover' border='1' bgcolor='white'>";
@@ -108,6 +110,7 @@ if($_SESSION['passwordcheck']!='pass'){
 			print "<h3 >Delete $row1[behavior]: $row1[trig]</h3>\n";
 			print"<input class='form-check-input' type = 'checkbox' align='center' name = 'delete_scale' id='delete_scale' value = $mapkey>\n";
 		print "</div>";
+	
 
 
 

@@ -104,7 +104,7 @@ if($_SESSION['cgfirst']!=""){
 	//}//end submit behavior map elseif
 if($intervention_1){
 	print"<h4 align='center'>A <em>$behavior</em> Scale has been logged for <em>$_SESSION[first] $_SESSION[last]</em>.</h4>";
-	print "<h4 align='center'><a href='ABAIT_choose_resident_for_map_review_v2.php'>Back to Scale Creation</a></h4>\n";
+	print "<h4 align='center'><a href='ABAIT_choose_resident_for_map_review_v2.php'>Review Another Resident's Behavior</a></h4>\n";
 }else{
 	print"<h4 align='center'>A trigger was not recored, please return to the scale creation page.</h4>\n";
 	print "<h4 align='center'><a href='chooseresident_for_map_review.php'>Back to Scale Creation</a></h4>\n";

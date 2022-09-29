@@ -27,7 +27,7 @@ set_css()
 <?
 $names = build_page_pg();
 ?>
-<h3 align='center'><label>Emergency Intervention Effect Report</label></h3>
+<h3 align='center'><label>Medical Intervention Effect Report</label></h3>
 <?
 
 

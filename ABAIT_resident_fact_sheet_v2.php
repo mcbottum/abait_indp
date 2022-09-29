@@ -122,7 +122,6 @@ print $_SESSION['SITE']
 					print "<thead>";
 						print"<tr align='center'>\n";
 							print"<th>Click Choice</th>\n";
-							print"<th>Resident ID</th>\n";
 							print"<th>First Name</th>\n";
 							print"<th>Last Name</th>\n";
 							// print"<th>Birth Date</th>\n";
@@ -136,7 +135,6 @@ print $_SESSION['SITE']
 								class='m-2'
 								name = 'residentkey'
 								value = $row1[residentkey]></td>\n";
-							print "<td> $row1[residentkey]</td>\n";
 							print "<td> $row1[first]</td>\n";
 							print "<td> $row1[last]</td>\n";
 							// print "<td> $row1[birthdate]</td>\n";

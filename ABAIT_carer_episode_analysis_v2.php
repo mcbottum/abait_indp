@@ -310,11 +310,18 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
 
                                 $best_int='intervention_'.$best;
                                 if(isset($best)){
+
+                                    arsort($values[$r]);
+                                    $json_array = json_encode($values[$r]);
+
                                     print"<td>$row2[$best_int]</td>";
-                                    print"<td align=center><INPUT class='icon' height='35' type=\"image\" src=\"Images/pie_icon.png\"  onClick=\"window.open('behaviorgraph'+$r+'.png','','width=700px,height=400px')\"></td>";
+                                    // print"<td align=center><INPUT class='icon' height='35' type=\"image\" src=\"Images/pie_icon.png\"  onClick=\"window.open('behaviorgraph'+$r+'.png','','width=700px,height=400px')\"></td>";
+
+
                                     $graphTitle='Relative Effectiveness of '.$trigger_array[$r].' Interventions';
                                     $yLabel='Relative Effectiveness';
-                                    ABAIT_pie_graph($values[$r], $graphTitle, $yLabel,$r);
+                                    // ABAIT_pie_graph($values[$r], $graphTitle, $yLabel,$r);
+                                    print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/pie_icon.png\" onClick='renderPieChart($json_array,\"$graphTitle\",\"$xLabel\",\"$yLabel\")'></td>";
                                 }else{
                                     print"<td></td>";
                                     print"<td align=\"center\">No Interventions Logged</td>";
@@ -384,6 +391,29 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
         }else{
             print"<div id='head'><h5 align=center>Episode per Time of Day for <em>${'behave_'.$j}</em> Triggers Since <em>$date_start</em></h5></div>\n";
         }
+
+            //call graph function
+                $values_bar_e=${'episode_count_array'.$j};
+                $graphTitle_bar_e='Count of Episodes per Three Hour Interval';
+                $yLabel_bar_e=' Episode Count';
+                $xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+            // if(count($values_bar_e)!=0){
+            // // ABAIT_bar_graph($values_bar_e, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+50);
+            // }
+            //call graph function
+                $values_bar_d=${'sum_duration_array'.$j};
+                $graphTitle_bar_d='Duration of Behavior Episodes per Three Hour Interval';
+                $yLabel_bar_d='Total Episode Duration (minutes)';
+                // $xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+            // if(count($values_bar_d)!=0){
+            // ABAIT_bar_graph($values_bar_d, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+100);
+            // }
+
+            // Required for JS graph
+            $json_array_e = json_encode($values_bar_e);
+            $json_array_d = json_encode($values_bar_d);
+
+
         print "<table class='table' width='100%'>";//table for more info copy this line
                 print "<tr><td>";//table in table data for more info
                     print "<table class='table' border='1' >";
@@ -405,7 +435,10 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
                                 foreach($episode_start_array as $i){
                                     print "<td>${'episode_count'.$i}</td>";
                                 }
-                                print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+50)+'.png','','width=700px,height=400')\"></td>";
+                                // print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+50)+'.png','','width=700px,height=400')\"></td>";
+
+                                        print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='renderBarChart($json_array_e,\"$graphTitle_bar_e\",\"$xLabel_bar\",\"$yLabel_bar_e\")'></td>";
+
                             print "</tr>";
                             print "<tr align='center'>";
                                 print "<td>Total Episode Duration (min)</td>";
@@ -413,26 +446,14 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
                                             print "<td>${'sum_duration'.$i}</td>";
                                     }
 
-                                print "<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+100)+'.png','','width=700px,height=400')\"></td>";
+                                // print "<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+100)+'.png','','width=700px,height=400')\"></td>";
+
+                                        print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='renderBarChart($json_array_d,\"$graphTitle_bar_d\",\"$xLabel_bar\",\"$yLabel_bar_d\")'></td>";
+
                             print "</tr>";
 
                 print"</table></td>";
-            //call graph function
-                $values_bar_e=${'episode_count_array'.$j};
-                $graphTitle_bar='Count of Episodes per Three Hour Interval';
-                $yLabel_bar=' Episode Count';
-                $xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
-            if(count($values_bar_e)!=0){
-            ABAIT_bar_graph($values_bar_e, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+50);
-            }
-            //call graph function
-                $values_bar_d=${'sum_duration_array'.$j};
-                $graphTitle_bar='Duration of Behavior Episodes per Three Hour Interval';
-                $yLabel_bar='Total Episode Duration (minutes)';
-                $xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
-            if(count($values_bar_d)!=0){
-            ABAIT_bar_graph($values_bar_d, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+100);
-            }
+
 
                     // print "<td align=center><table><tr><td><input type='submit' value='Tap for more Info' onClick=\"alert('This table reports behavior episodes by time of day.  Time of day is broken down into three hour intervals.');return false\">";
                     // print "</td>";
@@ -530,16 +551,7 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
                 print"</tr>";
             print "</table>";
 
-// print "<div class='mb-4'>";
-// print "<p class='backButton'>";
-//     print "<input   type = 'button'
-//                 name = ''
-//                 class='mb-3'
-//                 id = 'backButton3'
-//                 value = 'Return to Analysis Design'
-//                 onClick=\"backButton1('$Population')\"/>\n";
-// print "</p>";
-// print "</div>";
+
 
 
 
@@ -547,9 +559,36 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
     }
 }
 
+// Div for displaying graphs
+print "<div id='canvas_container' style='width:40%; position: relative;margin:0 auto;'>";
+    print "<canvas id='chartDiv' style='width:50%; height:300px; margin:0 auto; display: none;'>";
+    // print "<canvas id='myChart' style='width:50%;max-width:300px'></canvas>";
+    print "</canvas>";
+
+    //Div for displaying close graph button
+    print "<div id='chartHideDiv' margin:0 auto; display: none;'>"; 
+        print "<p>";
+            print "<input   type = 'button'
+                        name = ''
+                        class='mb-3'
+                        id = 'hide'
+                        value = 'Hide Chart'
+                        style = 'margin:10px auto; display: none'
+                        onClick=\"hideChart()\"/>\n";
+        print "</p>";
+    print "</div>"; 
+print "</div>";
+
 ?>
 
 <?build_footer_pg()?>
 
 </body>
+<script src="static/js/chart.js"></script>
+<script type="static/js/chartjs-plugin-labels.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script> this works -->  
+<script src="static/js/chartjs-plugin-labels.js"></script>
+<script src="static/js/index.js">
+
+</script>
 </html>

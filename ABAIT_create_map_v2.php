@@ -115,6 +115,9 @@ function seeAllTriggers(population, id, checkedValue, residentkey=null) {
     }
 	self.location='ABAIT_ti_catalog_v2.php?Population='+population+'&number_of_scales='+checkedValue+'&package='+location_vars+'&id='+residentkey;
 }
+function backButton1(target_population) {
+    window.location.href='ABAIT_choose_resident_for_map_review_V2.php';
+}
 </script>
 
 <style>
@@ -193,7 +196,11 @@ function seeAllTriggers(population, id, checkedValue, residentkey=null) {
 	}
 	.select-box-color {
 		background-color: #d0e0e3;
-	}	
+	}
+    p.backButton {
+      float:right;
+    }
+
 
 </style>
 </head>
@@ -684,6 +691,18 @@ $r=0;
 $_SESSION['Target_Population']=$Population_temp;
 
 print"<input type='hidden' name='scale_count' value='$count'>"; 
+
+print "<div class='mb-4'>";
+print "<p class='backButton'>";
+    print "<input   type = 'button'
+                name = ''
+                class='mb-3'
+                id = 'backButton3'
+                value = 'Return to Resident Listing'
+                onClick=\"backButton1('$Population')\"/>\n";
+print "</p>";
+print "</div>";
+print "</br>";
 
 ?>
 <br></br>

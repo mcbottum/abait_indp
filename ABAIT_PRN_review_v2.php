@@ -22,6 +22,13 @@ print $_SESSION['SITE']
 set_css()
 ?> 
 
+
+<script>
+function backButton1() {
+    window.location.href='ABAIT_resident_for_prn_v2.php';
+}
+</script>
+
 <style>
 	tr.floatRight{
 		float:right;
@@ -33,6 +40,10 @@ set_css()
 	input[type=radio]{
 	  	transform:scale(1.5);
 	}
+    p.backButton {
+      float:right;
+    }
+
 </style>
 </head>
 <body class="container">
@@ -69,7 +80,9 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 		print "<input type='hidden' name='residentkey' value='$request_residentkey'>";
 		print "<input type='hidden' name='population' value='$Population'>";
 
-		if($request_residentkey=='all'){
+		if($_SESSION['house']=='all'){
+			$sql1="SELECT * FROM residentpersonaldata order by first";
+		}elseif($request_residentkey=='all'){
 			$houses = explode(",",$_SESSION['house']);
 			$houses = join("', '", $houses);
 			$sql1="SELECT * FROM residentpersonaldata WHERE house IN ('$houses') order by first";
@@ -262,6 +275,18 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 					//print"<input type='text' name=$report_name style='background-color: yellow; font-size: 14px; width:99%;' size='130'>";
 					print "<textarea class='form-control form-control-ta' placeholder='Required...' name=$report_name></textarea>";
 		}//end row1 while for residents in Target_Population
+
+print "<div class='mb-4'>";
+print "<p class='backButton'>";
+    print "<input   type = 'button'
+                name = ''
+                class='mb-3 mt-3'
+                id = 'backButton3'
+                value = 'Return to Resident Select'
+                onClick=\"backButton1()\"/>\n";
+print "</p>";
+print "</div>";
+print "</br>";
 
 
 			print"<div id = 'submit'>";

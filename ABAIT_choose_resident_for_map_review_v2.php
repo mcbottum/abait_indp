@@ -158,7 +158,7 @@ else{
 <?
 	$scale_array[]=null;
 
-if($_SESSION['Target_Population']!='all'){
+if($_SESSION['privilege']=='globaladmin' && $_SESSION['Target_Population']!='all'){
 	$Population_strip=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
 	$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' ORDER by first";
 	$sql2="SELECT * FROM behavior_maps WHERE Target_Population='$Population_strip'";
@@ -166,6 +166,16 @@ if($_SESSION['Target_Population']!='all'){
 	$sql4="SELECT * FROM resident_mapping WHERE Target_Population='$Population_strip' ORDER by date";
 	$Population=$Population_strip;
 }//end target population if
+elseif($_SESSION['privilege']=='admin'){
+	$houses = explode(",",$_SESSION['house']);
+	$houses = join("', '", $houses);
+	$sql1="SELECT * FROM residentpersonaldata WHERE house IN ('$houses') order by first";
+	$Population_strip=mysqli_real_escape_string($conn,$_SESSION['Target_Population']);
+	$sql2="SELECT * FROM behavior_maps WHERE Target_Population='$Population_strip'";
+	$sql3="SELECT * FROM scale_table WHERE Target_Population='$Population_strip'";
+	$sql4="SELECT * FROM resident_mapping WHERE Target_Population='$Population_strip' ORDER by date";
+	$_SESSION['Population']=$Population_strip;
+}
 else{
 	$Population_strip=mysqli_real_escape_string($conn,$Population);
 	$sql1="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip' ORDER by first";

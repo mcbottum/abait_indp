@@ -20,7 +20,7 @@ print $_SESSION['SITE']
 </title>
 
 <script type="text/javascript">
-	function backButton(target_population) {
+	function backButton1() {
 		self.location='ABAIT_trigger_v2.php';
 	}
 </script>
@@ -83,25 +83,25 @@ print "<div class='row justify-content-md-center'> ";
 ?>
 	</div>
 </div>
-<!-- <div class='row justify-content-md-center'> 
-	<div class='col col-lg-5 mt-4'>
 
-		<button type='button' 
-			class='btn btn-info' 
-			id = 'backButton' 
-			value = 'Back to Scale Edit Page' 
-			onClick="backButton('')">
-			Back to Scale Edit Page
-		</button>
-
-
-	</div>
-</div> -->
 
 
 </form>
 
+
 <? 
+print "<div class='mb-4'>";
+print "<p class='backButton'>";
+    print "<input   type = 'button'
+                name = ''
+                class='mb-3'
+                id = 'backButton3'
+                value = 'Return Trigger Edit Selection'
+                onClick=\"backButton1()\"/>\n";
+print "</p>";
+print "</div>";
+print "</br>";
+
 	build_footer_pg();
 ?>
 </body>

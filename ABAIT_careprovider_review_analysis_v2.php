@@ -24,8 +24,7 @@ print $_SESSION['SITE']
 <script type="text/javascript">
     
 function backButton1(target_population) {
-    var url = 'ABAIT_episode_historical_review_v2.php?tp='+target_population;
-    window.location.href='ABAIT_episode_historical_review_v2.php?tp='+target_population;
+    window.location.href='ABAIT_careprovider_review_v2.php';
 }
 
 </script>
@@ -257,19 +256,16 @@ print "<p class='backButton'>";
                 name = ''
                 class='mb-3'
                 id = 'backButton3'
-                value = 'Return to Analysis Design'
+                value = 'Return to Care Provider Select'
                 onClick=\"backButton1('$Population')\"/>\n";
 print "</p>";
 print "</div>";
+print "</br>";
 
 ?>
 
 
-    <div id = "submit">
-        <input  type = "submit"
-                name = "submit"
-                value = "Back to Admin Home Page">
-    </div>
+
 
     </form>
 <?build_footer_pg()?>

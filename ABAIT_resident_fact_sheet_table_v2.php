@@ -20,6 +20,11 @@ ABAIT Resident Triggers and Interventions
 <?
 	set_css()
 ?>
+<script type="text/javascript">
+	function backButton1(target_population) {
+	    window.location.href='ABAIT_resident_fact_sheet_V2.php';
+	}	
+</script>
 <style>
     td {
     	padding-top: 5px;
@@ -28,6 +33,10 @@ ABAIT Resident Triggers and Interventions
     .table th {
     background-color: lightgrey;
     }
+    p.backButton {
+      float:right;
+    }
+
 </style>
 </head>
 <body class="container">
@@ -128,10 +137,10 @@ if($filename=="Submit Resident Choice"){
                     if($residentkey=='all_residents'){
                         print"<div id='head' align='center'><h4> $title for <em>All Residents</em></h4></div>\n";
                     }else{
-                            print"<div id='head'> $title $res_first $res_last</div>\n";         
+                            print"<div id='head'><h4 class='text-center'> $title<em> $res_first $res_last</em></h4></div>\n";         
                     }
-			
-			print "<table class='table center table-responsive-md table-hover table-sm' border='1'  style='width:auto'>";
+		
+			print "<table class='table center table-responsive-md table-hover table-sm' border='1'  >";
 
 					print"<tr>\n";
 						print"<th align='center'>Scale</th>\n";
@@ -232,12 +241,20 @@ if($filename=="Submit Resident Choice"){
 
 		
 }
+print "</form>";
+print "<div class='mb-4'>";
+	print "<p class='backButton'>";
+	    print "<input   type = 'button'
+	                name = ''
+	                class='mb-3'
+	                id = 'backButton3'
+	                value = 'Return to Resident Listing'
+	                onClick=\"backButton1('$Population')\"/>\n";
+	print "</p>";
+print "</div>";
+print "</br>";
 
+build_footer_pg() 
 ?>
-	</fieldset>
-
-
-	</form>
-	<? build_footer_pg() ?>
 </body>
 </html>

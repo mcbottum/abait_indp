@@ -33,8 +33,8 @@ $names = build_page_pg();
 		$date=date('Y-m-d');
 		$date_start=date('Y-m-d',(strtotime('- 2 days')));	
 		//print"$date_start";
-		$title1='Post Emergency Intervention Follow-Up';
-		$title2='Residents Experiencing Emergency Intervention Within the Last 48 Hours';
+		$title1='Post Medicated Intervention Follow-Up';
+		$title2='Residents requiring medication to manage behaviors during the past 48 hours.';
 		#$residentkey=$_REQUEST['resident_choice'];
 
 		$conn=make_msqli_connection();

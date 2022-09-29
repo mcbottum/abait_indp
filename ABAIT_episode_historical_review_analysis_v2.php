@@ -247,7 +247,11 @@ if($filename=="Submit Resident for Global Analysis"){
 			$Population_strip=mysqli_real_escape_string($conn,$Population);
         	$houses = explode(",",$_SESSION['house']);
         	$houses = join("', '", $houses);
-			$sql="SELECT * FROM residentpersonaldata WHERE house IN ('$houses') order by first";
+        	if($houses=='all'){
+        		$sql="SELECT * FROM residentpersonaldata order by first";
+        	}else{
+				$sql="SELECT * FROM residentpersonaldata WHERE house IN ('$houses') order by first";
+			}
 			//$sql="SELECT * FROM residentpersonaldata WHERE Target_Population='$Population_strip'";
 			$session=mysqli_query($conn,$sql);
 			while($row=mysqli_fetch_assoc($session)){
@@ -288,8 +292,6 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
 		unset($sql_array);
 
 	if($_REQUEST['all']=='all'){
-
-
 		if($residentkey=='all_residents'){
 			${'sql_all'}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
 		}else{
@@ -332,13 +334,15 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
 					}
 				}//end behaviorarray foreach
 			}
-			//call graph function
+			// call graph function
 			$values_bar=$sum_behaviorarray;
 			$graphTitle_bar='Duration of '.$behavior_spelling .'Episodes vs. '.$behavior_spelling;
 			$yLabel_bar='Total Duration (minutes)';
 			$xLabel_bar=$behavior_spelling.'s';
 			ABAIT_bar_graph($values_bar, $graphTitle_bar, $yLabel_bar,$xLabel_bar,'bar');
 
+			// Required for JS graph
+			$json_array = json_encode($values_bar);
 
 			print"<table width='100%'>";
 				print"<tr>";
@@ -372,18 +376,21 @@ if($scale_totals){///////////////////////scale totals///////////////////////////
 
 							print"<tr align='center'>\n";
 
-									print"<td>$date_start</td>";
-									print"<td>$date_end</td>";
-									print"<td>$sum_episodes</td>";
-									print"<td>$sum_duration</td>";
-									print"<td>$sum_PRN</td>";
-									print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraphbar.png','','width=700,height=400')\"></td>";
+								print"<td>$date_start</td>";
+								print"<td>$date_end</td>";
+								print"<td>$sum_episodes</td>";
+								print"<td>$sum_duration</td>";
+								print"<td>$sum_PRN</td>";
+								// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraphbar.png','','width=700,height=400')\"></td>";
+								print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='renderBarChart($json_array,\"$graphTitle_bar\",\"$xLabel_bar\",\"$yLabel_bar\")'></td>";
 
 							print "</tr>\n";
 					print "</table>";
 				print "</td>";
 		print "</tr>";
 	print "</table>";
+
+	
 
 
 }
@@ -439,21 +446,29 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 
 			//call graph function
 				$values_bar_e=${'episode_count_array'.$j};
-				$graphTitle_bar='Count of Episodes per Three Hour Interval';
-				$yLabel_bar=' Episode Count';
-				$xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
-			if(!empty($values_bar_e)){
-			ABAIT_bar_graph($values_bar_e, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+5);
-			}
-			//call graph function
+				$graphTitle_bar_e='Count of Episodes per Three Hour Interval';
+				$yLabel_bar_e=' Episode Count';
+				$xLabel_bar_e='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+			// if(!empty($values_bar_e)){
+			// ABAIT_bar_graph($values_bar_e, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+5);
+			// }
+			// //call graph function
 				$values_bar_d=${'sum_duration_array'.$j};
-				$graphTitle_bar='Duration of '.$behavior_spelling.' Episodes per Three Hour Interval';
-				$yLabel_bar='Total Episode Duration (minutes)';
-				$xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
-			if(!empty($values_bar_d)){
+				$graphTitle_bar_d='Duration of '.$behavior_spelling.' Episodes per Three Hour Interval';
+				$yLabel_bar_d='Total Episode Duration (minutes)';
+				$xLabel_bar_d='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+			// if(!empty($values_bar_d)){
 
-			ABAIT_bar_graph($values_bar_d, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+10);
-			}
+			// ABAIT_bar_graph($values_bar_d, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+10);
+			// }
+
+			// Required for JS graph
+			$json_array_e = json_encode($values_bar_e);
+			$json_array_d = json_encode($values_bar_d);
+
+
+
+
 
 			if($j==count($sql_array)-1&&in_array($sql_all,$sql_array)){
 				print"<h3 class='center_header'>Episode per Time of Day for <em>All</em> Triggers - Start Date:  <em>$date_start</em> End Date:   <em>$date_end</em></h3>\n";
@@ -465,7 +480,7 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 
 
 			print "<table width='100%'>";//table for more info copy this line
-				print "<tr align='right'>";
+				print "<tr align='center'>";
 					print "<td>";
 						print"<input type='submit' value='Tap for more Info' onClick=\"alert('This table groups $behavior_spelling episodes by the time of day during which they occurred.');return false\">";
 					print "</td>";
@@ -490,22 +505,28 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 								print"</tr>\n";
 							// print "</thead>";
 							// print "<tbody>";
-								print"<tr>\n";
+								print"<tr align='center'>\n";
 
 										print "<td>Total Episodes</td>";
 										foreach($episode_start_array as $i){
 											print "<td>${'episode_count'.$i}</td>";
 										}
-										print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+5)+'.png','','width=700px,height=400')\"></td>";
+										//PHP chart
+										// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+5)+'.png','','width=700px,height=400')\"></td>";
+										// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+5)+'.png','','width=700px,height=400')\"></td>";
+										print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='renderBarChart($json_array_e,\"$graphTitle_bar_e\",\"$xLabel_bar_e\",\"$yLabel_bar_e\")'></td>";
 
 								print"</tr>\n";
-								print"<tr>\n";
+								print"<tr align='center'>\n";
 
 										print"<td>Total Episode Duration (min)</td>";
 										foreach($episode_start_array as $i){
 												print "<td>${'sum_duration'.$i}</td>";
 										}
-										print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+10)+'.png','','width=700px,height=400')\"></td>";
+										//PHP chart
+										// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+10)+'.png','','width=700px,height=400')\"></td>";
+										// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+10)+'.png','','width=700px,height=400')\"></td>";
+										print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='renderBarChart($json_array_d,\"$graphTitle_bar_d\",\"$xLabel_bar_d\",\"$yLabel_bar_d\")'></td>";
 
 								print"</tr>\n";
 							// print "</tbody>";
@@ -609,7 +630,7 @@ print "<table width='100%'>";//table for more info copy this line
             print "<table class='table table-bordered'>";
                 // print "<thead>";
 					print "<tr>";
-						print "<th colspan='8'>$behavior $behavior_spelling Episodes.  Start Date: <em>$date_start</em>   End Date:   <em>$date_end</em></th>";
+						print "<th colspan='7'>$behavior $behavior_spelling Episodes.  Start Date: <em>$date_start</em>   End Date:   <em>$date_end</em></th>";
 					print "</tr>";
 					print"<tr>";
 						print"<th class='first'>Trigger (episodes/duration)</th>";
@@ -694,19 +715,10 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
         //$sql2="SELECT * FROM behavior_maps WHERE behavior='$behavior' AND residentkey='$residentkey'";
         $behavior_maps_session=mysqli_query($conn,$behavior_maps_sql);
 
-
-
-            print "<table align='center' width='100%'>";
-            	// print "<tr align='right'>";
-            	// 	print "<td>";
-
-						// print"<input type='submit' value='Tap for more Info' onClick=\"alert('This is the Trigger and Intervention Breakdown. Information listed is the total number of each type of episode, total duration of those episodes, and the most effective intervention based on cumulative reduction in episode intensity.  Click on the pie icon to display a pie chart of all episode type durations.');return false\">";
-
-				// 	print "</td>";
-				// print "</tr>";
+        print "<table align='center' width='100%'>";
 
             print "<tr><td>";
-            // print "<table  class='table scroll local' border='1' bgcolor='white'>";
+
             print "<table class='table table-bordered'>";
             
                 // print "<thead>";
@@ -734,18 +746,17 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
                                 $intv5=0;
                                 $intv6=0;
 
-																print"<tr align='center'>";
+								print"<tr align='center'>";
                                     print "<td> $behavior_maps_row[trig] </td>";
 
-																			if($residentkey=='all_residents'){
-																				$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
-																			}else{
-																				$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND behavior='$behavior' AND date > '$date_start' AND date < '$date_end'";
-																			}
-								                                $behavior_map_data_session=mysqli_query($conn,$behavior_map_data_sql);
+										if($residentkey=='all_residents'){
+											$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='$behavior' AND residentkey IN ('".implode("', '", $residentkey_array)."')";
+										}else{
+											$behavior_map_data_sql="SELECT * FROM behavior_map_data WHERE residentkey='$residentkey' AND behavior='$behavior' AND date > '$date_start' AND date < '$date_end'";
+										}
+                            			$behavior_map_data_session=mysqli_query($conn,$behavior_map_data_sql);
 
-
-                                            $trig_episodes=False;
+                                        $trig_episodes=False;
                                             while($behavior_map_data_row=mysqli_fetch_assoc($behavior_map_data_session)){
                                                 if($behavior_maps_row['mapkey']==$behavior_map_data_row['mapkey']){
                                                     $episodes=$episodes+1;
@@ -783,29 +794,43 @@ if($trigger_breakdown){ ////////////////////////////////////////trigger breakdow
 
                                                 $best_intervention='intervention_'.$best;
                                                 print"<td>$behavior_maps_row[$best_intervention]</td>";
-																								print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/pie_icon.png\" onClick=\"window.open('behaviorgraph'+($r+20)+'.png','','width=700px,height=400')\"></td>";
+																								// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/pie_icon.png\" onClick=\"window.open('behaviorgraph'+($r+20)+'.png','','width=700px,height=400')\"></td>";
+
+
 
                                                 $graphTitle='Relative Effectiveness of '.$trigger_array[$trigger_array_index].' Interventions';
                                                 $yLabel='Relative Effectiveness';
+                                                $xLabel="";
 
-                                                ABAIT_pie_graph($values[$r], $graphTitle, $yLabel,$r+20);
+                                                arsort($values[$r]);
 
+                                                $json_array = json_encode($values[$r]);
+
+
+												print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/pie_icon.png\" onClick='renderPieChart($json_array,\"$graphTitle\",\"$xLabel\",\"$yLabel\")'></td>";
+
+												// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='renderBarChart($json_array,\"$graphTitle_bar\",\"$xLabel_bar\",\"$yLabel_bar\")'></td>";
+
+
+                                                // ABAIT_pie_graph($values[$r], $graphTitle, $yLabel,$r+20);
 
                                                 //print"<td align=center>";
 
                                                 $r+=1;
 
                                             }else{
-                                                print "<td>0</td><td>0</td><td>None</td><td>No Graph</td>";
+                                                print "<td>0</td><td>0</td><td>None</td>";
+                                                // print "<td>No Graph</td>";
                                             }
                                 print"</tr>";
 
                     	$trigger_array_index+=1;
+
                 	}//end row2 while for each trigger
 								// print "</tbody>";
             print "</table>";
-
      	print"</td></tr></table>";
+
 
     }//end foreach
 }// end trigger_breakdown if
@@ -897,13 +922,13 @@ $dataPoints2 = array(
 
             print "<table class='table table-bordered'>";
 
-                    print"<tr align='center' ><th colspan='5' >Carer Interactions with $res_name From <em>$date_start</em> - <em>$date_end</em></th></tr>";
+                    print"<tr align='center' ><th colspan='4' >Carer Interactions with $res_name From <em>$date_start</em> - <em>$date_end</em></th></tr>";
                     print"<tr >";
                     		print"<th colspan='1'>Carer</th>";
                     		print"<th colspan='1'>On Staff</th>";
                     		print"<th colspan='1'>Present During Episode</th>";
                     		print"<th colspan='1'>Present During Interaction</th>";
-                    		print"<th colspan='1'>Graph</th>";
+                    		// print"<th colspan='1'>Graph</th>";
                     print"</tr>";
 
 
@@ -920,7 +945,7 @@ $dataPoints2 = array(
             			    foreach ($carer_presence_array[$key] as $key1 => $value1) {
             			    	print"<td colspan='1'>$value1</td>";
             			    }
-            				print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='chart_call()'></td>";
+            				// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='chart_call()'></td>";
             			print"</tr>";
             		}
 
@@ -1057,20 +1082,26 @@ if($all_episode){//////////////////////////////////////////all_episode//////////
 					$row1=mysqli_fetch_assoc($session1);
 					$rk = $row1['residentkey'];
 					//$residentkey_assoc_array[$rk]
+					$row_count = 0;
 					print "<tr>";
-
-							print"<td>$residentkey_assoc_array[$rk]</td>";
-							print"<td>$row[date]</td>";
-							print"<td>$row[time]</td>";
-							print"<td>$row[behavior]</td>";
-							print"<td>$row1[trig]</td>";
-							if($row['PRN']==1){
-								print"<td>Yes</td>";
-							}else{
-								print"<td>None</td>";
+							if($residentkey_assoc_array[$rk]){
+								$row_count++;
+								print"<td>$residentkey_assoc_array[$rk]</td>";
+								print"<td>$row[date]</td>";
+								print"<td>$row[time]</td>";
+								print"<td>$row[behavior]</td>";
+								print"<td>$row1[trig]</td>";
+								if($row['PRN']==1){
+									print"<td>Yes</td>";
+								}else{
+									print"<td>None</td>";
+								}
 							}
 
 					print "</tr>";
+				}
+				if($row_count==0){
+					print "<tr><td>No Recorded Episodes</td></tr>";
 				}
 
 			print "</table>";
@@ -1161,9 +1192,31 @@ print "<p class='backButton'>";
 				value = 'Return to Analysis Design'
 				onClick=\"backButton1('$Population')\"/>\n";
 print "</p>";
+
 print "</div>";
 
 print "</br>";
+
+// Div for displaying graphs
+print "<div id='canvas_container' style='width:40%; position: relative;margin:0 auto;'>";
+	print "<canvas id='chartDiv' style='width:50%; height:300px; margin:0 auto; display: none;'>";
+	// print "<canvas id='myChart' style='width:50%;max-width:300px'></canvas>";
+	print "</canvas>";
+
+	//Div for displaying close graph button
+	print "<div id='chartHideDiv' margin:0 auto; display: none;'>"; 
+		print "<p>";
+			print "<input	type = 'button'
+						name = ''
+						class='mb-3'
+						id = 'hide'
+						value = 'Hide Chart'
+						style = 'margin:10px auto; display: none'
+						onClick=\"hideChart()\"/>\n";
+		print "</p>";
+	print "</div>"; 
+print "</div>";
+
 
 ?>
 <!--
@@ -1177,4 +1230,10 @@ print "</br>";
 
 <?build_footer_pg()?>
 </body>
+<script src="static/js/chart.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script> this works -->  
+<script src="static/js/chartjs-plugin-labels.js"></script>
+<script src="static/js/index.js">
+
+</script>
 </html>

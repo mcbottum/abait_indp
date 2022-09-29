@@ -20,6 +20,16 @@ print $_SESSION['SITE']
 <?
 set_css()
 ?> 
+<script>
+function backButton1() {
+    window.location.href='ABAIT_resident_for_prn_v2.php';
+}
+</script>
+<style type="text/css">
+	    p.backButton {
+      float:right;
+    }
+</style>
 
 </head>
 <body class="container">
@@ -62,6 +72,17 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Repor
 					print"<h3 style='color:red'>Please return to PRN Report Page, PRN report was missing for ".$row['first']." ".$row['last'].".<h3>";
 				}
 		}// END WHILE.
+print "<div class='mb-4'>";
+print "<p class='backButton'>";
+    print "<input   type = 'button'
+                name = ''
+                class='mb-3 mt-3'
+                id = 'backButton3'
+                value = 'Return to Resident Select'
+                onClick=\"backButton1()\"/>\n";
+print "</p>";
+print "</div>";
+print "</br>";
 ?>
 
 				<div id = "submit">
