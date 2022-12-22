@@ -1,0 +1,19 @@
+
+2022-10-26 06:55:01pm
+Argument #0 -  received
+Argument #1 -  received
+Argument #2 -  received
+4 Residents loaded. 0 Residents updated. 2 Staff loaded. 0 Staff updated.                   
+
+
+
+
+2022-11-15 03:04:45pm
+Argument #0 -  received
+Argument #1 -  received
+Argument #2 -  received
+ Could not connect to User Database                  
+
+
+
+

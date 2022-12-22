@@ -94,14 +94,14 @@ unset($_SESSION['residentkey']);
                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
 
                         <?
-                        //print "<a class='dropdown-item' href='ABAIT_add_admin_pcs_v2.php'>Enroll Carers and Admins</a>";
-                        print "<a class='dropdown-item' href='ABAIT_add_member_pcs_v2.php'>Enroll Members</a>";
+                        
 
 
                         if($_SESSION['privilege']=='globaladmin'){
                             // print "<a class='dropdown-item' href='ABAIT_add_resident_v2.php'>Enroll New Resident</a>";
                             // print "<a class='dropdown-item' href='ABAIT_add_care_v2.php'>Enroll New Care Provider</a>";
                             // print "<a class='dropdown-item' href='ABAIT_add_admin_v2.php'>Enroll New Administrator</a>";
+                            print "<a class='dropdown-item' href='ABAIT_add_member_pcs_v2.php'>Enroll Members</a>";
                             print "<div class='dropdown-divider'></div>";
                             // print "<a class='dropdown-item' href='ABAIT_updateMembers_v2.php'>Update Admins, Caregivers or Residents</a>";
                             print "<a class='dropdown-item' href='ABAIT_remove_members_v2.php'>Remove Admins, Caregivers or Residents</a>";
@@ -117,6 +117,7 @@ unset($_SESSION['residentkey']);
                             //     print "<a class='disabled dropdown-item' href='ABAIT_remove_members_v2.php'>Remove Admins, Caregivers or Residents</a>";
                             // print "</span>";
                             print "<a class='dropdown-item' href='ABAIT_add_admin_pwd_v2.php'>ADD Admin Password</a>";
+                            print "<a class='dropdown-item' href='ABAIT_add_member_log_pcs_v2.php'>Sync Member Database</a>";
                             // print "<a class='dropdown-item' href='ABAIT_bulk_enroll_v2.php'>Bulk Enroll Members</a>";
 
                         }
@@ -165,7 +166,30 @@ unset($_SESSION['residentkey']);
 
 
 
-    <? build_footer_pg() ?>
+    <? 
+if($_SESSION['privilege']!='globaladmin'){
+    $db_configs=get_db_configs();
+    $sync_interval = $db_configs['db_sync_interval'];
+    $apikey = get_apikey();
+    $conn = make_msqli_connection();
+    $sql = "SELECT id from  db_sync_log where organization_id='$apikey' and UTC_TIMESTAMP() - interval ".$sync_interval." hour <= sync_timestamp";
+    $syncsa=mysqli_query($conn,$sql);
+    $syncs=mysqli_num_rows($syncsa);
+
+    if($db_configs['login_sync'] && $syncs == 0){
+        $logfile=$db_configs['logfile'];
+        $cwd = getcwd();
+        if($logfile){
+            $logfile = $cwd."/".$logfile;
+            shell_exec("php ".$cwd."/ABAIT_add_member_pcs_daemon_V2.php '".$_SESSION['hosting_service']."' '".$apikey."' >> ".$logfile." &");
+        }else{
+            shell_exec("php ".$cwd."/ABAIT_add_member_pcs_daemon_V2.php '".$_SESSION['hosting_service']."' '".$apikey."' > /dev/null 2>&1 &");
+        }
+    }
+}
+
+
+    build_footer_pg() ?>
 
 
 </body>

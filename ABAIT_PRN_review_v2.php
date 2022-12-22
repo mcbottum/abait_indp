@@ -197,7 +197,7 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 										print"<th>Ave Duration of PRN Episode (min)</th>\n";
 										print"<th>Ave Duration of non-PRN Episode (min)</th>\n";
 									print"</tr>\n";
-									print"<tr><td colspan='7' align='center'><i>During Two Week Observation Period</i></td></tr>";
+									print"<tr><td colspan='7' align='center'><i>During Observation Period</i></td></tr>";
 									print"<tr>\n";
 										print"<td>$date_start</td>\n";
 										print"<td>$date</td>\n";
@@ -228,7 +228,7 @@ print"<h2 class='m-3 p-2 footer_div' align='center'>Medicated Intervention Revie
 									print"<th>Specific $behavior_spelling Description</th>\n";
 									print"<th>Thirty Minute PRN Response</th></tr>\n";
 
-									print"<tr><td colspan='7' align='center'><i>During Two Week Observation Period</i></td></tr>";
+									print"<tr><td colspan='7' align='center'><i>During Observation Period</i></td></tr>";
 									$session8=mysqli_query($conn,$sql_rm4);
 									$PRN_given = False;
 									while($row8=mysqli_fetch_assoc($session8)){

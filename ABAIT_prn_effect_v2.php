@@ -98,7 +98,7 @@ $names = build_page_pg();
 					print"<thead class='thead-light'>";
 						print"<tr>";
 							print"<th>Episode Date</th>\n";
-							print"<th>Child</th>\n";
+							print"<th>Client</th>\n";
 							print"<th>Incident Description</th>\n";
 							print"<th>$post_observation_header</th>";
 					print"</thead>";
@@ -251,7 +251,7 @@ $names = build_page_pg();
 											$do_submit=false;
 											print"<div class='row justify-content-md-center'>";
 												print"<div class='col col-lg-auto pr-0'>";
-														print"<h3 style='color:green' align='center'>Currently, No Emergency Intervention Follow-Ups are Required</h3>\n";
+														print"<h3 style='color:green' align='center'>Currently, No Medication Follow-Ups are Required</h3>\n";
 												print"</div>";
 											print"</div>";
 								}

@@ -6,6 +6,13 @@ function get_db_configs(){
 	return $configs['db_connections'][$_SESSION['hosting_service']];
 }
 
+function get_log_file(){
+	// ****** READ IN DB CONNECTIONS SETTINGS USING config.json ******* //
+	$string = file_get_contents("configfiles/config.json");
+	$configs = json_decode($string, true);
+	return $configs['db_connections'][$_SESSION['hosting_service']]["logfile"];
+}
+
 function get_url_subdir(){
 	// ****** READ IN DB CONNECTIONS SETTINGS USING config.json ******* //
 	$string = file_get_contents("configfiles/config.json");
@@ -13,11 +20,27 @@ function get_url_subdir(){
 	return $configs['db_connections'][$_SESSION['hosting_service']]["url_subdir"];
 }
 
+function get_default_target_population(){
+	// ****** READ IN DB CONNECTIONS SETTINGS USING config.json ******* //
+	$string = file_get_contents("configfiles/config.json");
+	$configs = json_decode($string, true);
+	return $configs['db_connections'][$_SESSION['hosting_service']]["target_population"];
+}
+
+function get_apikey(){
+    $conn = make_msqli_connection();
+    $sql="SELECT notify FROM personaldata WHERE personaldatakey='$_SESSION[personaldatakey]'";
+    $check=mysqli_query($conn,$sql);
+    $row1=mysqli_fetch_assoc($check);
+    return $row1['notify'];
+}
+
 function make_msqli_connection(){
-	if($_SESSION['use_ssl']){
+	$db_configs = get_db_configs();
+	if($db_configs['use_ssl']){
 		$conn = mysqli_init();
-		mysqli_ssl_set($conn,NULL,NULL, "configfiles/".$_SESSION['cert'], NULL, NULL);
-		mysqli_real_connect($conn, $_SESSION['hostname'], $_SESSION['user'], $_SESSION['mysqlpassword'], $_SESSION['db'], 3306, MYSQLI_CLIENT_SSL);
+		mysqli_ssl_set($conn,NULL,NULL, "configfiles/".$db_configs['certificate'], NULL, NULL);
+		mysqli_real_connect($conn, $db_configs['host'], $db_configs['db_user'], $db_configs['db_pwd'], $db_configs['db'], 3306, MYSQLI_CLIENT_SSL);
 		if (mysqli_connect_errno($conn)) {
 			die('Failed to connect to MySQL: '.mysqli_connect_error());
 		}

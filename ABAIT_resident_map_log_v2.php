@@ -72,17 +72,11 @@ set_css()
 
 $dt = new DateTime($raw_date);
 
-
-
-
 		## old datepicker
 		// $date_time = explode(" ", $raw_date);
 		// $date = $date_time[0];
 		// $date = str_replace('/',',',$date);
 		// $time = $date_time[1];
-
-
-
 
 		$time_stamp = str_replace("T", " ", $raw_date).":00";
 

@@ -12,7 +12,10 @@
 			"target_population": "Dementia",
 			"devapikey": "",
 			"send_care_note": "False",
-			"url_subdir": ""
+			"url_subdir": "",
+			"db_sync_interval": "0",
+			"logfile": "member_sync_logs.txt",
+			"login_sync": 0
 		},
 		"azure_UK": {
 			"db": "abait-c",
@@ -26,7 +29,10 @@
 			"target_population": "Dementia",
 			"devapikey": "8de7a68c-f962-4fb1-a98a-1d08e3263dd9",
 			"send_care_note": "True",
-			"url_subdir": ""
+			"url_subdir": "",
+			"db_sync_interval": "3",
+			"logfile": "member_sync_logs.txt",
+			"login_sync": 1
 		},
 		"cog.abaitscale": {
 			"db": "agitation_cog",
@@ -40,7 +46,10 @@
 			"target_population": "Dementia",
 			"devapikey": "",
 			"send_care_note": "False",
-			"url_subdir": ""
+			"url_subdir": "",
+			"db_sync_interval": "0",
+			"logfile": "member_sync_logs.txt",
+			"login_sync": 0
 		},
 		"cog-training.abaitscale": {
 			"db": "cog_training",
@@ -54,7 +63,10 @@
 			"target_population": "Dementia",
 			"devapikey": "",
 			"send_care_note": "False",
-			"url_subdir": ""
+			"url_subdir": "",
+			"db_sync_interval": "0",
+			"logfile": "member_sync_logs.txt",
+			"login_sync": 0
 		}
 	}
 }

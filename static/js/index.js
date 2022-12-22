@@ -30,7 +30,7 @@ document.getElementById("chartDiv").scrollIntoView();
 			  	},
 			  	responsive: true,
 			  	maintainAspectRatio: true,
-			  	aspectRatio: 2|1,
+			  	aspectRatio: 2,
 			    scales: {
 				    xAxes: [{
 				      scaleLabel: {

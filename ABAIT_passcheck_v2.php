@@ -67,63 +67,7 @@ $_SESSION['cert'] = $db_configs['db_connections'][$_SESSION['hosting_service']][
 $_SESSION['population_type'] = $db_configs['db_connections'][$_SESSION['hosting_service']]['population_type'];
 $_SESSION['default_target_Population'] = $db_configs['db_connections'][$_SESSION['hosting_service']]['target_population'];
 
-// ******* HARD CODED DB CONNECTION SETTINGS
-// if ($_SESSION['population_type']==='cognitive'){ // ***  for remote dementia (indp, cs, ):  ***//
 
-// 	if ($_SESSION['hosting_service']==='local'){
-// 		$db = 'abait_cog';
-// 		$_SESSION['db'] = $db;
-// 		$host = '';
-// 		$db_user = 'root';
-// 		$db_pwd = 'abaitroot!';
-// 		$_SESSION['reset_password'] = True;
-// 		$_SESSION['use_ssl'] = False;
-// 	}elseif($_SESSION['hosting_service']==='azure_UK'){
-// 		$db = 'abait-c';
-// 		$_SESSION['db'] = $db;
-// 		$host = 'abait-cog.mysql.database.azure.com';
-// 		$db_user = 'abaitadmin@abait-cog';
-// 		$db_pwd = 'Abehave8*';
-// 		$_SESSION['reset_password'] = False;
-// 		$_SESSION['use_ssl'] = True;
-// 	}elseif($_SESSION['hosting_service']==='dreamhost_US'){
-//         $db = 'agitation_cog';
-//         $_SESSION['db'] = $db;
-//      	$host = 'mysqlcog.abaitscale.com';
-//      	$db_user = 'abaitcog';
-//      	$db_pwd = 'abaitcog13!';
-//      	$_SESSION['reset_password'] = False;
-// 	}
-
-// }elseif ($_SESSION['population_type']==='behavioral') { // *** for remote behavioral (cog, hs, ):   ***//
-
-// 	if ($_SESSION['hosting_service']==='local'){
-// 		$db = 'abait_cog';
-// 		$_SESSION['db'] = $db;
-// 		$host = '';
-// 		$db_user = 'root';
-// 		$db_pwd = 'abaitroot!';
-// 		$_SESSION['reset_password'] = True;
-// 		$_SESSION['use_ssl'] = False;
-// 	}elseif($_SESSION['hosting_service']==='dreamhost_US'){
-// 		$db = 'agitation_cs';
-// 		$_SESSION['db'] = $db;
-// 		$host = 'mysqlcs.abaitscale.com';
-// 		$db_user = 'abaitcs';
-// 		$db_pwd = 'abaitcs13!';
-// 		$_SESSION['reset_password'] = False;
-// 		$_SESSION['use_ssl'] = False;
-// 	}
-	
-// }else{
-// 	//for local
-// 	$db = 'abait_cog';
-// 	$_SESSION['db'] = $db;
-// 	$host = 'mysql';
-// 	$db_user = 'root';
-// 	$db_pwd = 'abaitroot';
-// 	$_SESSION['use_ssl'] = False;
-// }
 
 $_SESSION['passwordcheck']='fail';
 
@@ -177,7 +121,7 @@ $filename =$_REQUEST["submit"];
 
 
 		$password=mysqli_real_escape_string($conn, $password);
-		//$sql1="SELECT * FROM personaldata WHERE password='$password'";	
+	
 		$sql1="SELECT * FROM personaldata WHERE password LIKE '$password%' OR password2='$password'";
 
 		#mysqli_select_db($db);
@@ -284,6 +228,13 @@ $filename =$_REQUEST["submit"];
                 $nextfile=$_SESSION['HOME'];
         }
 	if($_SESSION['passwordcheck']=='pass'){
+
+			// if($db_configs['login_sync']){
+			// 	$logfile=$db_configs['logfile'];
+			// 	$cwd = getcwd();
+			// 	$logfile = $cwd."/".$logfile;
+			// 	shell_exec("php ".$cwd."/ABAIT_add_member_pcs_daemon_V2.php '".$_SESSION['hosting_service']."' 'alert' >> ".$logfile." &");
+			// }
 			$_SESSION['hostname']=$host;
 			$_SESSION['user']=$db_user;
 			$_SESSION['mysqlpassword']=$db_pwd;

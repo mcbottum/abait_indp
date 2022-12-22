@@ -268,7 +268,14 @@ if($filename=="Submit Resident for Global Analysis"){
 			$residentkey_assoc_array[$row['residentkey']] = $row['first'].' '.$row['last'];
 			print"<h2 class='m-3 p-2 footer_div' align='center'>$title for $res_first $res_last</h2>";
 		}else{
-			print"A resident selection was not made, please return to the previous page";
+			print"<h5 style='text-align:center'>A resident selection was not made, please return to the previous page</h5>";
+			print "<p class='backButton'>";
+				print "<input	type = 'button'
+							name = ''
+							id = 'backButton1'
+							value = 'Return to Analysis Design'
+							onClick=\"backButton1('$Population')\"/>\n";
+			print "</p>";
 			die;
 		}
 		print "<p class='backButton'>";
@@ -407,10 +414,10 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 		}
 		$sql_array[]=$sql_all;
 	}else{
-		foreach($_SESSION[scale_array] as $behavior){//$i counts the sql variables!!
+		foreach($_SESSION['scale_array'] as $behavior){//$i counts the sql variables!!
 			$behavior=str_replace(' ','_',$behavior);
 			${'behave_'.$i}=$_REQUEST[$behavior];
-			if(in_array(${'behave_'.$i},$_SESSION[scale_array])){
+			if(in_array(${'behave_'.$i},$_SESSION['scale_array'])){
 				if($residentkey=='all_residents'){
 					${'sql'.$i}="SELECT * FROM behavior_map_data WHERE date > '$date_start' AND date < '$date_end' AND behavior='${'behave_'.$i}'";
 				}else{
@@ -448,7 +455,8 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 				$values_bar_e=${'episode_count_array'.$j};
 				$graphTitle_bar_e='Count of Episodes per Three Hour Interval';
 				$yLabel_bar_e=' Episode Count';
-				$xLabel_bar_e='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+				// $xLabel_bar_e='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+				$xLabel_bar='Clock Hour';
 			// if(!empty($values_bar_e)){
 			// ABAIT_bar_graph($values_bar_e, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+5);
 			// }
@@ -456,7 +464,7 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 				$values_bar_d=${'sum_duration_array'.$j};
 				$graphTitle_bar_d='Duration of '.$behavior_spelling.' Episodes per Three Hour Interval';
 				$yLabel_bar_d='Total Episode Duration (minutes)';
-				$xLabel_bar_d='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+				// $xLabel_bar_d='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
 			// if(!empty($values_bar_d)){
 
 			// ABAIT_bar_graph($values_bar_d, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+10);
@@ -514,7 +522,7 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 										//PHP chart
 										// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+5)+'.png','','width=700px,height=400')\"></td>";
 										// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+5)+'.png','','width=700px,height=400')\"></td>";
-										print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='renderBarChart($json_array_e,\"$graphTitle_bar_e\",\"$xLabel_bar_e\",\"$yLabel_bar_e\")'></td>";
+										print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='renderBarChart($json_array_e,\"$graphTitle_bar_e\",\"$xLabel_bar\",\"$yLabel_bar_e\")'></td>";
 
 								print"</tr>\n";
 								print"<tr align='center'>\n";
@@ -526,7 +534,7 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
 										//PHP chart
 										// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+10)+'.png','','width=700px,height=400')\"></td>";
 										// print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick=\"window.open('behaviorgraph'+($j+10)+'.png','','width=700px,height=400')\"></td>";
-										print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='renderBarChart($json_array_d,\"$graphTitle_bar_d\",\"$xLabel_bar_d\",\"$yLabel_bar_d\")'></td>";
+										print"<td><INPUT class='icon' height='35' type=\"image\" src=\"Images/chart_icon.png\" onClick='renderBarChart($json_array_d,\"$graphTitle_bar_d\",\"$xLabel_bar\",\"$yLabel_bar_d\")'></td>";
 
 								print"</tr>\n";
 							// print "</tbody>";

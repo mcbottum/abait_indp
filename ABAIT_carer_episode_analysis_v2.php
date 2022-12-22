@@ -396,7 +396,8 @@ if($episode_time_of_day){///////////////////////////////////////time of day/////
                 $values_bar_e=${'episode_count_array'.$j};
                 $graphTitle_bar_e='Count of Episodes per Three Hour Interval';
                 $yLabel_bar_e=' Episode Count';
-                $xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+                // $xLabel_bar='|-------Day Shift-------||------PM Shift------||-----Night Shift-----|';
+                $xLabel_bar='Clock Hour';
             // if(count($values_bar_e)!=0){
             // // ABAIT_bar_graph($values_bar_e, $graphTitle_bar, $yLabel_bar,$xLabel_bar,$j+50);
             // }

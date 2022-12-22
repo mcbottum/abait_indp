@@ -22,6 +22,53 @@ print $_SESSION['SITE']
 <?
 set_css()
 ?> 
+<script>
+function validate_form()
+{
+	var valid = true;	
+	var alertstring=new String("");
+	if(!check_radios("residentkey")){
+		alertstring = alertstring + "\n-Please select a resident"
+		valid = false;
+	}
+	if(!check_radios("review_time")){
+		alertstring = alertstring + "\n-Please select a time duration"
+		valid = false;		
+	}
+	if (document.getElementById('Anxiety').checked || document.getElementById('Care').checked || document.getElementById('Vocalisations').checked || document.getElementById('Aggression').checked){
+		var checked=true;
+	}else{
+		alertstring = alertstring + "\n-Please select a Behaviour"
+		valid = false;		
+	}
+
+	if (document.getElementById('behavior_units').checked || document.getElementById('episode_time_of_day').checked || document.getElementById('trigger_breakdown').checked || document.getElementById('all_episode').checked || document.getElementById('scale_totals').checked){
+		alertstring = alertstring + "\n-Please select an Analysis Type"
+		var checked1=true;
+	}else{
+		alertstring = alertstring + "\n-Please select an Analysis Type"
+		valid = false;		
+	}
+	if(valid==false){
+		alert("Please enter the following data;" + alertstring);
+	}
+	return valid;
+}
+function check_radios(id){
+	var checked = false;
+	var radios = document.getElementsByName(id);
+    for (var i = 0, len = radios.length; i < len; i++) {
+        if (radios[i].checked) {
+            checked = true;
+            break;
+        }
+    }
+    return checked;
+}
+
+</script>
+
+
 <style>
     table.local thead th{
         width:500px;
@@ -108,7 +155,9 @@ if($_SESSION['Target_Population']=='all'&&!$Population){
 			$session1=mysqli_query($conn,$sql1);
 
 			?>
-		<form action="ABAIT_episode_historical_review_v2.php" method="post">
+		<form 
+			action="ABAIT_episode_historical_review_v2.php" 
+			method="post">
 			<?
 			print"<h3><label>Select ABAIT Target Population</label></h3>";
 			?>
@@ -137,10 +186,12 @@ if($_SESSION['Target_Population']=='all'&&!$Population){
 else{
 
 ?>
-	<form 	name = 'form1'
+	<form 	
+		name = 'form1'
+		onsubmit='return validate_form()'
 		action = "ABAIT_episode_historical_review_analysis_v2.php"
 		method = "post">
-<? //print $Population;
+<? 
 	$scale_array[]=null;
 	
 	$conn=make_msqli_connection();
@@ -163,7 +214,7 @@ else{
 
 }//end else
 $pop=str_replace(' ','_',$Population);
-//print $pop;
+
 $_SESSION['pop']=$pop;
 print"<input type='hidden' value='$pop' name='Target_Population'>";
 
@@ -334,6 +385,7 @@ $scale_array=array();
 									print "<input type='checkbox'
 											class='space'
 											name='scale_totals'
+											id='scale_totals'
 											value='1'>$behavior_spelling Episode Totals</label>";
 							print "</td></tr>\n";
 						
@@ -386,6 +438,7 @@ if ($_SESSION['population_type']==='behavioral'){
 							print "<input type='checkbox'
 									class='space'
 									name='all_episode'
+									id='all_episode'
 									value='1'>All Episode Printout</label>";
 							print "</td></tr>";
 						print"</table>\n";
